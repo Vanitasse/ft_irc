@@ -6,7 +6,7 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:43:27 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/24 16:54:48 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/24 18:45:19 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@
 # include <arpa/inet.h> //-> for inet_ntoa()
 # include <poll.h> //-> for poll()
 # include <csignal> //-> for signal()
+# include <string.h>
 # include "Client.hpp"
+# include <sstream>
 
 class	Server
 {
@@ -35,6 +37,8 @@ class	Server
 		void closeFds();
 		std::vector<struct pollfd> poll_fds;
 		std::vector<Client> clients;
+		std::vector<Client> LOL;
+		std::vector<Client> DOTA;
 		void connectClient();
 		void readData(int fd);
 		void clearClient(int fd);

@@ -6,7 +6,7 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:20:22 by vanitas           #+#    #+#             */
-/*   Updated: 2024/05/24 16:51:43 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/24 18:27:15 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 class Client
 {
 	private:
+		std::string	channel;
 		int nb;
 		int fd;
 		std::string ip_addr;
@@ -34,5 +35,6 @@ class Client
 		void setNb(int nb_input);
 		const std::string& getUsername() const ;
 		void setUsername(std::string user_input);
-		
+		const std::string& getChannel() const ;
+		void setChannel(std::string channel_input);
 };

@@ -6,7 +6,7 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:45:42 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/24 17:34:13 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/24 18:47:14 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,13 +108,14 @@ void Server::serverExec()
 void Server::PromptName(Client& cli)
 {
 	std::string input;
-	char buffer[10];
+	char buffer[20];
+	memset(buffer, 0, 20);
 	ssize_t bytes;
 	
 	bytes = 0;
 	send(cli.getFd(), "Enter your username : ", 23, 0);
-	while (bytes == 0 && signal == false)
-		bytes = recv(cli.getFd(), buffer, sizeof(buffer), 0);
+	bytes = recv(cli.getFd(), buffer, sizeof(buffer), 0);
+	std::cout << "OUI" << std::endl;
 	input = buffer;
 	if (input.size() > 1)
 		input[input.size() - 1] = '\0';
@@ -129,25 +130,27 @@ void Server::connectClient()
 	struct sockaddr_in sock_addr;
 	socklen_t len = sizeof(sock_addr);
 
-	std::cout << "CONNECT" << std::endl;
-	cli.setFd(accept(this->serv_sock_fd, (struct sockaddr *)&sock_addr, &len));
-	if (cli.getFd() == -1)
+	clients.push_back(cli);
+	clients.front().setChannel("general");
+	clients.front().setFd(accept(this->serv_sock_fd, (struct sockaddr *)&sock_addr, &len));
+	if (clients.front().getFd() == -1)
 		throw std::runtime_error("Client socket creation failed");
-	if (fcntl(cli.getFd(), F_SETFL, O_NONBLOCK) == -1) //met l'option O_NONBLOCK pour faire une socket non bloquante
+	PromptName(clients.front());
+	if (fcntl(clients.front().getFd(), F_SETFL, O_NONBLOCK) == -1) //met l'option O_NONBLOCK pour faire une socket non bloquante
 		throw(std::runtime_error("set option (O_NONBLOCK) failed"));
-	PromptName(cli);
 		
-	new_poll.fd = cli.getFd();
+	new_poll.fd = clients.front().getFd();
 	new_poll.events = POLLIN;
 	new_poll.revents = 0;
-	clients.push_back(cli);
-	clients.front().setNb(clients.size());
+	// clients.front().setNb(clients.size());
+	// clients.front().setUsername(cli.getUsername());
 	poll_fds.push_back(new_poll);
 }
 
 void Server::readData(int fd)
 {
 	char buffer[20];
+	memset(buffer, 0, 20);
 	ssize_t bytes;
 	
 	bytes = recv(fd, buffer, sizeof(buffer), 0); //MSG_WAITALL MSG_DONTWAIT MSG_PEEK MSG_TRUNC
@@ -156,8 +159,11 @@ void Server::readData(int fd)
 	else
 	{
 		buffer[bytes] = '\0';
-		std::cout << "Buffer = " << buffer;
-		//Interpretation de la data ici
+		for (size_t i = 0; i < clients.size(); i++)
+		{
+			if (fd != clients[i].getFd())
+				send(clients[i].getFd(), buffer, sizeof(buffer), 0);
+		}
 	}
 }
 
