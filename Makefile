@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+         #
+#    By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/17 15:03:53 by bvaujour          #+#    #+#              #
-#    Updated: 2024/05/22 15:01:57 by bvaujour         ###   ########.fr        #
+#    Updated: 2024/05/24 14:31:37 by mablatie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ INCLUDE	= Irc.hpp
 
 OBJ_DIR	= ./obj/
 
-FILES	= main.cpp Server.cpp
+FILES	= main.cpp Server.cpp Client.cpp
 
 SRC		= $(addprefix $(SRC_DIR), $(FILES))
 
@@ -26,7 +26,7 @@ OBJ		= $(addprefix $(OBJ_DIR), $(FILES:.cpp=.o))
 
 CC		= c++
 
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -g
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp $(INCLUDE)
 	mkdir -p $(OBJ_DIR)

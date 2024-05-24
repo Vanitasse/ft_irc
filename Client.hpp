@@ -3,22 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vanitas <vanitas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:20:22 by vanitas           #+#    #+#             */
-/*   Updated: 2024/05/22 16:21:51 by vanitas          ###   ########.fr       */
+/*   Updated: 2024/05/24 16:51:43 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-
+#include <iostream>
 
 class Client
 {
 	private:
+		int nb;
+		int fd;
+		std::string ip_addr;
+		std::string username;
 	public:
 		Client();
 		Client(const Client &cpy);
 		~Client();
 		Client    &operator=(const Client &rhs);
+		
+		int getFd() const;
+		void setFd(int fd_input);
+		const std::string& getIp() const;
+		void setIp(int ip_input);
+		int getNb() const ;
+		void setNb(int nb_input);
+		const std::string& getUsername() const ;
+		void setUsername(std::string user_input);
+		
 };

@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:55:33 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/22 14:57:40 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/24 14:30:40 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 # include "Server.hpp"
+# include "Client.hpp"
