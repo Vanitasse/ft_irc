@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/05/24 18:27:19 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:35:52 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ Client& Client::operator=(const Client& rhs)
 	{
 		this->fd = rhs.getFd();
 		this->ip_addr = rhs.getIp();
+		this->username = rhs.getUsername();
+		this->channel = rhs.getChannel();
 	}
 	return *this;
 }
@@ -51,16 +53,6 @@ void Client::setIp(int ip_input)
 	this->ip_addr = ip_input;
 }
 
-int Client::getNb() const
-{
-	return this->nb;
-}
-
-void Client::setNb(int nb_input)
-{
-	this->nb = nb_input;
-}
-
 const std::string& Client::getUsername() const
 {
 	return this->username;
@@ -79,4 +71,14 @@ const std::string& Client::getChannel() const
 void Client::setChannel(std::string channel_input)
 {
 	this->username = channel_input;
+}
+
+const State& Client::getState() const
+{
+	return this->state;
+}
+
+void Client::setState(const State& state_input)
+{
+	this->state = state_input;
 }

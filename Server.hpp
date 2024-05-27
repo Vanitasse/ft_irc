@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:43:27 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/24 18:45:19 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/27 16:29:00 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,27 +29,25 @@
 class	Server
 {
 	public:
-		~Server();
-		Server(const std::string& port, const std::string& password);
-		void serverInit();
-		void serverExec();
-		static void signalHandler(int signum);
-		void closeFds();
-		std::vector<struct pollfd> poll_fds;
-		std::vector<Client> clients;
-		std::vector<Client> LOL;
-		std::vector<Client> DOTA;
-		void connectClient();
-		void readData(int fd);
-		void clearClient(int fd);
-		void PromptName(Client& cli);
-	private:
 		Server();
+		~Server();
 		Server(const Server& toCpy);
 		Server&	operator=(const Server& toCpy);
+		Server(const std::string& port, const std::string& password);
+	
+		void serverInit();
+		static void signalHandler(int signum);
+	
+	private:
 		int port;
 		std::string password;
-		int serv_sock_fd;
+		void serverExec();
+		void closeFds();
+		void connectClient();
+		void readData(Client& client);
+		void clearClient(int fd);
 		static bool signal;
-		
+		int serv_sock_fd;
+		std::vector<struct pollfd> poll_fds;
+		std::vector<Client> clients;
 };

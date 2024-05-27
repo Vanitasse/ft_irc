@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:12:38 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/24 17:02:10 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/27 12:48:20 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Server.hpp"
-#include "../Client.hpp"
-
+#include "../Irc.hpp"
 
 int	main(int ac, char **av)
 {
@@ -23,12 +21,11 @@ int	main(int ac, char **av)
 		{
 			signal(SIGINT, Server::signalHandler);
 			
-			// signal(SIGQUIT, Server::signalHandler());
+			signal(SIGQUIT, Server::signalHandler);
 			server.serverInit();
 		}
 		catch(const std::exception& e)
 		{
-			server.closeFds();
 			std::cerr << e.what() << '\n';
 		}
 	}
