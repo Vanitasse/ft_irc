@@ -6,25 +6,14 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:43:27 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/27 16:29:00 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/28 10:48:29 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-# include <iostream>
-# include <vector>
-# include <sys/socket.h> //-> for socket()
-# include <sys/types.h> //-> for socket() options
-# include <netinet/in.h> //-> for sockaddr_in
-# include <fcntl.h> //-> for fcntl()
-# include <unistd.h> //-> for close()
-# include <arpa/inet.h> //-> for inet_ntoa()
-# include <poll.h> //-> for poll()
-# include <csignal> //-> for signal()
-# include <string.h>
+# include "Irc.hpp"
 # include "Client.hpp"
-# include <sstream>
 
 class	Server
 {
@@ -35,19 +24,23 @@ class	Server
 		Server&	operator=(const Server& toCpy);
 		Server(const std::string& port, const std::string& password);
 	
-		void serverInit();
-		static void signalHandler(int signum);
+		void						serverInit();
+		static void					signalHandler(int signum);
 	
 	private:
-		int port;
-		std::string password;
-		void serverExec();
-		void closeFds();
-		void connectClient();
-		void readData(Client& client);
-		void clearClient(int fd);
-		static bool signal;
-		int serv_sock_fd;
-		std::vector<struct pollfd> poll_fds;
-		std::vector<Client> clients;
+		static bool					signal;
+
+		int							port;
+		std::string					password;
+	
+		void						serverExec();
+		void						closeFds();
+		void						connectClient();
+		void						readData(Client& client);
+		void						clearClient(int fd);
+
+		int							serv_sock_fd;
+	
+		std::vector<struct pollfd>	poll_fds;
+		std::vector<Client> 		clients;
 };

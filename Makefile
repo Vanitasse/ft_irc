@@ -6,7 +6,7 @@
 #    By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/17 15:03:53 by bvaujour          #+#    #+#              #
-#    Updated: 2024/05/27 15:01:41 by bvaujour         ###   ########.fr        #
+#    Updated: 2024/05/28 10:27:39 by bvaujour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ OBJ_DIR	=	./obj/
 
 FILES	=	main.cpp		\
 			Client.cpp		\
+			ClientCore.cpp	\
 			Server.cpp		\
 			ServerUtils.cpp	\
 			ServerCore.cpp

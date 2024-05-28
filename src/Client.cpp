@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/05/27 15:35:52 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/28 12:07:42 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ Client& Client::operator=(const Client& rhs)
 		this->ip_addr = rhs.getIp();
 		this->username = rhs.getUsername();
 		this->channel = rhs.getChannel();
+		this->state = rhs.getState();
 	}
 	return *this;
 }
@@ -63,6 +64,7 @@ void Client::setUsername(std::string user_input)
 	this->username = user_input;
 }
 
+
 const std::string& Client::getChannel() const
 {
 	return this->channel;
@@ -70,7 +72,7 @@ const std::string& Client::getChannel() const
 
 void Client::setChannel(std::string channel_input)
 {
-	this->username = channel_input;
+	this->channel = channel_input;
 }
 
 const State& Client::getState() const

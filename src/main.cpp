@@ -6,11 +6,12 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:12:38 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/27 12:48:20 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/28 10:09:24 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Irc.hpp"
+#include "../Server.hpp"
+#include "../Client.hpp"
 
 int	main(int ac, char **av)
 {

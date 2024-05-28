@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:45:42 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/27 16:32:43 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/28 12:07:13 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,27 @@ void Server::serverInit()
 	serverExec();
 }
 
+void Server::connectClient()
+{
+	Client client;
+	struct sockaddr_in sock_addr;
+	socklen_t len = sizeof(sock_addr);
+	struct pollfd		new_poll;
+
+	client.setState(LOGIN);
+	client.setChannel("general");
+	client.setFd(accept(this->serv_sock_fd, (struct sockaddr *)&sock_addr, &len));
+	if (client.getFd() == -1)
+		throw std::runtime_error("Client socket creation failed");
+	if (fcntl(client.getFd(), F_SETFL, O_NONBLOCK) == -1) //met l'option O_NONBLOCK pour faire une socket non bloquante
+		throw(std::runtime_error("set option (O_NONBLOCK) failed"));
+	new_poll.fd = client.getFd();
+	new_poll.events = POLLIN;
+	new_poll.revents = 0;
+	poll_fds.push_back(new_poll);
+	clients.push_back(client);
+	client.printPrompt("Enter your username : ");
+}
 
 void Server::serverExec()
 {
@@ -64,35 +85,9 @@ void Server::serverExec()
 	}
 }
 
-void Server::connectClient()
-{
-	Client client;
-	struct sockaddr_in sock_addr;
-	socklen_t len = sizeof(sock_addr);
-	struct pollfd		new_poll;
 
-	client.setState(LOGIN);
-	client.setChannel("general");
-	client.setFd(accept(this->serv_sock_fd, (struct sockaddr *)&sock_addr, &len));
-	if (client.getFd() == -1)
-		throw std::runtime_error("Client socket creation failed");
-	if (fcntl(client.getFd(), F_SETFL, O_NONBLOCK) == -1) //met l'option O_NONBLOCK pour faire une socket non bloquante
-		throw(std::runtime_error("set option (O_NONBLOCK) failed"));
-	new_poll.fd = client.getFd();
-	new_poll.events = POLLIN;
-	new_poll.revents = 0;
-	poll_fds.push_back(new_poll);
-	clients.push_back(client);
-	send(client.getFd(), "Enter your username : ", 23, 0);
-}
-
-// void	Server::Emoticon()
-// {
-	
-// }
 void	Server::readData(Client& client)
 {
-	std::string	input;
 	char buffer[1024];
 	memset(buffer, 0,1024);
 	ssize_t bytes;
@@ -103,36 +98,14 @@ void	Server::readData(Client& client)
 	else
 	{
 		buffer[bytes] = '\0';
-		input = buffer;
 		switch	(client.getState())
 		{
 			case	LOGIN:
-				if (input.length() > 0)
-					input[input.length() - 1] = '\0';
-				client.setUsername(input);
-				client.setState(PASSWORD);
-				send(client.getFd(), "Enter Server password : ", 25, 0);
-				return ;
+				return (client.loginRecv(buffer));
 			case	PASSWORD:
-				if (input == password + '\n')
-				{
-					send(client.getFd(), "Connected\n", 10, 0);
-					client.setState(CONNECTED);
-				}
-				else
-					send(client.getFd(), "Enter Server password : ", 25, 0);
-				return ;
+				return (client.passwordRecv(buffer, password));
 			case	CONNECTED:
-				for (std::vector<Client>::iterator it = clients.begin(); it < clients.end(); it++)
-				{
-					if (it->getFd() != client.getFd())
-					{
-						send(it->getFd(), client.getUsername().c_str(), client.getUsername().size(), 0);
-						send(it->getFd(), ": ", 2, 0);
-						send(it->getFd(), buffer, sizeof(buffer), 0);
-					}
-				}
-				return ;
+				return (client.connectedRecv(buffer, this->clients));
 		}
 	}
 }
