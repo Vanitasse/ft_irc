@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerCore.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:45:42 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 12:07:13 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/28 15:59:12 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,10 @@ void Server::serverInit()
 	new_poll.events = POLLIN; //le poll doit lire des infos;
 	new_poll.revents = 0; //0 events actuellement donc par defaut;
 	poll_fds.push_back(new_poll);
+	createChannel("#general", NULL);
 	serverExec();
 }
+
 
 void Server::connectClient()
 {
@@ -91,7 +93,7 @@ void	Server::readData(Client& client)
 	char buffer[1024];
 	memset(buffer, 0,1024);
 	ssize_t bytes;
-
+	
 	bytes = recv(client.getFd(), buffer, sizeof(buffer), 0); //MSG_WAITALL MSG_DONTWAIT MSG_PEEK MSG_TRUNC
 	if (bytes <= 0)
 		clearClient(client.getFd());
@@ -99,13 +101,85 @@ void	Server::readData(Client& client)
 	{
 		buffer[bytes] = '\0';
 		switch	(client.getState())
-		{
+		{	
 			case	LOGIN:
 				return (client.loginRecv(buffer));
 			case	PASSWORD:
 				return (client.passwordRecv(buffer, password));
 			case	CONNECTED:
-				return (client.connectedRecv(buffer, this->clients));
+			{
+				if(handleCommands(buffer, client))
+					return (client.connectedRecv(buffer, this->clients));
+			}
 		}
 	}
+}
+
+
+int	Server::handleCommands(std::string buffer, Client& client)
+{
+	if (buffer.find("/JOIN", 0) != buffer.npos)
+	{
+		this->JOIN(buffer, client);
+		return 0;
+	}
+	else if (buffer.find("/KICK", 0) != buffer.npos)
+		return 0;
+	else if (buffer.find("/INVITE", 0) != buffer.npos)
+		return 0;
+	else if (buffer.find("/TOPIC", 0) != buffer.npos)
+		return 0;
+	else if (buffer.find("/MODE", 0) != buffer.npos)
+		return 0;
+	return 1;
+}
+
+void	Server::JOIN(std::string buffer, Client& client)
+{
+	if (buffer.length() > 0)
+		buffer[buffer.length() - 1] = '\0';
+	if (buffer.find('#', 6) != buffer.npos)
+	{
+		for (size_t i = 0; i < clients.size(); i++)
+		{
+			if (clients[i].getChannel() == buffer.substr(7, buffer.size() - 1))
+			{
+				client.setChannel(clients[i].getChannel());
+				client.printPrompt(std::string(GREEN) + "#" + client.getChannel() + ": " + RESET);
+				return ;
+			}
+			// std::cout << buffer.substr(7, clients[i].getChannel().size() - 1);
+		}
+		std::cout << "Creating channel";
+		createChannel(buffer.substr(7, buffer.size()), &client);
+		client.printPrompt(std::string(GREEN) + "#" + client.getChannel() + ": " + RESET);
+	}
+	
+}
+
+void Server::createChannel(std::string input, Client *client)
+{
+	Channel new_channel;
+	new_channel.setName(input);
+	if (client != NULL)
+	{
+		client->setChannel(input);
+		new_channel.setOperateur(client);
+	}
+	channels.push_back(new_channel);
+}
+
+void	Server::INVITE()
+{
+
+}
+
+void	Server::KICK()
+{
+	
+}
+
+void	Server::MODE()
+{
+	
 }

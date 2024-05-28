@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+         #
+#    By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/17 15:03:53 by bvaujour          #+#    #+#              #
-#    Updated: 2024/05/28 10:27:39 by bvaujour         ###   ########.fr        #
+#    Updated: 2024/05/28 15:20:26 by mablatie         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME	=	ircserv
 
 SRC_DIR	=	./src/
 
-INCLUDE	=	Irc.hpp Client.hpp Server.hpp
+INCLUDE	=	Irc.hpp Client.hpp Server.hpp Channel.hpp
 
 OBJ_DIR	=	./obj/
 
@@ -23,7 +23,8 @@ FILES	=	main.cpp		\
 			ClientCore.cpp	\
 			Server.cpp		\
 			ServerUtils.cpp	\
-			ServerCore.cpp
+			ServerCore.cpp	\
+			Channel.cpp		\
 
 SRC		= $(addprefix $(SRC_DIR), $(FILES))
 

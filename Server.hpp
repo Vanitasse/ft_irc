@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:43:27 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 10:48:29 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/28 15:48:06 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 # include "Irc.hpp"
 # include "Client.hpp"
+# include "Channel.hpp"
 
 class	Server
 {
@@ -25,7 +26,15 @@ class	Server
 		Server(const std::string& port, const std::string& password);
 	
 		void						serverInit();
+		void						createChannel(std::string input, Client *client);
 		static void					signalHandler(int signum);
+
+		int		handleCommands(std::string buffer, Client& client);
+		void	JOIN(std::string buffer, Client& client);
+		void	KICK();
+		void	INVITE();
+		void	TOPIC();
+		void	MODE();
 	
 	private:
 		static bool					signal;
@@ -43,4 +52,5 @@ class	Server
 	
 		std::vector<struct pollfd>	poll_fds;
 		std::vector<Client> 		clients;
+		std::vector<Channel>		channels;
 };

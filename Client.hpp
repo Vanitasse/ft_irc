@@ -6,14 +6,14 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:20:22 by vanitas           #+#    #+#             */
-/*   Updated: 2024/05/28 13:54:08 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:16:00 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 # include "Irc.hpp"
-
+# include "Channel.hpp"
 
 class	Client
 {
@@ -48,6 +48,10 @@ class	Client
 		void	loginRecv(std::string input);
 		void	passwordRecv(std::string input, const std::string& password);
 		void	connectedRecv(std::string input, std::vector<Client> clients);
+		void	smiley(std::string& input);
 
 		void	printPrompt(std::string prompt);
+		
+
+
 };
