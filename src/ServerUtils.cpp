@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerUtils.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 14:28:29 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 10:30:07 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:21:43 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,15 @@ void Server::clearClient(int fd)
 		}
 	}
 	close(fd);	
+}
+
+bool	Server::checkPermissions(Client& client)
+{
+	for (size_t i = 1; i < clients.size(); i++)
+	{
+		if (client.getChannel() == channels[i].getName())
+			if (channels[i].getOperateur()->getUsername() == client.getUsername())
+				return true;
+	}
+	return false;
 }

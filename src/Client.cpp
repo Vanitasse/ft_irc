@@ -6,7 +6,7 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/05/28 17:01:00 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:38:26 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@ Client::~Client() {}
 Client::Client(const Client& cpy)
 {
 	*this = cpy;
+	std::cout << GREEN << "Client copy constructor called" << std::endl;
 }
 
 Client& Client::operator=(const Client& rhs)
 {
+	std::cout << GREEN << "Client assignement operator called" << std::endl;
 	if (this != &rhs)
 	{
 		this->fd = rhs.getFd();

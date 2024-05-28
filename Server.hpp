@@ -6,7 +6,7 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:43:27 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 16:46:15 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:19:56 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,13 @@ class	Server
 
 		int		handleCommands(std::string buffer, Client& client);
 		void	JOIN(std::string buffer, Client& client);
-		void	KICK(std::string buffer, Client& client);
+		void	KICK(std::string buffer);
 		void	INVITE();
 		void	TOPIC();
 		void	MODE();
+
+		bool	checkPermissions(Client& client);
+		
 	
 	private:
 		static bool					signal;

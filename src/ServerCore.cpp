@@ -6,7 +6,7 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:45:42 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 17:01:05 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:37:19 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,44 +144,50 @@ void Server::createChannel(std::string input, Client *client)
 
 int	Server::handleCommands(std::string buffer, Client& client)
 {
-	if (buffer.find("/JOIN", 0) != buffer.npos)
+    std::istringstream    iss(buffer);
+    std::pair<std::string, std::string> cmd;
+
+    std::getline(iss, cmd.first, ' ');
+    std::getline(iss, cmd.second, ' ');
+	cmd.second[cmd.second.size() - 1] = '\0';
+
+	if (cmd.first == "/JOIN")
 	{
-		this->JOIN(buffer, client);
+		this->JOIN(cmd.second, client);
 		return 0;
 	}
-	else if (buffer.find("/KICK", 0) != buffer.npos)
+	if (checkPermissions(client))
 	{
-		this->KICK(buffer, client);
-		return 0;
+		if (cmd.first == "/KICK")
+		{
+			this->KICK(cmd.second);
+			client.printPrompt(std::string(GREEN) + client.getChannel() + ": " + RESET);
+			return 0;
+		}
+		else if (buffer.find("/INVITE", 0) != buffer.npos)
+			return 0;
+		else if (buffer.find("/TOPIC", 0) != buffer.npos)
+			return 0;
+		else if (buffer.find("/MODE", 0) != buffer.npos)
+			return 0;
 	}
-	else if (buffer.find("/INVITE", 0) != buffer.npos)
-		return 0;
-	else if (buffer.find("/TOPIC", 0) != buffer.npos)
-		return 0;
-	else if (buffer.find("/MODE", 0) != buffer.npos)
-		return 0;
 	return 1;
 }
 
-void	Server::JOIN(std::string buffer, Client& client)
+void	Server::JOIN(std::string arg, Client& client)
 {
-	size_t pos;
-
-	if (buffer.length() > 0)
-		buffer[buffer.length() - 1] = '\0';
-	pos = buffer.find('#', 6);
-	if (pos != buffer.npos)
+	if (arg[0] == '#')
 	{
 		for (size_t i = 0; i < clients.size(); i++)
 		{
-			if (clients[i].getChannel() == buffer.substr(pos, buffer.size() - 1))
+			if (clients[i].getChannel() == arg)
 			{
 				client.setChannel(clients[i].getChannel());
 				client.printPrompt(std::string(GREEN) + client.getChannel() + ": " + RESET);
 				return ;
 			}
 		}
-		createChannel(buffer.substr(pos, buffer.size()), &client);
+		createChannel(arg, &client);
 		client.printPrompt(std::string(GREEN) + client.getChannel() + ": " + RESET);
 	}
 }
@@ -191,22 +197,18 @@ void	Server::INVITE()
 
 }
 
-void	Server::KICK(std::string buffer, Client& client)
+void	Server::KICK(std::string arg)
 {
-	for (size_t i = 1; i < channels.size(); i++)
+	for (size_t i = 0; i < clients.size(); i++)
 	{
-		if (client.getChannel() == channels[i].getName())
+		if (arg == clients[i].getUsername())
 		{
-			std::cout << "1 OUI" << std::endl;
-			if (channels[i].getOperateur()->getUsername() == client.getUsername())
-			{
-				
-				
-			}
+			clients[i].printPrompt(std::string(RED) + "\rYou have been kicked from channel " + clients[i].getChannel() + "!\n" + RESET);
+			clients[i].setChannel("#general");
 			
+			clients[i].printPrompt(std::string(GREEN) + clients[i].getChannel() + ": " + RESET);
 		}
 	}
-	(void)buffer;
 }
 
 void	Server::MODE()
