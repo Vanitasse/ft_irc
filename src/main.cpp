@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:12:38 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 10:09:24 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:46:31 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	main(int ac, char **av)
 		try
 		{
 			signal(SIGINT, Server::signalHandler);
-			
 			signal(SIGQUIT, Server::signalHandler);
 			server.serverInit();
 		}
