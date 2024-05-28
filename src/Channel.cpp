@@ -6,7 +6,7 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:36:16 by mablatie          #+#    #+#             */
-/*   Updated: 2024/05/28 15:29:24 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:56:49 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ Channel& Channel::operator=(const Channel& rhs)
 	if (this != &rhs)
 	{
 		this->name = rhs.getName();
-		// this->operateur = rhs.getOperateur();
+		this->operateur = rhs.getOperateur();
 	}
 	return *this;
 }
@@ -43,7 +43,7 @@ void Channel::setName(std::string &input)
 	this->name = input;
 }
 
-Client* Channel::getOperateur()
+Client* Channel::getOperateur() const
 {
 	return this->operateur;
 }
@@ -52,3 +52,8 @@ void Channel::setOperateur(Client* client)
 {
 	this->operateur = client;
 }
+
+// std::vector<Client*> Channel::getChanClients() const
+// {
+// 	return this->chan_clients;
+// }

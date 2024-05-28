@@ -6,7 +6,7 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:45:42 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 15:59:12 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:01:05 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void Server::connectClient()
 	struct pollfd		new_poll;
 
 	client.setState(LOGIN);
-	client.setChannel("general");
+	client.setChannel("#general");
 	client.setFd(accept(this->serv_sock_fd, (struct sockaddr *)&sock_addr, &len));
 	if (client.getFd() == -1)
 		throw std::runtime_error("Client socket creation failed");
@@ -116,6 +116,32 @@ void	Server::readData(Client& client)
 }
 
 
+
+void Server::createChannel(std::string input, Client *client)
+{
+	Channel new_channel;
+	new_channel.setName(input);
+	if (client != NULL)
+	{
+		client->setChannel(input);
+		new_channel.setOperateur(client);
+		std::cout << "Operator = " << new_channel.getOperateur()->getUsername() << std::endl;
+	}
+	channels.push_back(new_channel);
+}
+
+// void Server::pushToChannel(Client& client)
+// {
+// 	for (size_t i = 0; i < channels.size(); i++)
+// 	{
+// 		if (client.getChannel() == channels[i].getName())
+// 		{
+// 			channels[i].getChanClients().push_back(&client);
+// 		}
+// 	}
+	
+// }
+
 int	Server::handleCommands(std::string buffer, Client& client)
 {
 	if (buffer.find("/JOIN", 0) != buffer.npos)
@@ -124,7 +150,10 @@ int	Server::handleCommands(std::string buffer, Client& client)
 		return 0;
 	}
 	else if (buffer.find("/KICK", 0) != buffer.npos)
+	{
+		this->KICK(buffer, client);
 		return 0;
+	}
 	else if (buffer.find("/INVITE", 0) != buffer.npos)
 		return 0;
 	else if (buffer.find("/TOPIC", 0) != buffer.npos)
@@ -136,37 +165,25 @@ int	Server::handleCommands(std::string buffer, Client& client)
 
 void	Server::JOIN(std::string buffer, Client& client)
 {
+	size_t pos;
+
 	if (buffer.length() > 0)
 		buffer[buffer.length() - 1] = '\0';
-	if (buffer.find('#', 6) != buffer.npos)
+	pos = buffer.find('#', 6);
+	if (pos != buffer.npos)
 	{
 		for (size_t i = 0; i < clients.size(); i++)
 		{
-			if (clients[i].getChannel() == buffer.substr(7, buffer.size() - 1))
+			if (clients[i].getChannel() == buffer.substr(pos, buffer.size() - 1))
 			{
 				client.setChannel(clients[i].getChannel());
-				client.printPrompt(std::string(GREEN) + "#" + client.getChannel() + ": " + RESET);
+				client.printPrompt(std::string(GREEN) + client.getChannel() + ": " + RESET);
 				return ;
 			}
-			// std::cout << buffer.substr(7, clients[i].getChannel().size() - 1);
 		}
-		std::cout << "Creating channel";
-		createChannel(buffer.substr(7, buffer.size()), &client);
-		client.printPrompt(std::string(GREEN) + "#" + client.getChannel() + ": " + RESET);
+		createChannel(buffer.substr(pos, buffer.size()), &client);
+		client.printPrompt(std::string(GREEN) + client.getChannel() + ": " + RESET);
 	}
-	
-}
-
-void Server::createChannel(std::string input, Client *client)
-{
-	Channel new_channel;
-	new_channel.setName(input);
-	if (client != NULL)
-	{
-		client->setChannel(input);
-		new_channel.setOperateur(client);
-	}
-	channels.push_back(new_channel);
 }
 
 void	Server::INVITE()
@@ -174,9 +191,22 @@ void	Server::INVITE()
 
 }
 
-void	Server::KICK()
+void	Server::KICK(std::string buffer, Client& client)
 {
-	
+	for (size_t i = 1; i < channels.size(); i++)
+	{
+		if (client.getChannel() == channels[i].getName())
+		{
+			std::cout << "1 OUI" << std::endl;
+			if (channels[i].getOperateur()->getUsername() == client.getUsername())
+			{
+				
+				
+			}
+			
+		}
+	}
+	(void)buffer;
 }
 
 void	Server::MODE()
