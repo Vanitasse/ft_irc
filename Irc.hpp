@@ -6,7 +6,7 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:55:33 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 16:16:23 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:51:13 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@
 
 // Smiley
 # define SMILE "\U0001f604"
+
+//ANSI
+
+# define CLEAR "\033[2J\033[H"
 
 // Couleurs de texte
 #define RESET       "\033[0m"

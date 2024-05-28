@@ -6,7 +6,7 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:45:42 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 17:37:19 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:51:29 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,11 @@ int	Server::handleCommands(std::string buffer, Client& client)
 			return 0;
 		}
 		else if (buffer.find("/INVITE", 0) != buffer.npos)
+		{
+			this->INVITE(cmd.second, client.getChannel());
+			client.printPrompt(std::string(GREEN) + client.getChannel() + ": " + RESET);
 			return 0;
+		}
 		else if (buffer.find("/TOPIC", 0) != buffer.npos)
 			return 0;
 		else if (buffer.find("/MODE", 0) != buffer.npos)
@@ -192,9 +196,17 @@ void	Server::JOIN(std::string arg, Client& client)
 	}
 }
 
-void	Server::INVITE()
+void	Server::INVITE(std::string arg, std::string channel)
 {
-
+	for (size_t i = 0; i < clients.size(); i++)
+	{
+		if (arg == clients[i].getUsername())
+		{
+			clients[i].printPrompt(std::string(GREEN) + "\rYou have been invited to " + channel + "!\n" + RESET);
+			clients[i].setChannel(channel);
+			clients[i].printPrompt(std::string(GREEN) + clients[i].getChannel() + ": " + RESET);
+		}
+	}
 }
 
 void	Server::KICK(std::string arg)
@@ -205,7 +217,7 @@ void	Server::KICK(std::string arg)
 		{
 			clients[i].printPrompt(std::string(RED) + "\rYou have been kicked from channel " + clients[i].getChannel() + "!\n" + RESET);
 			clients[i].setChannel("#general");
-			
+			clients[i].printPrompt(CLEAR);
 			clients[i].printPrompt(std::string(GREEN) + clients[i].getChannel() + ": " + RESET);
 		}
 	}
