@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerCore.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:45:42 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 17:51:29 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/30 17:03:53 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void Server::serverInit()
 	new_poll.events = POLLIN; //le poll doit lire des infos;
 	new_poll.revents = 0; //0 events actuellement donc par defaut;
 	poll_fds.push_back(new_poll);
-	createChannel("#general", NULL);
 	serverExec();
 }
 
@@ -53,7 +52,8 @@ void Server::connectClient()
 	socklen_t len = sizeof(sock_addr);
 	struct pollfd		new_poll;
 
-	client.setState(LOGIN);
+	std::cout << "Enter Connect Client" << std::endl;
+	client.setState(CONNECTED);
 	client.setChannel("#general");
 	client.setFd(accept(this->serv_sock_fd, (struct sockaddr *)&sock_addr, &len));
 	if (client.getFd() == -1)
@@ -65,7 +65,11 @@ void Server::connectClient()
 	new_poll.revents = 0;
 	poll_fds.push_back(new_poll);
 	clients.push_back(client);
-	client.printPrompt("Enter your username : ");
+	const char *welcome_msg = ":chuck 001 user :Welcome to the IRC server\r\n";
+	char buffer[1024] = {0};
+	read(client.getFd(), buffer, 1024);
+    std::cout << buffer << std::endl;
+    send(client.getFd(), welcome_msg, strlen(welcome_msg), 0);
 }
 
 void Server::serverExec()
@@ -93,26 +97,11 @@ void	Server::readData(Client& client)
 	char buffer[1024];
 	memset(buffer, 0,1024);
 	ssize_t bytes;
-	
+	std::cout << "Enter Readdata" << std::endl;
 	bytes = recv(client.getFd(), buffer, sizeof(buffer), 0); //MSG_WAITALL MSG_DONTWAIT MSG_PEEK MSG_TRUNC
 	if (bytes <= 0)
 		clearClient(client.getFd());
-	else
-	{
-		buffer[bytes] = '\0';
-		switch	(client.getState())
-		{	
-			case	LOGIN:
-				return (client.loginRecv(buffer));
-			case	PASSWORD:
-				return (client.passwordRecv(buffer, password));
-			case	CONNECTED:
-			{
-				if(handleCommands(buffer, client))
-					return (client.connectedRecv(buffer, this->clients));
-			}
-		}
-	}
+	client.connectedRecv(buffer, this->clients);
 }
 
 

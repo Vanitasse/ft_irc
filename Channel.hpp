@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 14:33:24 by mablatie          #+#    #+#             */
-/*   Updated: 2024/05/29 10:11:31 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:56:45 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ class Channel
 	private:
 		std::string	name;
 		Client 		*operateur;
+		// std::vector<Client*> chan_clients;
 	public:
 		Channel();
 		Channel(const Channel &cpy);
@@ -31,4 +32,5 @@ class Channel
 		void				setName(std::string &input);
 		Client*				getOperateur() const;
 		void				setOperateur(Client* client);
+		// std::vector<Client*> getChanClients() const;
 };

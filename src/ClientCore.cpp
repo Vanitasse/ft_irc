@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ClientCore.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 10:03:14 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 16:58:24 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/30 17:28:32 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,16 @@ void	Client::passwordRecv(std::string input, const std::string& password)
 
 void    Client::connectedRecv(std::string input, std::vector<Client> &clients)
 {
-    smiley(input);
+    // smiley(input);
     for (std::vector<Client>::iterator it = clients.begin(); it < clients.end(); it++)
     {
-        if (it->getFd() != fd && it->getState() == CONNECTED && this->channel == it->channel)
+        if (it->getFd() != fd && it->getState() == CONNECTED)
         {
-            it->printPrompt("\r" + std::string(GREEN) + this->channel + "->" + BLUE + username + ": " + RESET + input.c_str());
-            it->printPrompt(std::string(GREEN) + it->getChannel() + ": " + RESET);
+			std::cout << input.c_str() << std::endl;
+            // it->printPrompt(std::string(":chuck 001 user:") + input.c_str());
+            it->printPrompt(input.c_str());
         }
     }
-    printPrompt(GREEN + this->channel + ": " + RESET);
 }
 
 void    Client::smiley(std::string& input)

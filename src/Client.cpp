@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/05/28 17:38:26 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/30 16:51:47 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ Client::~Client() {}
 Client::Client(const Client& cpy)
 {
 	*this = cpy;
-	std::cout << GREEN << "Client copy constructor called" << std::endl;
+	std::cout << GREEN << "Client copy constructor called" << RESET << std::endl;
 }
 
 Client& Client::operator=(const Client& rhs)
 {
-	std::cout << GREEN << "Client assignement operator called" << std::endl;
+	std::cout << GREEN << "Client assignement operator called" << RESET << std::endl;
 	if (this != &rhs)
 	{
 		this->fd = rhs.getFd();
