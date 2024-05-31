@@ -3,57 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:43:27 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 17:47:13 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/31 16:35:44 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+# include <iostream>
 # include "Irc.hpp"
-# include "Client.hpp"
-# include "Channel.hpp"
+# include "IrssiClient.hpp"
+# include "NcClient.hpp"
 
 class	Server
 {
+	private:
+		const std::string			_password;
+		std::vector<struct pollfd>	_pfds;
+		std::vector<Client*>		_Clients;
+		void						serverExec();
+		void						connectClient();
+		void						clearClient(Client& client);
+		static bool					_signal;
+		void						readData(Client& client);
+		int							ServerRecv(int fd);
+		void						ServerSend(Client& Sender);
+		void						addIrssiClient(int fd);
+		void						addNcClient(int fd);
+
+		std::string					_strBuf;
 	public:
 		Server();
 		~Server();
+		Server(const int& port, const std::string password);
 		Server(const Server& toCpy);
 		Server&	operator=(const Server& toCpy);
-		Server(const std::string& port, const std::string& password);
-	
-		void						serverInit();
-		void						createChannel(std::string input, Client *client);
 		static void					signalHandler(int signum);
-
-		int		handleCommands(std::string buffer, Client& client);
-		void	JOIN(std::string buffer, Client& client);
-		void	KICK(std::string buffer);
-		void	INVITE(std::string arg, std::string channel);
-		void	TOPIC();
-		void	MODE();
-
-		bool	checkPermissions(Client& client);
-		
-	
-	private:
-		static bool					signal;
-
-		int							port;
-		std::string					password;
-	
-		void						serverExec();
-		void						closeFds();
-		void						connectClient();
-		void						readData(Client& client);
-		void						clearClient(int fd);
-
-		int							serv_sock_fd;
-	
-		std::vector<struct pollfd>	poll_fds;
-		std::vector<Client> 		clients;
-		std::vector<Channel>		channels;
 };

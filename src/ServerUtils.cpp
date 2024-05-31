@@ -6,61 +6,75 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 14:28:29 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/30 14:46:49 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/31 17:55:28 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Server.hpp"
 
-void Server::closeFds()
+int	Server::ServerRecv(int fd)
 {
-	for (size_t i = 0; i < clients.size(); i++)
+	char buffer[1024] = {0};
+	ssize_t bytes;
+
+	bytes = recv(fd, buffer, sizeof(buffer), 0); //MSG_WAITALL MSG_DONTWAIT MSG_PEEK MSG_TRUNC
+	if (bytes <= 0)
 	{
-		std::cout << "Client " << clients[i].getFd() << " disconnected." << std::endl;
-		close(clients[i].getFd());	
+		std::cout << "Sortie" <<std::endl;
+		return (0);
 	}
-	if (this->serv_sock_fd != -1)
-		close(serv_sock_fd);
+	buffer[bytes] = '\0';
+	_strBuf = buffer;
+	int	i(0);
+
+	std::cout << CYAN << "[Server receive]:";
+	while (_strBuf[i])
+	{
+		if (_strBuf[i] == '\r')
+			std::cout << "\\r";
+		else if (_strBuf[i] == '\n')
+			std::cout << "\\n";
+		else
+			std::cout << _strBuf[i];
+		i++;
+	}
+	std::cout << RESET << std::endl;
+	return (1);
 }
 
+void	Server::ServerSend(Client& Sender)
+{
+	std::vector<Client*>::iterator	it;
+	it = _Clients.begin();
+	while (it != _Clients.end())
+	{
+		if (*it != &Sender)
+			send((*it)->getFd(), _strBuf.c_str(), _strBuf.size(), 0);
+		it++;
+	}
+}
+
+void	Server::clearClient(Client& client)
+{
+	std::vector<Client*>::iterator			it;
+	std::vector<struct pollfd>::iterator	it2;
+
+	std::cout << "Entering ClearClient" << std::endl;
+	it2 = _pfds.begin();
+	while (it2 != _pfds.end() && it2->fd != client.getFd())
+		it2++;
+	_pfds.erase(it2);
+	it = _Clients.begin();
+	while (it != _Clients.end() && (*it)->getFd() != client.getFd())
+		it++;
+	close((*it)->getFd());
+	delete *it;
+	_Clients.erase(it);
+}
 
 void Server::signalHandler(int signum) //static
 {
 	(void)signum;
 	std::cout << "SIGNAL RECEIVED" << std::endl;
-	Server::signal = true;
-}
-
-void Server::clearClient(int fd)
-{
-	std::cout << "Entering clearClient" << std::endl;
-	for (std::vector<struct pollfd>::iterator it = poll_fds.begin(); it < poll_fds.end(); it++)
-	{	
-		if (fd == it->fd)
-		{
-			poll_fds.erase(it);
-			break;
-		}
-	}
-	for (std::vector<Client>::iterator it = clients.begin(); it < clients.end(); it++)
-	{
-		if (fd == it->getFd())
-		{
-			std::cout << "Client " << it->getUsername() << " disconnected" << std::endl;
-			clients.erase(it);
-			break;
-		}
-	}
-	close(fd);	
-}
-
-bool	Server::checkPermissions(Client& client)
-{
-	for (size_t i = 1; i < clients.size(); i++)
-	{
-		if (client.getChannel() == channels[i].getName())
-			if (channels[i].getOperateur()->getUsername() == client.getUsername())
-				return true;
-	}
-	return false;
+	Server::_signal = true;
 }

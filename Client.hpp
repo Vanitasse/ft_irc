@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:20:22 by vanitas           #+#    #+#             */
-/*   Updated: 2024/05/28 16:58:32 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/05/31 18:05:50 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,41 +17,39 @@
 
 class	Client
 {
-	private:
-		int			fd;
-		std::string	channel;
-		std::string	ip_addr;
-		std::string	username;
-		State		state;
+	protected:
+		int			_fd;
+		std::string	_channel;
+		std::string	_pass;
+		std::string	_ip_addr;
+		std::string	_username;
+		std::string	_nickname;
+		State		_state;
 	
 	public:
 		Client();
 		Client(const Client &cpy);
 		Client	&operator=(const Client &rhs);
-		~Client();
+		virtual ~Client();
 	
-		int		getFd() const;
-		void	setFd(int fd_input);
+		int				getFd() const;
+		void			setFd(int fd_input);
 	
-		const	std::string& getIp() const;
-		void	setIp(int ip_input);
+		const			std::string& getIp() const;
+		void			setIp(int ip_input);
 	
-		const	std::string& getUsername() const;
-		void	setUsername(std::string username_input);
+		const			std::string& getUsername() const;
+		void			setUsername(std::string username_input);
 	
-		const	std::string& getChannel() const;
-		void	setChannel(std::string channel_input);
+		const			std::string& getChannel() const;
+		void			setChannel(std::string channel_input);
 	
-		const	State& getState() const;
-		void	setState(const State& state_input);
-		
-		void	loginRecv(std::string input);
-		void	passwordRecv(std::string input, const std::string& password);
-		void	connectedRecv(std::string input, std::vector<Client> &clients);
-		void	smiley(std::string& input);
+		const			State& getState() const;
+		void			setState(const State& state_input);
 
-		void	printPrompt(std::string prompt);
-		
+		const			std::string& getPass() const;
+		void			setPass(std::string pass_input);
 
-
+		void			smiley(std::string& input);
+		virtual void	parseInput(std::string input) = 0;
 };

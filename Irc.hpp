@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:55:33 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/28 18:03:18 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/05/31 00:25:25 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <csignal> //-> for signal()
 # include <string.h>
 # include <sstream>
+# include <algorithm> 
 
 // Smiley
 # define SMILE "\U0001f604"
