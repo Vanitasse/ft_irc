@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:12:38 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/31 17:21:47 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 02:37:49 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@ int	main(int ac, char **av)
 {
 	if (ac == 3)
 	{
+		Server server(std::stoi(av[1]), av[2]);
 		try
 		{
 			signal(SIGINT, Server::signalHandler);
 			signal(SIGQUIT, Server::signalHandler);
-			Server server(std::stoi(av[1]), av[2]);
+			server.run();
 		}
 		catch(const std::exception& e)
 		{

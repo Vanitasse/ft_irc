@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:20:22 by vanitas           #+#    #+#             */
-/*   Updated: 2024/05/31 18:05:50 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 01:26:00 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,13 @@ class	Client
 	protected:
 		int			_fd;
 		std::string	_channel;
-		std::string	_pass;
 		std::string	_ip_addr;
-		std::string	_username;
-		std::string	_nickname;
 		State		_state;
+
+		std::string	_username;
+		std::string	_nick;
+		std::string	_realname;
+		std::string	_pass;
 	
 	public:
 		Client();
@@ -50,6 +52,15 @@ class	Client
 		const			std::string& getPass() const;
 		void			setPass(std::string pass_input);
 
+		const			std::string& getNick() const;
+		void			setNick(std::string nick_input);
+		
+		const			std::string& getRealname() const;
+		void			setRealname(std::string realname_input);
+
 		void			smiley(std::string& input);
-		virtual void	parseInput(std::string input) = 0;
+
+		static std::vector<std::string>	splitInput(std::string input);
+		
+		virtual void					ParseAndRespond(std::string input) = 0;
 };

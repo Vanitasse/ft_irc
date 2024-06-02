@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:24:57 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/31 16:58:54 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 01:28:44 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,5 @@ class	NcClient : public Client
 		NcClient(const NcClient &cpy);
 		NcClient	&operator=(const NcClient &rhs);
 		~NcClient();
-		void	parseInput(std::string input);
+		void	ParseAndRespond(std::string input);
 };

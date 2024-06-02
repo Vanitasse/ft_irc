@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 23:14:13 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/31 17:26:02 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 02:33:22 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ Server::Server()
 
 Server::~Server()
 {
-	std::vector<Client*>::iterator			it;
-	std::cout << _Clients.size() << std::endl;
+	std::vector<Client*>::iterator	it;
+
 	it = _Clients.begin();
 	while (it != _Clients.end())
 	{
@@ -31,9 +31,10 @@ Server::~Server()
 		it++;
 	}
 	close (_pfds[0].fd);
+	std::cout << RED << "Server destructed" << RESET << std::endl;
 }
 
-Server::Server(const Server& toCpy)
+Server::Server(const Server& toCpy) : _password(toCpy._password)
 {
 	*this = toCpy;
 }
@@ -42,38 +43,42 @@ Server&	Server::operator=(const Server& toCpy)
 {
 	if (this != &toCpy)
 	{
-		
+		_Clients = toCpy._Clients;
+		_pfds = toCpy._pfds;
+		_port = toCpy._port;
 	}
 	return (*this);
 }
 
-Server::Server(const int& port, const std::string password_input) : _password(password_input)
+Server::Server(const int& port, const std::string password_input) : _password(password_input), _port(port)
+{
+	
+}
+
+void	Server::serverInit()
 {
 	struct pollfd		new_poll= {};
 	struct sockaddr_in	sock_addr; //structure pour l'adresse internet
 	int uh = 1; // necessaire car parametre opt_value de setsockopt() = const void *
 
 	sock_addr.sin_family = AF_INET; //on set le type en IPV4
-	sock_addr.sin_port = htons(port); // converti le port(int) en big endian (pour le network byte order)
+	sock_addr.sin_port = htons(_port); // converti le port(int) en big endian (pour le network byte order)
 	sock_addr.sin_addr.s_addr = INADDR_ANY; // IMADDR_ANY = n'importe quel adresse donc full local
-
-	new_poll.fd = socket(AF_INET, SOCK_STREAM, 0); //socket creation
-	if (new_poll.fd == -1)
-		throw(std::runtime_error("socket creation failed"));
-
-	if (setsockopt(new_poll.fd, SOL_SOCKET, SO_REUSEADDR, &uh, sizeof(uh)) == - 1) //met l'option SO_REUSEADDR sur la socket = permet de reutiliser l'addresse
-		throw(std::runtime_error("set option (SO_REUSEADDR) failed"));
-	if (fcntl(new_poll.fd, F_SETFL, O_NONBLOCK) == -1) //met l'option O_NONBLOCK pour faire une socket non bloquante
-		throw(std::runtime_error("set option (O_NONBLOCK) failed"));
-	if (bind(new_poll.fd, (struct sockaddr*) &sock_addr, sizeof(sock_addr)) == -1) //lie la socket a l'adresse reutilisable (obliger de cast pour avoir toute les infos)
-		throw(std::runtime_error("socket binding failed"));
-	if (listen(new_poll.fd, SOMAXCONN) == -1) //la socket devient passive = c'est une socket serveur qui attend des connections (SOMAXCONN = max_connections autorise)
-		throw(std::runtime_error("listen() failed"));
 
 	new_poll.events = POLLIN; //le poll doit lire des infos;
 	new_poll.revents = 0; //0 events actuellement donc par defaut;
+	new_poll.fd = socket(AF_INET, SOCK_STREAM, 0); //socket creation
+	if (new_poll.fd == -1)
+		throw(std::runtime_error("socket creation failed"));
 	_pfds.push_back(new_poll); 
-	serverExec();
+	if (setsockopt(new_poll.fd, SOL_SOCKET, SO_REUSEADDR, &uh, sizeof(uh)) == - 1) //met l'option SO_REUSEADDR sur la socket = permet de reutiliser l'addresse
+		throw(std::runtime_error("set option (SO_REUSEADDR) failed"));
+	if (fcntl(new_poll.fd, F_SETFL, O_NONBLOCK) == -1) //met l'option O_NONBLOCK pour faire une socket non bloquante
+		throw(std::runtime_error("set option (O_NONBLOCK) failed")); //lie la socket a l'adresse reutilisable (obliger de cast pour avoir toute les infos)
+	if (bind(new_poll.fd, (struct sockaddr*) &sock_addr, sizeof(sock_addr)) == -1)
+		throw(std::runtime_error("socket binding failed"));
+	if (listen(new_poll.fd, SOMAXCONN) == -1) //la socket devient passive = c'est une socket serveur qui attend des connections (SOMAXCONN = max_connections autorise)
+		throw(std::runtime_error("listen() failed"));
 }
 
 void Server::serverExec()
@@ -95,25 +100,46 @@ void Server::serverExec()
 	}
 }
 
+void	Server::run()
+{
+	serverInit();
+	serverExec();
+}
+
+
+
+
+
+
+
 void	Server::addIrssiClient(int fd)
 {
-	Client	*client = new IrssiClient();
+	Client	*client = new IrssiClient(_strBuf, fd);
+	std::string welcome_msg;
 
-	std::cout << "irssi Client connected" << std::endl;
-	const char *welcome_msg = ":localhost 001 user :Welcome to the IRC server\r\n";
-	send(fd, welcome_msg, strlen(welcome_msg), 0);
-	client->setFd(fd);
 	_Clients.push_back(client);
+	if (client->getPass() != _password)
+	{
+		sendError(client->getFd(), "464", client->getNick(), "Password incorrect");
+		clearClient(*client);
+	}
+	else
+	{
+		std::cout << GREEN << "IRSSI client created" << RESET << std::endl;
+		welcome_msg = ":localhost 001 " + client->getNick() + " :Welcome to the IRC server\r\n";
+		send(fd, welcome_msg.c_str(), welcome_msg.size(), 0);
+	}
 }
 
 void	Server::addNcClient(int fd)
 {
 	Client	*client = new NcClient();
 
-	std::cout << "nc Client connected" << std::endl;
+	std::cout << GREEN << "nc client created" << RESET << std::endl;
 	client->setFd(fd);
 	_Clients.push_back(client);
 }
+
 void	Server::connectClient()
 {
 	struct sockaddr_in sock_addr;
@@ -129,11 +155,17 @@ void	Server::connectClient()
 	new_poll.events = POLLIN;
 	new_poll.revents = 0;
 	_pfds.push_back(new_poll);
-	if (ServerRecv(new_poll.fd))
-		addIrssiClient(new_poll.fd);
-	else
-		addNcClient(new_poll.fd);
+	if (!ServerRecv(new_poll.fd))
+		return (addNcClient(new_poll.fd));
+	addIrssiClient(new_poll.fd);
 }
+
+
+
+
+
+
+
 
 void	Server::readData(Client& client)
 {
@@ -143,5 +175,32 @@ void	Server::readData(Client& client)
 		clearClient(client);
 		return ;
 	}
-	ServerSend(client);
+	client.ParseAndRespond(_strBuf);
+}
+
+int	Server::ServerRecv(int fd)
+{
+	char buffer[1024] = {0};
+	ssize_t bytes;
+	int	i(0);
+
+	bytes = recv(fd, buffer, sizeof(buffer), 0); //MSG_WAITALL MSG_DONTWAIT MSG_PEEK MSG_TRUNC
+	if (bytes <= 0)
+		return (0);
+	buffer[bytes] = '\0';
+	_strBuf = buffer;
+
+	std::cout << CYAN << "[Server receive]";
+	while (_strBuf[i])
+	{
+		if (_strBuf[i] == '\r')
+			std::cout << "\\r";
+		else if (_strBuf[i] == '\n')
+			std::cout << "\\n";
+		else
+			std::cout << _strBuf[i];
+		i++;
+	}
+	std::cout << RESET << std::endl;
+	return (1);
 }

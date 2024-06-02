@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:24:30 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/31 17:37:17 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 01:30:16 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,17 @@
 
 NcClient::NcClient()
 {
-
+	std::cout << GREEN << "Nc Client created" << RESET << std::endl;
 }
 
 NcClient::~NcClient()
 {
+	std::cout << RED << "Nc Client destructed" << RESET << std::endl;
 }
 
 NcClient::NcClient(const NcClient& toCpy)
 {
+	std::cout << GREEN << "Nc Client copied" << RESET << std::endl;
 	*this = toCpy;
 }
 
@@ -40,13 +42,9 @@ NcClient&	NcClient::operator=(const NcClient& toCpy)
 	return (*this);
 }
 
-void	NcClient::parseInput(std::string input)
+void	NcClient::ParseAndRespond(std::string input)
 {
-	std::istringstream			iss(input);
-	std::string					str;
 	std::vector<std::string>	cmds;
 
-	while (iss >> str)
-		cmds.push_back(str);
-	
+	cmds = Client::splitInput(input);
 }

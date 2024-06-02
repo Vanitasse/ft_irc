@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/05/31 17:50:18 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 01:14:10 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ Client& Client::operator=(const Client& rhs)
 		this->_username = rhs.getUsername();
 		this->_channel = rhs.getChannel();
 		this->_state = rhs.getState();
+		this->_nick = rhs.getNick();
+		this->_realname = rhs.getRealname();
 	}
 	return *this;
 }
@@ -69,6 +71,26 @@ const std::string& Client::getUsername() const
 void Client::setUsername(std::string user_input)
 {
 	this->_username = user_input;
+}
+
+const std::string& Client::getRealname() const
+{
+	return this->_realname;
+}
+
+void Client::setRealname(std::string realname_input)
+{
+	this->_realname = realname_input;
+}
+
+const std::string& Client::getNick() const
+{
+	return this->_nick;
+}
+
+void Client::setNick(std::string nick_input)
+{
+	this->_nick = nick_input;
 }
 
 
@@ -115,7 +137,18 @@ void    Client::smiley(std::string& input)
         
 }
 
-void	Client::parseInput(std::string input)
+std::vector<std::string>	Client::splitInput(std::string input)
+{
+	std::istringstream					iss(input);
+	std::string							str;
+	std::vector<std::string>			split;
+
+	while (iss >> str)
+		split.push_back(str);
+	return (split);
+}
+
+void	readData(std::string& input)
 {
 	(void)input;
 }
