@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:24:30 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/02 01:30:16 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 12:41:42 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,10 @@ NcClient&	NcClient::operator=(const NcClient& toCpy)
 	return (*this);
 }
 
-void	NcClient::ParseAndRespond(std::string input)
+Response	NcClient::ParseAndRespond(std::string& input)
 {
 	std::vector<std::string>	cmds;
 
 	cmds = Client::splitInput(input);
+	return (DEFAULT);
 }

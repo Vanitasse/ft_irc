@@ -6,11 +6,12 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/02 01:14:10 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 12:41:28 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Client.hpp"
+
 
 Client::Client()
 {
@@ -146,9 +147,4 @@ std::vector<std::string>	Client::splitInput(std::string input)
 	while (iss >> str)
 		split.push_back(str);
 	return (split);
-}
-
-void	readData(std::string& input)
-{
-	(void)input;
 }

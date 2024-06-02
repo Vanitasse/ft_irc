@@ -6,14 +6,13 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:20:22 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/02 01:26:00 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 12:38:27 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 # include "Irc.hpp"
-# include "Channel.hpp"
 
 class	Client
 {
@@ -27,12 +26,11 @@ class	Client
 		std::string	_nick;
 		std::string	_realname;
 		std::string	_pass;
-	
 	public:
-		Client();
-		Client(const Client &cpy);
-		Client	&operator=(const Client &rhs);
-		virtual ~Client();
+					Client();
+					Client(const Client& cpy);
+		Client		&operator=(const Client &rhs);
+		virtual		~Client();
 	
 		int				getFd() const;
 		void			setFd(int fd_input);
@@ -62,5 +60,5 @@ class	Client
 
 		static std::vector<std::string>	splitInput(std::string input);
 		
-		virtual void					ParseAndRespond(std::string input) = 0;
+		virtual Response					ParseAndRespond(std::string& input) = 0;
 };

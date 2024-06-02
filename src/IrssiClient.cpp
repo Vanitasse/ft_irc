@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:09:29 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/02 02:25:58 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 13:20:52 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ IrssiClient::IrssiClient(const std::string& input, int fd)
 	std::vector<std::string>			infos;
 	std::vector<std::string>::iterator	it;
 
-	setFd(fd);
+	_fd = fd;
 	infos = Client::splitInput(input);
 	it = std::find(infos.begin(), infos.end(), "USER");
 	if (it != infos.end() && it + 1 != infos.end())
@@ -58,10 +58,9 @@ IrssiClient::IrssiClient(const std::string& input, int fd)
 	it = std::find(infos.begin(), infos.end(), "PASS");
 	if (it != infos.end() && it + 1 != infos.end())
 		_pass = *(it + 1);
-
 }
 
-void	IrssiClient::ParseAndRespond(std::string input)
+Response	IrssiClient::ParseAndRespond(std::string& input)
 {
 	std::vector<std::string>			cmds;
 	std::vector<std::string>::iterator	it;
@@ -71,8 +70,8 @@ void	IrssiClient::ParseAndRespond(std::string input)
 	it = std::find(cmds.begin(), cmds.end(), "PING");
 	if (it != cmds.end() && it + 1 != cmds.end())
 	{
-		rep = "PONG :" + *(it + 1) + "\r\n";
-		send(_fd, rep.c_str(), rep.size(), 0);
-		std::cout << CYAN << "[Server send]" << rep << RESET << std::endl;
+		input = "PONG :" + *(it + 1) + "\r\n";
+		return (IRSSI_PING);
 	}
+	return (DEFAULT);
 }

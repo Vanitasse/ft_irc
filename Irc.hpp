@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:55:33 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/05/31 00:25:25 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 13:20:40 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 
 # include <iostream>
 # include <vector>
-# include <sys/socket.h> //-> for socket()
-# include <sys/types.h> //-> for socket() options
-# include <netinet/in.h> //-> for sockaddr_in
-# include <fcntl.h> //-> for fcntl()
-# include <unistd.h> //-> for close()
-# include <arpa/inet.h> //-> for inet_ntoa()
-# include <poll.h> //-> for poll()
-# include <csignal> //-> for signal()
+# include <sys/socket.h>
+# include <sys/types.h>
+# include <netinet/in.h>
+# include <fcntl.h>
+# include <unistd.h>
+# include <arpa/inet.h>
+# include <poll.h>
+# include <csignal>
 # include <string.h>
 # include <sstream>
 # include <algorithm> 
@@ -129,4 +129,10 @@ enum	State
 	LOGIN,
 	PASSWORD,
 	CONNECTED
+};
+
+enum	Response
+{
+	DEFAULT,
+	IRSSI_PING
 };

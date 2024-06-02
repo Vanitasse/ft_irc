@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 23:14:13 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/02 02:33:22 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 13:20:44 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,14 +120,13 @@ void	Server::addIrssiClient(int fd)
 	_Clients.push_back(client);
 	if (client->getPass() != _password)
 	{
-		sendError(client->getFd(), "464", client->getNick(), "Password incorrect");
+		sendWithCode(*client, "464", "Password incorrect");
 		clearClient(*client);
 	}
 	else
 	{
 		std::cout << GREEN << "IRSSI client created" << RESET << std::endl;
-		welcome_msg = ":localhost 001 " + client->getNick() + " :Welcome to the IRC server\r\n";
-		send(fd, welcome_msg.c_str(), welcome_msg.size(), 0);
+		sendWithCode(*client, "001", "Welcome to the IRC server");
 	}
 }
 
@@ -171,11 +170,15 @@ void	Server::readData(Client& client)
 {
 	std::cout << "readData" << std::endl;
 	if (!ServerRecv(client.getFd()))
+		return (clearClient(client));
+	switch (client.ParseAndRespond(_strBuf))
 	{
-		clearClient(client);
-		return ;
+		case IRSSI_PING:
+		return (sendBasic(client, _strBuf));
+		case DEFAULT:
+			return;
 	}
-	client.ParseAndRespond(_strBuf);
+	// client.ParseAndRespond(_strBuf);
 }
 
 int	Server::ServerRecv(int fd)
