@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 15:24:30 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/02 12:41:42 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 19:40:12 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,23 @@
 
 NcClient::NcClient()
 {
-	std::cout << GREEN << "Nc Client created" << RESET << std::endl;
+	std::cout << GREEN << "NC Client created" << RESET << std::endl;
 }
 
 NcClient::~NcClient()
 {
-	std::cout << RED << "Nc Client destructed" << RESET << std::endl;
+	std::cout << RED << "NC Client destructed" << RESET << std::endl;
 }
 
 NcClient::NcClient(const NcClient& toCpy)
 {
-	std::cout << GREEN << "Nc Client copied" << RESET << std::endl;
+	std::cout << GREEN << "NC Client copied" << RESET << std::endl;
 	*this = toCpy;
 }
 
 NcClient&	NcClient::operator=(const NcClient& toCpy)
 {
-	std::cout << GREEN << "NcClient assignement operator called" << RESET << std::endl;
+	std::cout << GREEN << "NC Client assignement operator called" << RESET << std::endl;
 	if (this != &toCpy)
 	{
 		this->_fd = toCpy.getFd();
@@ -42,10 +42,24 @@ NcClient&	NcClient::operator=(const NcClient& toCpy)
 	return (*this);
 }
 
-Response	NcClient::ParseAndRespond(std::string& input)
+void		NcClient::formatText(std::string& input)
+{
+	(void)input;
+}
+Destination	NcClient::ParseAndRespond(std::string& input)
 {
 	std::vector<std::string>	cmds;
+	size_t	nl_pos;
 
-	cmds = Client::splitInput(input);
+	_message += input;
+	nl_pos = _message.find('\n');
+	if (nl_pos != _message.npos)
+	{
+		_message.erase(nl_pos);
+		cmds = Client::splitInput(_message);
+		input = _message;
+		_message.clear();
+		return (SEND_CHAN);
+	}
 	return (DEFAULT);
 }

@@ -6,12 +6,11 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/02 12:41:28 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 16:21:59 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Client.hpp"
-
 
 Client::Client()
 {
@@ -69,7 +68,7 @@ const std::string& Client::getUsername() const
 	return this->_username;
 }
 
-void Client::setUsername(std::string user_input)
+void Client::setUsername(const std::string& user_input)
 {
 	this->_username = user_input;
 }
@@ -79,7 +78,7 @@ const std::string& Client::getRealname() const
 	return this->_realname;
 }
 
-void Client::setRealname(std::string realname_input)
+void Client::setRealname(const std::string& realname_input)
 {
 	this->_realname = realname_input;
 }
@@ -89,7 +88,7 @@ const std::string& Client::getNick() const
 	return this->_nick;
 }
 
-void Client::setNick(std::string nick_input)
+void Client::setNick(const std::string& nick_input)
 {
 	this->_nick = nick_input;
 }
@@ -100,7 +99,7 @@ const std::string& Client::getChannel() const
 	return this->_channel;
 }
 
-void Client::setChannel(std::string channel_input)
+void Client::setChannel(const std::string& channel_input)
 {
 	this->_channel = channel_input;
 }
@@ -120,7 +119,7 @@ const std::string& Client::getPass() const
 	return this->_pass;
 }
 
-void Client::setPass(std::string pass_input)
+void Client::setPass(const std::string& pass_input)
 {
 	this->_pass = pass_input;
 }
@@ -138,7 +137,7 @@ void    Client::smiley(std::string& input)
         
 }
 
-std::vector<std::string>	Client::splitInput(std::string input)
+std::vector<std::string>	Client::splitInput(const std::string& input) //static
 {
 	std::istringstream					iss(input);
 	std::string							str;

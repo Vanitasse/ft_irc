@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:55:33 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/02 13:20:40 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 14:54:39 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,9 @@ enum	State
 	CONNECTED
 };
 
-enum	Response
+enum	Destination
 {
 	DEFAULT,
-	IRSSI_PING
+	ANSWER_SENDER,
+	SEND_CHAN
 };

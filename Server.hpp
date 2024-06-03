@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:43:27 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/02 13:15:44 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 19:02:01 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ class	Server
 		int							ServerRecv(int fd);
 		void						addIrssiClient(int fd);
 		void						addNcClient(int fd);
-		void						sendWithCode(const Client& client, const std::string& code, const std::string& msg) const;
-		void						sendBasic(const Client& client, const std::string& msg) const;
-		std::string					_strBuf;
+		void						sendWithCode(const Client& client, const std::string& code, const std::string& msg, const std::string& color) const;
+		void						sendBasic(const Client& client, const std::string& msg, const std::string& color) const;
+		std::string					_receivedBuffer;
 	public:
 								Server();
 								~Server();
-								Server(const int& port, const std::string password);
+								Server(const int& port, const std::string& password);
 								Server(const Server& toCpy);
 		Server&					operator=(const Server& toCpy);
 
@@ -47,4 +47,7 @@ class	Server
 		void						clearClient(Client& client);
 
 		void						run();
+
+		void		detailString(const std::string& str)const ; //debug
+
 };

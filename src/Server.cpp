@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 23:14:13 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/02 13:20:44 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/02 20:21:03 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ Server&	Server::operator=(const Server& toCpy)
 	return (*this);
 }
 
-Server::Server(const int& port, const std::string password_input) : _password(password_input), _port(port)
+Server::Server(const int& port, const std::string& password_input) : _password(password_input), _port(port)
 {
 	
 }
@@ -114,29 +114,26 @@ void	Server::run()
 
 void	Server::addIrssiClient(int fd)
 {
-	Client	*client = new IrssiClient(_strBuf, fd);
+	Client	*client = new IrssiClient(_receivedBuffer, fd);
 	std::string welcome_msg;
 
 	_Clients.push_back(client);
 	if (client->getPass() != _password)
 	{
-		sendWithCode(*client, "464", "Password incorrect");
+		sendWithCode(*client, "464", "Password incorrect", RED);
 		clearClient(*client);
 	}
 	else
-	{
-		std::cout << GREEN << "IRSSI client created" << RESET << std::endl;
-		sendWithCode(*client, "001", "Welcome to the IRC server");
-	}
+		sendWithCode(*client, "001", "Welcome to the IRC server", GREEN);
 }
 
 void	Server::addNcClient(int fd)
 {
 	Client	*client = new NcClient();
 
-	std::cout << GREEN << "nc client created" << RESET << std::endl;
 	client->setFd(fd);
 	_Clients.push_back(client);
+	// sendBasic(*)
 }
 
 void	Server::connectClient()
@@ -145,7 +142,6 @@ void	Server::connectClient()
 	socklen_t len = sizeof(sock_addr);
 	struct pollfd		new_poll = {};
 
-	std::cout << "connectClient" << std::endl;
 	new_poll.fd = accept(_pfds[0].fd, (struct sockaddr *)&sock_addr, &len);
 	if (new_poll.fd == -1)
 		throw std::runtime_error("Client socket creation failed");
@@ -165,45 +161,33 @@ void	Server::connectClient()
 
 
 
+int	Server::ServerRecv(int fd)
+{
+	char buffer[1024] = {0};
+	ssize_t bytes;
+
+	bytes = recv(fd, buffer, sizeof(buffer), 0); //MSG_WAITALL MSG_DONTWAIT MSG_PEEK MSG_TRUNC
+	if (bytes <= 0)
+		return (0);
+	buffer[bytes] = '\0';
+	_receivedBuffer = buffer;
+	std::cout << CYAN << "[Server receive]" << _receivedBuffer << RESET << std::endl;
+	return (1);
+}
 
 void	Server::readData(Client& client)
 {
-	std::cout << "readData" << std::endl;
 	if (!ServerRecv(client.getFd()))
 		return (clearClient(client));
-	switch (client.ParseAndRespond(_strBuf))
+	switch (client.ParseAndRespond(_receivedBuffer))
 	{
-		case IRSSI_PING:
-		return (sendBasic(client, _strBuf));
+		case ANSWER_SENDER:
+			return (sendBasic(client, _receivedBuffer, ""));
+		case SEND_CHAN:
+			return (sendBasic(client, _receivedBuffer, ""));
 		case DEFAULT:
 			return;
 	}
 	// client.ParseAndRespond(_strBuf);
 }
 
-int	Server::ServerRecv(int fd)
-{
-	char buffer[1024] = {0};
-	ssize_t bytes;
-	int	i(0);
-
-	bytes = recv(fd, buffer, sizeof(buffer), 0); //MSG_WAITALL MSG_DONTWAIT MSG_PEEK MSG_TRUNC
-	if (bytes <= 0)
-		return (0);
-	buffer[bytes] = '\0';
-	_strBuf = buffer;
-
-	std::cout << CYAN << "[Server receive]";
-	while (_strBuf[i])
-	{
-		if (_strBuf[i] == '\r')
-			std::cout << "\\r";
-		else if (_strBuf[i] == '\n')
-			std::cout << "\\n";
-		else
-			std::cout << _strBuf[i];
-		i++;
-	}
-	std::cout << RESET << std::endl;
-	return (1);
-}
