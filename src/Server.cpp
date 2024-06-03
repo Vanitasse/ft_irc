@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 23:14:13 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/03 12:29:28 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 14:24:11 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,31 +110,6 @@ void	Server::run()
 
 
 
-
-// void	Server::addIrssiClient(int fd)
-// {
-// 	Client	*client = new IrssiClient(_receivedBuffer, fd);
-// 	std::string welcome_msg;
-
-// 	_Clients.push_back(client);
-// 	if (client->getPass() != _password)
-// 	{
-// 		sendWithCode(*client, "464", "Password incorrect", RED);
-// 		clearClient(*client);
-// 	}
-// 	else
-// 		sendWithCode(*client, "001", "Welcome to the IRC server", GREEN);
-// }
-
-// void	Server::addNcClient(int fd)
-// {
-// 	Client	*client = new NcClient();
-
-// 	client->setFd(fd);
-// 	_Clients.push_back(client);
-// 	// sendBasic(*)
-// }
-
 void	Server::connectClient()
 {
 	Client				client;
@@ -161,6 +136,7 @@ void	Server::connectClient()
 
 
 
+
 int	Server::ServerRecv(int fd)
 {
 	char buffer[1024] = {0};
@@ -179,15 +155,6 @@ void	Server::readData(Client& client)
 {
 	if (!ServerRecv(client.getFd()))
 		return (clearClient(client));
-	switch (client.ParseAndRespond(_receivedBuffer))
-	{
-		case ANSWER_SENDER:
-			return (sendBasic(client, _receivedBuffer, ""));
-		case SEND_CHAN:
-			return (sendBasic(client, _receivedBuffer, ""));
-		case DEFAULT:
-			return;
-	}
-	// client.ParseAndRespond(_strBuf);
+	client.ParseAndRespond(_receivedBuffer);
 }
 

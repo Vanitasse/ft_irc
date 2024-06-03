@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 14:09:46 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 14:28:05 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,7 +177,14 @@ std::vector<std::string>	Client::splitInput(const std::string& input) //static
 	return (split);
 }
 
-Destination	Client::ParseAndRespond(std::string& input)
+
+void		Client::Answer(const std::string& answer)
+{
+	send(getFd(),answer.c_str(), answer.length(), 0);
+	std::cout << CYAN << "[Server send]" << answer << RESET << std::endl;
+}
+
+void	Client::ParseAndRespond(std::string& input)
 {
 	Destination							dest;
 	std::vector<std::string>			cmds;
@@ -188,6 +195,7 @@ Destination	Client::ParseAndRespond(std::string& input)
 	dest = DEFAULT;
 	_message += input;
 	nl_pos = _message.find('\n');
+	std::cout << "message en cours" << std::endl;
 	if (nl_pos != _message.npos)
 	{
 		std::cout << "message finished" << std::endl;
@@ -203,10 +211,7 @@ Destination	Client::ParseAndRespond(std::string& input)
 			setPass(*(it + 1));
 		it = std::find(cmds.begin(), cmds.end(), "PING");
 		if (it != cmds.end() && it + 1 != cmds.end())
-		{
-			input = "PONG :" + *(it + 1);
-			dest = ANSWER_SENDER;
-		}
+			Answer("PONG :" + *(it + 1));
 		it = std::find(cmds.begin(), cmds.end(), "PRIVMSG");
 		if (it != cmds.end() && it + 1 != cmds.end())
 		{
@@ -216,10 +221,8 @@ Destination	Client::ParseAndRespond(std::string& input)
 		if (_nickIsSet && _passIsSet && !_isConnected)
 		{
 			_isConnected = true;
-			dest = ANSWER_SENDER;
-			input = ":42IRCserver 001 " + _nick + " : Welcome to the IRC server";
+			Answer(":42IRCserver 001 " + _nick + " : Welcome to the IRC server" + "\r\n");
 		}
 		_message.clear();
-	}	
-	return (dest);
+	}
 }

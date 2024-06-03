@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:20:22 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 13:43:28 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 14:29:12 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ class	Client
 
 		static std::vector<std::string>	splitInput(const std::string& input);
 		
-		Destination				ParseAndRespond(std::string& input);
-		// virtual void					formatText(std::string& input) = 0;
+		void				ParseAndRespond(std::string& input);
+		void				Answer(const std::string& answer);
+		// virtual void		formatText(std::string& input) = 0;
 };
