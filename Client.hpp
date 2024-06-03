@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:20:22 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 16:03:55 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:40:18 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,11 @@ class	Client
 		const bool& 		getIsConnected() const;
 		void 				setIsConnected(const bool& isConnected_input);
 
-		void				smiley(std::string& input);
+		void							smiley(std::string& input);
 
 		static std::vector<std::string>	splitInput(const std::string& input);
 		
-		void				ParseAndRespond(std::string& input);
-		void				Answer(const std::string& answer);
+		void							ParseAndRespond(std::string& input);
+		void							Answer(const std::string& answer);
 		// virtual void		formatText(std::string& input) = 0;
 };

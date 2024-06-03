@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 17:35:29 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:43:46 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,10 @@ const std::string& Client::getNick() const
 void Client::setNick(const std::string& nick_input)
 {
 	if (!_server->checkAllNicknames(nick_input))
+	{
+		std::cout << "SetNick refused nick" << std::endl;
 		return ;
+	}
 	std::cout << "Nick Set to " << nick_input << std::endl;
 	_nickIsSet = true;
 	Answer(user_id(this->getNick(), this->getUsername()) + " NICK :" + nick_input + "\r\n");
@@ -130,6 +133,11 @@ const std::string& Client::getPass() const
 
 void Client::setPass(const std::string& pass_input)
 {
+	if (pass_input != _server->getPassword())
+	{
+		std::cout << "SetPass refused password" << std::endl;
+		return ;
+	}
 	std::cout << "pass Set to " << pass_input << std::endl;
 	_passIsSet = true;
 	this->_pass = pass_input;
