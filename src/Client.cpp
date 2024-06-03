@@ -7,6 +7,7 @@ Client::Client() : _server(NULL)
 	_isConnected = false;
 	_passIsSet = false;
 	_nickIsSet = false;
+	std::cout << "MAX" << std::endl;
 }
 
 Client::Client(Server& server) : _server(&server)
