@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 17:26:09 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:35:29 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void Client::setNick(const std::string& nick_input)
 		return ;
 	std::cout << "Nick Set to " << nick_input << std::endl;
 	_nickIsSet = true;
+	Answer(user_id(this->getNick(), this->getUsername()) + " NICK :" + nick_input + "\r\n");
 	this->_nick = nick_input;
 }
 
@@ -237,7 +238,8 @@ void	Client::ParseAndRespond(std::string& input)
 			Answer(msg_serv(std::string("001"), this->getNick()) + GREEN + "Welcome to the IRC server\r\n"
 				+ msg_serv(std::string("002"), this->getNick()) + GREEN + "Your host is 42IRCserver, running version 0.1\r\n"
 				+ msg_serv(std::string("003"), this->getNick()) + GREEN + "This server was created " + _server->getDate() + "\r\n"
-				+ msg_serv2(std::string("004"), this->getNick()) + GREEN + "42IRCserver 0.1 connected \r\n");
+				+ msg_serv2(std::string("004"), this->getNick()) + GREEN + "42IRCserver 0.1 connected \r\n"
+				+ msg_serv3(std::string("005"), this->getNick(), supp_info()));
 		}
 		_message.clear();
 	}
