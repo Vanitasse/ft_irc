@@ -3,16 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 14:28:05 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:11:13 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Client.hpp"
+# include "../Client.hpp"
+# include "../Server.hpp"
 
-Client::Client()
+
+Client::Client() : _server(NULL)
+{
+	_isConnected = false;
+	_passIsSet = false;
+	_nickIsSet = false;
+}
+
+Client::Client(Server& server) : _server(&server)
 {
 	_isConnected = false;
 	_passIsSet = false;
@@ -43,6 +52,7 @@ Client& Client::operator=(const Client& rhs)
 		this->_nickIsSet = rhs._nickIsSet;
 		this->_passIsSet = rhs._passIsSet;
 		this->_isConnected = rhs._isConnected;
+		this->_server = rhs._server;
 	}
 	return *this;
 }
@@ -180,6 +190,7 @@ std::vector<std::string>	Client::splitInput(const std::string& input) //static
 
 void		Client::Answer(const std::string& answer)
 {
+	
 	send(getFd(),answer.c_str(), answer.length(), 0);
 	std::cout << CYAN << "[Server send]" << answer << RESET << std::endl;
 }
@@ -211,7 +222,7 @@ void	Client::ParseAndRespond(std::string& input)
 			setPass(*(it + 1));
 		it = std::find(cmds.begin(), cmds.end(), "PING");
 		if (it != cmds.end() && it + 1 != cmds.end())
-			Answer("PONG :" + *(it + 1));
+			Answer("PONG :" + *(it + 1) + "\r\n");
 		it = std::find(cmds.begin(), cmds.end(), "PRIVMSG");
 		if (it != cmds.end() && it + 1 != cmds.end())
 		{
@@ -221,7 +232,10 @@ void	Client::ParseAndRespond(std::string& input)
 		if (_nickIsSet && _passIsSet && !_isConnected)
 		{
 			_isConnected = true;
-			Answer(":42IRCserver 001 " + _nick + " : Welcome to the IRC server" + "\r\n");
+			Answer(msg_serv(std::string("001"), this->getNick()) + GREEN + "Welcome to the IRC server\r\n"
+				+ msg_serv(std::string("002"), this->getNick()) + GREEN + "Your host is 42IRCserver, running version 0.1\r\n"
+				+ msg_serv(std::string("003"), this->getNick()) + GREEN + "This server was created " + _server->getDate() + "\r\n"
+				+ msg_serv2(std::string("004"), this->getNick()) + GREEN + "42IRCserver 0.1 connected \r\n");
 		}
 		_message.clear();
 	}

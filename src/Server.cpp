@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 23:14:13 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/03 14:24:11 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:09:04 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,13 @@ Server&	Server::operator=(const Server& toCpy)
 	return (*this);
 }
 
-Server::Server(const int& port, const std::string& password_input) : _password(password_input), _port(port)
+Server::Server(const int& port, const std::string& password_input) : _password(password_input), _port(port) {}
+
+const std::string& Server::getDate() const
 {
-	
+	return this->_date;
 }
+
 
 void	Server::serverInit()
 {
@@ -78,6 +81,7 @@ void	Server::serverInit()
 		throw(std::runtime_error("socket binding failed"));
 	if (listen(new_poll.fd, SOMAXCONN) == -1) //la socket devient passive = c'est une socket serveur qui attend des connections (SOMAXCONN = max_connections autorise)
 		throw(std::runtime_error("listen() failed"));
+	getServerCreationTime();
 }
 
 void Server::serverExec()
@@ -112,7 +116,7 @@ void	Server::run()
 
 void	Server::connectClient()
 {
-	Client				client;
+	Client				client(*this);
 	struct sockaddr_in 	sock_addr;
 	socklen_t 			len;
 	struct pollfd		new_poll = {};

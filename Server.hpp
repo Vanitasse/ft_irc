@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:43:27 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/03 12:17:41 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:07:52 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ class	Server
 		void						sendBasic(const Client& client, const std::string& msg, const std::string& color) const;
 		
 		std::string					_receivedBuffer;
+		std::string					_date;
 
 	public:
 								Server();
@@ -51,6 +52,9 @@ class	Server
 
 		void						run();
 
-		void		detailString(const std::string& str)const ; //debug
+		void					detailString(const std::string& str)const ; //debug
+		void					getServerCreationTime() ;
+		const std::string&		getDate() const ;
+
 
 };

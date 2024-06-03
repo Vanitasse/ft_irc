@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:20:22 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 14:29:12 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:03:55 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 # include "Irc.hpp"
+
+class Server;
 
 class	Client
 {
@@ -29,8 +31,11 @@ class	Client
 		std::string	_pass;
 		// const std::string& server_password;
 		std::string	_message;
+		Server* 	_server;
+
 	public:
 					Client();
+					Client(Server& server);
 					Client(const Client& cpy);
 		Client		&operator=(const Client &rhs);
 					~Client();

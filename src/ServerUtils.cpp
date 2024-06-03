@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerUtils.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 14:28:29 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/03 12:30:12 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:07:02 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,19 @@ void Server::sendBasic(const Client& client, const std::string& msg, const std::
 	std::string message = color + msg + "\r\n";
 	send(client.getFd(), message.c_str(), message.length(), 0);
 	std::cout << CYAN << "[Server send]" << message << RESET << std::endl;
+}
+
+void Server::getServerCreationTime()
+{
+    // Obtenir l'heure actuelle
+    std::time_t now = std::time(nullptr);
+    // Convertir l'heure en structure tm pour le formatage
+    std::tm* now_tm = std::localtime(&now);
+    
+    // Créer une chaîne de caractères pour la date et l'heure formatées
+    char buffer[80] = {0};
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", now_tm);
+    
+    // Retourner la chaîne formatée
+    this->_date = buffer;
 }

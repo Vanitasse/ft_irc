@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Irc.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:55:33 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/02 14:54:39 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 15:49:41 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <string.h>
 # include <sstream>
 # include <algorithm> 
+# include <ctime>
 
 // Smiley
 # define SMILE "\U0001f604"
@@ -123,6 +124,16 @@
 #define MAGENTA     "\033[35m"      /* Magenta */
 #define CYAN        "\033[36m"      /* Cyan */
 #define WHITE       "\033[37m"      /* Blanc */
+
+#define msg_serv(code, nickname) (":42IRCserv " + code + " " + nickname + " :")
+#define msg_serv2(code, nickname) ("42IRCserv " + code + " " + nickname + " ")
+#define msg_serv3(code, nickname, support_info) ("42IRCserv " + code + " " + nickname + " " + support_info + " :are supported by this server\r\n")
+
+
+#define user_id(nickname, username) (":" + nickname + "!" + username + "@localhost")
+#define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " #" + channel + "\r\n")
+// [...]
+#define ERR_INVALIDMODEPARAM(client, channel, mode, password) ("696 " + client + " #" + channel + " " + mode + " " + password + " : password must only contained alphabetic character\r\n")
 
 enum	State
 {
