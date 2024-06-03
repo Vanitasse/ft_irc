@@ -6,7 +6,7 @@
 /*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:55:33 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/03 17:32:48 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:42:42 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,10 @@
 #define msg_serv2(code, nickname) (":42IRCserv " + code + " " + nickname + " ")
 #define msg_serv3(code, nickname, support_info) (":42IRCserv " + code + " " + nickname + " " + support_info + " :are supported by this server\r\n")
 
+#define msg_err(code, nickname) (":42IRCserv " + code + " * " + nickname + " :")
+
 #define supp_info() ("CHANTYPES=# PREFIX=(o)@ MODES=1 CHANLIMIT=#:5 NICKLEN=20 TOPICLEN=200")
+
 
 #define user_id(nickname, username) (":" + nickname + "!" + username + "@localhost")
 #define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " #" + channel + "\r\n")
