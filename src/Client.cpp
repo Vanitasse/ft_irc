@@ -24,6 +24,7 @@ Client::Client(const Client& cpy)
 {
 	*this = cpy;
 	std::cout << GREEN << "Client copy constructor called" << RESET << std::endl;
+	std::cout << GREEN << "Client copy constructor called" << RESET << std::endl;
 }
 
 Client& Client::operator=(const Client& rhs)
