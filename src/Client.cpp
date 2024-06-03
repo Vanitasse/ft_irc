@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 17:43:46 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:48:22 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,7 @@ void    Client::smiley(std::string& input)
         input.erase(pos, 2);
         input.insert(pos, SMILE);
     }
+	std::cout << "smiley" << std::endl;
         
 }
 
