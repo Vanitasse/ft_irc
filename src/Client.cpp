@@ -101,6 +101,7 @@ void Client::setNick(const std::string& nick_input)
 	_nickIsSet = true;
 	Answer(user_id(this->getNick(), this->getUsername()) + " NICK :" + nick_input + "\r\n");
 	this->_nick = nick_input;
+	std::cout << "LOL" << std::endl;
 }
 
 
