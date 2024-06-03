@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 16:11:13 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:26:09 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ const std::string& Client::getNick() const
 
 void Client::setNick(const std::string& nick_input)
 {
+	if (!_server->checkAllNicknames(nick_input))
+		return ;
 	std::cout << "Nick Set to " << nick_input << std::endl;
 	_nickIsSet = true;
 	this->_nick = nick_input;

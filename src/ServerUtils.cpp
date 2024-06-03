@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerUtils.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 14:28:29 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/03 16:07:02 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:25:29 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,18 @@ void Server::getServerCreationTime()
     
     // Retourner la chaîne formatée
     this->_date = buffer;
+}
+
+int	Server::checkAllNicknames(const std::string& nickname)
+{
+	std::vector<Client>::iterator	it;
+
+	it = _Clients.begin();
+	while (it != _Clients.end())
+	{
+		if (it->getNick() == nickname)
+			return (0);
+		it++;
+	}
+	return (1);
 }
