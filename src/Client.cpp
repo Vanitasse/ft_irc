@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 18:08:09 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/06/03 18:10:38 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ void    Client::smiley(std::string& input)
         input.erase(pos, 2);
         input.insert(pos, SMILE);
     }
-	std::cout << "smiley" << std::endl;
+	std::cout << "smiley lol" << std::endl;
         
 }
 
