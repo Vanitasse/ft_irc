@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:43:27 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/03 17:21:40 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:40:53 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,13 @@ class	Server
 		std::string					_date;
 
 	public:
-								Server();
-								~Server();
-								Server(const int& port, const std::string& password);
-								Server(const Server& toCpy);
-		Server&					operator=(const Server& toCpy);
+							Server();
+							~Server();
+							Server(const int& port, const std::string& password);
+							Server(const Server& toCpy);
+		Server&				operator=(const Server& toCpy);
+
+		const std::string&		getPassword() const;
 
 		static void					signalHandler(int signum);
 
@@ -51,9 +53,9 @@ class	Server
 
 		void						run();
 
-		void					detailString(const std::string& str)const ; //debug
-		void					getServerCreationTime() ;
-		const std::string&		getDate() const ;
+		void						detailString(const std::string& str)const ; //debug
+		void						getServerCreationTime() ;
+		const std::string&			getDate() const ;
 
-		int						checkAllNicknames(const std::string& nickname);
+		int							checkAllNicknames(const std::string& nickname);
 };

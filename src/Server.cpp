@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 23:14:13 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/03 16:09:04 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:40:48 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,10 @@ const std::string& Server::getDate() const
 	return this->_date;
 }
 
+const std::string&	Server::getPassword() const
+{
+	return (_password);
+}
 
 void	Server::serverInit()
 {
