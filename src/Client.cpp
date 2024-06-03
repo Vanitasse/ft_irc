@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 18:10:38 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 18:13:53 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ void Client::setNick(const std::string& nick_input)
 	_nickIsSet = true;
 	Answer(user_id(this->getNick(), this->getUsername()) + " NICK :" + nick_input + "\r\n");
 	this->_nick = nick_input;
+	std::cout << "LOL" << std::endl;
 }
 
 
