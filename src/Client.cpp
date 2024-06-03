@@ -7,7 +7,6 @@ Client::Client() : _server(NULL)
 	_isConnected = false;
 	_passIsSet = false;
 	_nickIsSet = false;
-	std::cout << "MAX" << std::endl;
 }
 
 Client::Client(Server& server) : _server(&server)
@@ -24,7 +23,6 @@ Client::~Client()
 Client::Client(const Client& cpy)
 {
 	*this = cpy;
-	std::cout << GREEN << "Client copy constructor called" << RESET << std::endl;
 	std::cout << GREEN << "Client copy constructor called" << RESET << std::endl;
 }
 
@@ -103,7 +101,6 @@ void Client::setNick(const std::string& nick_input)
 	_nickIsSet = true;
 	Answer(user_id(this->getNick(), this->getUsername()) + " NICK :" + nick_input + "\r\n");
 	this->_nick = nick_input;
-	std::cout << "LOL" << std::endl;
 }
 
 
@@ -175,8 +172,6 @@ void    Client::smiley(std::string& input)
         input.erase(pos, 2);
         input.insert(pos, SMILE);
     }
-	std::cout << "smiley lol" << std::endl;
-        
 }
 
 std::vector<std::string>	Client::splitInput(const std::string& input) //static
