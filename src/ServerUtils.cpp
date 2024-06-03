@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 14:28:29 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/02 19:37:09 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 12:30:12 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	Server::clearClient(Client& client)
 {
-	std::vector<Client*>::iterator			it;
+	std::vector<Client>::iterator			it;
 	std::vector<struct pollfd>::iterator	it2;
 
 	std::cout << "Entering ClearClient" << std::endl;
@@ -23,10 +23,9 @@ void	Server::clearClient(Client& client)
 		it2++;
 	_pfds.erase(it2);
 	it = _Clients.begin();
-	while (it != _Clients.end() && (*it)->getFd() != client.getFd())
+	while (it != _Clients.end() && it->getFd() != client.getFd())
 		it++;
-	close((*it)->getFd());
-	delete *it;
+	close(it->getFd());
 	_Clients.erase(it);
 }
 

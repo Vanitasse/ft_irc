@@ -6,7 +6,7 @@
 #    By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/17 15:03:53 by bvaujour          #+#    #+#              #
-#    Updated: 2024/06/02 11:06:58 by bvaujour         ###   ########.fr        #
+#    Updated: 2024/06/03 12:07:06 by bvaujour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME	=	ircserv
 
 SRC_DIR	=	./src/
 
-INCLUDE	=	Server.hpp Irc.hpp Client.hpp IrssiClient.hpp NcClient.hpp
+INCLUDE	=	Server.hpp Irc.hpp Client.hpp
 
 OBJ_DIR	=	./obj/
 
@@ -22,8 +22,6 @@ FILES	=	main.cpp		\
 			Client.cpp		\
 			Server.cpp		\
 			ServerUtils.cpp	\
-			IrssiClient.cpp	\
-			NcClient.cpp	\
 
 SRC		= $(addprefix $(SRC_DIR), $(FILES))
 

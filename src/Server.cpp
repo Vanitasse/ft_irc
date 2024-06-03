@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 23:14:13 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/02 20:21:03 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 12:29:28 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,12 @@ Server::Server()
 
 Server::~Server()
 {
-	std::vector<Client*>::iterator	it;
+	std::vector<Client>::iterator	it;
 
 	it = _Clients.begin();
 	while (it != _Clients.end())
 	{
-		close ((*it)->getFd());
-		delete *it;
+		close (it->getFd());
 		it++;
 	}
 	close (_pfds[0].fd);
@@ -94,7 +93,7 @@ void Server::serverExec()
 				if (i == 0)
 					connectClient();
 				else
-					readData(*_Clients[i - 1]);
+					readData(_Clients[i - 1]);
 			}
 		}
 	}
@@ -112,36 +111,38 @@ void	Server::run()
 
 
 
-void	Server::addIrssiClient(int fd)
-{
-	Client	*client = new IrssiClient(_receivedBuffer, fd);
-	std::string welcome_msg;
+// void	Server::addIrssiClient(int fd)
+// {
+// 	Client	*client = new IrssiClient(_receivedBuffer, fd);
+// 	std::string welcome_msg;
 
-	_Clients.push_back(client);
-	if (client->getPass() != _password)
-	{
-		sendWithCode(*client, "464", "Password incorrect", RED);
-		clearClient(*client);
-	}
-	else
-		sendWithCode(*client, "001", "Welcome to the IRC server", GREEN);
-}
+// 	_Clients.push_back(client);
+// 	if (client->getPass() != _password)
+// 	{
+// 		sendWithCode(*client, "464", "Password incorrect", RED);
+// 		clearClient(*client);
+// 	}
+// 	else
+// 		sendWithCode(*client, "001", "Welcome to the IRC server", GREEN);
+// }
 
-void	Server::addNcClient(int fd)
-{
-	Client	*client = new NcClient();
+// void	Server::addNcClient(int fd)
+// {
+// 	Client	*client = new NcClient();
 
-	client->setFd(fd);
-	_Clients.push_back(client);
-	// sendBasic(*)
-}
+// 	client->setFd(fd);
+// 	_Clients.push_back(client);
+// 	// sendBasic(*)
+// }
 
 void	Server::connectClient()
 {
-	struct sockaddr_in sock_addr;
-	socklen_t len = sizeof(sock_addr);
+	Client				client;
+	struct sockaddr_in 	sock_addr;
+	socklen_t 			len;
 	struct pollfd		new_poll = {};
 
+	len = sizeof(sock_addr);
 	new_poll.fd = accept(_pfds[0].fd, (struct sockaddr *)&sock_addr, &len);
 	if (new_poll.fd == -1)
 		throw std::runtime_error("Client socket creation failed");
@@ -150,9 +151,8 @@ void	Server::connectClient()
 	new_poll.events = POLLIN;
 	new_poll.revents = 0;
 	_pfds.push_back(new_poll);
-	if (!ServerRecv(new_poll.fd))
-		return (addNcClient(new_poll.fd));
-	addIrssiClient(new_poll.fd);
+	client.setFd(new_poll.fd);
+	_Clients.push_back(client);
 }
 
 

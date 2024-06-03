@@ -6,7 +6,7 @@
 /*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 14:43:27 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/02 19:02:01 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/06/03 12:17:41 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,22 @@ class	Server
 	private:
 		const std::string			_password;
 		int							_port;
+
+		static bool					_signal;
+	
 		std::vector<struct pollfd>	_pfds;
-		std::vector<Client*>		_Clients;
+		std::vector<Client>			_Clients;
+	
 		void						serverInit();
 		void						serverExec();
 		void						connectClient();
-		static bool					_signal;
 		void						readData(Client& client);
 		int							ServerRecv(int fd);
-		void						addIrssiClient(int fd);
-		void						addNcClient(int fd);
 		void						sendWithCode(const Client& client, const std::string& code, const std::string& msg, const std::string& color) const;
 		void						sendBasic(const Client& client, const std::string& msg, const std::string& color) const;
+		
 		std::string					_receivedBuffer;
+
 	public:
 								Server();
 								~Server();
