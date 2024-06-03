@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 16:23:16 by vanitas           #+#    #+#             */
-/*   Updated: 2024/06/03 18:01:30 by mablatie         ###   ########.fr       */
+/*   Updated: 2024/06/03 18:04:59 by bvaujour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,5 +253,3 @@ void	Client::ParseAndRespond(std::string& input)
 		_message.clear();
 	}
 }
-
-ADNSANDFSNHPFJDSNfjrsdnfgrwmforsdwmGfrkgrs';
