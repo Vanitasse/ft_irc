@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/28 14:36:16 by mablatie          #+#    #+#             */
-/*   Updated: 2024/05/28 16:56:49 by mablatie         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../Channel.hpp"
 
 Channel::Channel()
@@ -27,33 +15,53 @@ Channel& Channel::operator=(const Channel& rhs)
 {
 	if (this != &rhs)
 	{
-		this->name = rhs.getName();
-		this->operateur = rhs.getOperateur();
+		this->_name = rhs._name;
+		this->_operators = rhs._operators;
+		this->_chanClients = rhs._chanClients;
 	}
 	return *this;
 }
 
 const std::string& Channel::getName() const
 {
-	return this->name;
+	return (this->_name);
 }
 
-void Channel::setName(std::string &input)
+void Channel::setName(const std::string& name)
 {
-	this->name = input;
+	this->_name = name;
 }
 
-Client* Channel::getOperateur() const
+const std::vector<Client*>& Channel::getOperators() const
 {
-	return this->operateur;
+	return (this->_operators);
 }
 
-void Channel::setOperateur(Client* client)
+const std::vector<Client*>& Channel::getChanClients() const
 {
-	this->operateur = client;
+	return (this->_chanClients);
 }
 
-// std::vector<Client*> Channel::getChanClients() const
-// {
-// 	return this->chan_clients;
-// }
+void	Channel::addClient(Client& client)
+{
+	if (_operators.size() == 0)
+	{
+		_operators.push_back(&client);
+		std::cout << BG_BLUE << "client " << client.getNick() << " added to channel " << this->_name << " as Operator" << RESET << std::endl;
+	}
+	else
+	{
+		_chanClients.push_back(&client);
+		std::cout<<  BG_GREEN << "client " << client.getNick() << " added to channel " << this->_name << " as Simple user" << RESET << std::endl;
+	}
+}
+
+void	Channel::sendToClients(const Client& sender, const std::string& msg)
+{
+	for (auto& client : _operators)
+		if (client->getFd() != sender.getFd())
+			FormatIRC::SendPRIVMESS(client->getFd(), sender.getNick(), this->_name, msg);
+	for (auto& client : _chanClients)
+		if (client->getFd() != sender.getFd())
+			FormatIRC::SendPRIVMESS(client->getFd(), sender.getNick(), this->_name, msg);
+}

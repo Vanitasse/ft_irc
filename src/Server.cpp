@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/30 23:14:13 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/03 17:40:48 by bvaujour         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../Server.hpp"
 
 bool Server::_signal = false;
@@ -23,7 +11,8 @@ Server::~Server()
 {
 	std::vector<Client>::iterator	it;
 
-	it = _Clients.begin();
+	it = _Clients.begin() + 1; // bot est au debut sans fd ouvert
+	
 	while (it != _Clients.end())
 	{
 		close (it->getFd());
@@ -67,6 +56,8 @@ void	Server::serverInit()
 	struct sockaddr_in	sock_addr; //structure pour l'adresse internet
 	int uh = 1; // necessaire car parametre opt_value de setsockopt() = const void *
 
+	_Clients.push_back(Bot(*this));
+
 	sock_addr.sin_family = AF_INET; //on set le type en IPV4
 	sock_addr.sin_port = htons(_port); // converti le port(int) en big endian (pour le network byte order)
 	sock_addr.sin_addr.s_addr = INADDR_ANY; // IMADDR_ANY = n'importe quel adresse donc full local
@@ -101,7 +92,7 @@ void Server::serverExec()
 				if (i == 0)
 					connectClient();
 				else
-					readData(_Clients[i - 1]);
+					readData(_Clients[i]);
 			}
 		}
 	}

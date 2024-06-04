@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Irc.hpp                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/17 15:55:33 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/06/03 17:42:42 by mablatie         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #pragma once
 
 
@@ -27,6 +15,8 @@
 # include <sstream>
 # include <algorithm> 
 # include <ctime>
+
+# include "FormatIRC.hpp"
 
 // Smiley
 # define SMILE "\U0001f604"
@@ -133,22 +123,9 @@
 
 #define supp_info() ("CHANTYPES=# PREFIX=(o)@ MODES=1 CHANLIMIT=#:5 NICKLEN=20 TOPICLEN=200")
 
+#define	priv_mess(nickname, channel, msg) (":" + nickname + " PRIVMSG" + ' ' + channel + ' ' + msg + "\r\n")
 
 #define user_id(nickname, username) (":" + nickname + "!" + username + "@localhost")
 #define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " #" + channel + "\r\n")
 // [...]
 #define ERR_INVALIDMODEPARAM(client, channel, mode, password) ("696 " + client + " #" + channel + " " + mode + " " + password + " : password must only contained alphabetic character\r\n")
-
-enum	State
-{
-	LOGIN,
-	PASSWORD,
-	CONNECTED
-};
-
-enum	Destination
-{
-	DEFAULT,
-	ANSWER_SENDER,
-	SEND_CHAN
-};
