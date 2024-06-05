@@ -198,7 +198,12 @@ void	Client::JOIN(const std::string& chanName)
 	while (it != _InChannels.end() && (*it)->getName() != chanName)
 		it++;
 	if (it != _InChannels.end())
+	{
+		(*it)->addClient(*this);
+		FormatIRC::JOIN(this->_fd, this->getNick(), this->getUsername(), (*it)->getName(),
+					(*it)->getTopic(), (*it)->getTopicInfo(), (*it)->getNickList());
 		return ;
+	}
 	JOINChannel = &_server->newChannelAccess(chanName);
 	JOINChannel->addClient(*this);
 	JOINChannel->setTopic("Default", *this);
@@ -226,6 +231,13 @@ void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 	}
 	(*it)->sendToClients(*this, msg);
 }
+
+void	Client::QUIT()
+{
+	FormatIRC::QUIT(this->_fd, this->getNick(), this->getUsername());
+	_server->clearClient(*this);
+}
+
 
 void	Client::ParseAndRespond(std::string& input)
 {
@@ -256,6 +268,14 @@ void	Client::ParseAndRespond(std::string& input)
 		it = std::find(cmds.begin(), cmds.end(), "PRIVMSG");
 		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
 			PRIVMSG(*(it + 1), *(it + 2));
+
+		it = std::find(cmds.begin(), cmds.end(), "QUIT");
+		if (it != cmds.end() && it + 1 != cmds.end())
+		{
+			QUIT();
+			return;
+		}
+
 		if (_nickIsSet && _passIsSet && !_isConnected)
 		{
 			_isConnected = true;
