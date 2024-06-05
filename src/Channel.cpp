@@ -87,11 +87,6 @@ void	Channel::sendToClients(const Client& sender, const std::string& msg)
 const std::string Channel::getNickList()
 {
 	std::string res;
-	// for (std::vector<Client*>::iterator it = _chanClients.begin(); it < _chanClients.end(); it++)
-	// {
-	// 	std::cout << "GETNICK = " << 
-	// 	res += (*it)->getNick() + " ";
-	// }
 	for (auto& client : _chanClients)
 	{
 		std::cout << "ChanClient name : " << client->getNick() << std::endl;
