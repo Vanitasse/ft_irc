@@ -1,7 +1,12 @@
 #include "../Channel.hpp"
+#include <sys/time.h>
 
 Channel::Channel()
 {
+	struct timeval t;
+	
+	gettimeofday(&t, NULL);
+	_date = std::to_string(t.tv_sec);
 }
 
 Channel::Channel(const Channel& cpy)
@@ -19,6 +24,7 @@ Channel& Channel::operator=(const Channel& rhs)
 		this->_topic = rhs.getTopic();
 		this->_operators = rhs._operators;
 		this->_chanClients = rhs._chanClients;
+		this->_date = rhs._date;
 	}
 	return *this;
 }
@@ -90,24 +96,9 @@ const std::string Channel::getNickList()
 
 const std::string Channel::getTopicInfo() const
 {
-	const std::string format = "[" + this->_who_topic + "] [" + this->_date + "]";
+	const std::string format = this->_who_topic + ' ' + this->_date;
 	return format;
 }
 
-
-void 	Channel::getTopicTime()
-{
-	// Obtenir l'heure actuelle
-	std::time_t now = std::time(nullptr);
-	// Convertir l'heure en structure tm pour le formatage
-	std::tm* now_tm = std::localtime(&now);
-	
-	// Créer une chaîne de caractères pour la date et l'heure formatées
-	char buffer[100] = {0};
-	std::strftime(buffer, sizeof(buffer), "%a %b %e %H:%M:%S %Y", now_tm);
-	
-	// Retourner la chaîne formatée
-	this->_date = buffer;
-}
 
 // Thu Jan  1 01:33:44 1970

@@ -25,8 +25,7 @@ class Channel
 
 		const std::vector<Client*>&		getOperators() const;
 		const std::vector<Client*>& 	getChanClients() const;
-		
-		void								getTopicTime();
+
 		const std::string					getTopicInfo() const;
 		const std::string					getNickList();
 

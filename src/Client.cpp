@@ -202,7 +202,6 @@ void	Client::JOIN(const std::string& chanName)
 	JOINChannel = &_server->newChannelAccess(chanName);
 	JOINChannel->addClient(*this);
 	JOINChannel->setTopic("Default", *this);
-	JOINChannel->getTopicTime();
 	_InChannels.push_back(JOINChannel);
 	FormatIRC::JOIN(this->_fd, this->getNick(), this->getUsername(), JOINChannel->getName(),
 					JOINChannel->getTopic(), JOINChannel->getTopicInfo(), JOINChannel->getNickList());
