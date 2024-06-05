@@ -15,7 +15,8 @@ Channel& Channel::operator=(const Channel& rhs)
 {
 	if (this != &rhs)
 	{
-		this->_name = rhs._name;
+		this->_name = rhs.getName();
+		this->_topic = rhs.getTopic();
 		this->_operators = rhs._operators;
 		this->_chanClients = rhs._chanClients;
 	}
@@ -30,6 +31,17 @@ const std::string& Channel::getName() const
 void Channel::setName(const std::string& name)
 {
 	this->_name = name;
+}
+
+const std::string& Channel::getTopic() const
+{
+	return (this->_topic);
+}
+
+void Channel::setTopic(const std::string& topic, const Client& client)
+{
+	this->_topic = topic;
+	this->_who_topic = client.getNick();
 }
 
 const std::vector<Client*>& Channel::getOperators() const
@@ -65,3 +77,37 @@ void	Channel::sendToClients(const Client& sender, const std::string& msg)
 		if (client->getFd() != sender.getFd())
 			FormatIRC::SendPRIVMESS(client->getFd(), sender.getNick(), this->_name, msg);
 }
+
+const std::string Channel::getNickList()
+{
+	std::string res;
+	for (std::vector<Client*>::iterator it = _chanClients.begin(); it < _chanClients.end(); it++)
+	{
+		res += (*it)->getNick() + " ";
+	}
+	return res;
+}
+
+const std::string Channel::getTopicInfo() const
+{
+	const std::string format = "[" + this->_who_topic + "] [" + this->_date + "]";
+	return format;
+}
+
+
+void 	Channel::getTopicTime()
+{
+	// Obtenir l'heure actuelle
+	std::time_t now = std::time(nullptr);
+	// Convertir l'heure en structure tm pour le formatage
+	std::tm* now_tm = std::localtime(&now);
+	
+	// Créer une chaîne de caractères pour la date et l'heure formatées
+	char buffer[100] = {0};
+	std::strftime(buffer, sizeof(buffer), "%a %b %e %H:%M:%S %Y", now_tm);
+	
+	// Retourner la chaîne formatée
+	this->_date = buffer;
+}
+
+// Thu Jan  1 01:33:44 1970

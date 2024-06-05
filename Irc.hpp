@@ -129,3 +129,14 @@
 #define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " #" + channel + "\r\n")
 // [...]
 #define ERR_INVALIDMODEPARAM(client, channel, mode, password) ("696 " + client + " #" + channel + " " + mode + " " + password + " : password must only contained alphabetic character\r\n")
+
+
+// :nick!user@host JOIN :#channel
+// :yourserver.com 332 <nick> #channel :<channel topic>
+// :yourserver.com 333 <nick> #channel <topic set by> <set time>
+
+
+
+
+// :yourserver.com 353 <nick> = #channel :<nick list>
+// :yourserver.com 366 <nick> #channel :End of /NAMES list

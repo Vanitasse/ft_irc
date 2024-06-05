@@ -175,7 +175,7 @@ void	Client::NICK(const std::string& newName)
 	}
 	std::cout << "Nick Set to " << newName << std::endl;
 	_nickIsSet = true;
-	Answer(user_id(this->getNick(), this->getUsername()) + " NICK :" + newName + "\r\n");
+	FormatIRC::NICK(this->_fd, this->getNick(), this->getUsername(), newName);
 	setNick(newName);
 }
 
@@ -201,7 +201,11 @@ void	Client::JOIN(const std::string& chanName)
 		return ;
 	JOINChannel = &_server->newChannelAccess(chanName);
 	JOINChannel->addClient(*this);
+	JOINChannel->setTopic("Default", *this);
+	JOINChannel->getTopicTime();
 	_InChannels.push_back(JOINChannel);
+	FormatIRC::JOIN(this->_fd, this->getNick(), this->getUsername(), JOINChannel->getName(),
+					JOINChannel->getTopic(), JOINChannel->getTopicInfo(), JOINChannel->getNickList());
 }
 
 void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
