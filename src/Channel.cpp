@@ -78,19 +78,31 @@ void	Channel::sendToClients(const Client& sender, const std::string& msg)
 {
 	for (auto& client : _operators)
 		if (client->getFd() != sender.getFd())
-			FormatIRC::SendPRIVMESS(client->getFd(), sender.getNick(), this->_name, msg);
+			FormatIRC::SendPRIVMESS(client->getFd(), user_id(sender.getNick(), sender.getUsername()), this->_name, msg);
 	for (auto& client : _chanClients)
 		if (client->getFd() != sender.getFd())
-			FormatIRC::SendPRIVMESS(client->getFd(), sender.getNick(), this->_name, msg);
+			FormatIRC::SendPRIVMESS(client->getFd(), user_id(sender.getNick(), sender.getUsername()), this->_name, msg);
 }
 
 const std::string Channel::getNickList()
 {
 	std::string res;
-	for (std::vector<Client*>::iterator it = _chanClients.begin(); it < _chanClients.end(); it++)
+	// for (std::vector<Client*>::iterator it = _chanClients.begin(); it < _chanClients.end(); it++)
+	// {
+	// 	std::cout << "GETNICK = " << 
+	// 	res += (*it)->getNick() + " ";
+	// }
+	for (auto& client : _chanClients)
 	{
-		res += (*it)->getNick() + " ";
+		std::cout << "ChanClient name : " << client->getNick() << std::endl;
+		res += client->getNick() + " ";
 	}
+	for (auto& client : _operators)
+	{
+		std::cout << "Operators name : " << client->getNick() << std::endl;
+		res += "@" + client->getNick() + " ";
+	}
+	std::cout << "RES = " << res << std::endl;
 	return res;
 }
 

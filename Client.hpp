@@ -69,5 +69,7 @@ class	Client
 		void							PASS(const std::string& pass);
 		void							JOIN(const std::string& chanName);
 		void							PRIVMSG(const std::string& destination, const std::string& msg);
+		void							QUIT();
+
 		// virtual void		formatText(std::string& input) = 0;
 };

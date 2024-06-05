@@ -69,5 +69,10 @@ const std::string& chan_name, const std::string& topic, const std::string& topic
 
 }
 
+void	FormatIRC::QUIT(int fd, const std::string& client_nick, const std::string& client_username)
+{
+	const std::string format(user_id(client_nick, client_username) + " QUIT :BYE BYE");
+	sender(fd, format);
+}
 
 //:42IRCserv 333 mablatie #lol mablatie Wed Jun  5 16:30:09 2024
