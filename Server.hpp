@@ -47,6 +47,6 @@ class	Server
 		const std::string&			getDate() const ;
 
 		int							newNickAccess(const std::string& nickname);
-		Channel&					newChannelAccess(const std::string& chanName);
+		Channel*					newChannelAccess(const std::string& chanName);
 		
 };

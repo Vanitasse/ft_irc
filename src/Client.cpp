@@ -37,7 +37,7 @@ Client& Client::operator=(const Client& rhs)
 		this->_fd = rhs._fd;
 		this->_ip_addr = rhs._ip_addr;
 		this->_username = rhs._username;
-		this->_InChannels = rhs._InChannels;
+		this->_inChannels = rhs._inChannels;
 		this->_nick = rhs._nick;
 		this->_realname = rhs._realname;
 		this->_nickIsSet = rhs._nickIsSet;
@@ -101,7 +101,7 @@ void Client::setNick(const std::string& nick_input)
 
 const std::vector<Channel*>& Client::getInChannels() const
 {
-	return (this->_InChannels);
+	return (this->_inChannels);
 }
 
 const bool&	Client::getPassIsSet() const
@@ -175,7 +175,7 @@ void	Client::NICK(const std::string& newName)
 	}
 	std::cout << "Nick Set to " << newName << std::endl;
 	_nickIsSet = true;
-	FormatIRC::NICK(this->_fd, this->getNick(), this->getUsername(), newName);
+	FormatIRC::sendNICK(this->_fd, this->getNick(), this->getUsername(), newName);
 	setNick(newName);
 }
 
@@ -191,24 +191,15 @@ void	Client::PASS(const std::string& password)
 
 void	Client::JOIN(const std::string& chanName)
 {
-	std::vector<Channel*>::iterator	it;
-	Channel	*JOINChannel;
-
-	it = _InChannels.begin();
-	while (it != _InChannels.end() && (*it)->getName() != chanName)
-		it++;
-	if (it != _InChannels.end())
-	{
-		(*it)->addClient(*this);
-		FormatIRC::JOIN(this->_fd, this->getNick(), this->getUsername(), (*it)->getName(),
-					(*it)->getTopic(), (*it)->getTopicInfo(), (*it)->getNickList());
-		return ;
-	}
-	JOINChannel = &_server->newChannelAccess(chanName);
-	JOINChannel->addClient(*this);
+	Channel *JOINChannel;
+	for (auto& channel : _inChannels)
+		if (channel->getName() == chanName)
+			return ;
+	JOINChannel = _server->newChannelAccess(chanName);
+	JOINChannel->addClient(this);
 	JOINChannel->setTopic("Default", *this);
-	_InChannels.push_back(JOINChannel);
-	FormatIRC::JOIN(this->_fd, this->getNick(), this->getUsername(), JOINChannel->getName(),
+	_inChannels.push_back(JOINChannel);
+	FormatIRC::sendJOIN(this->_fd, this->getNick(), this->getUsername(), JOINChannel->getName(),
 					JOINChannel->getTopic(), JOINChannel->getTopicInfo(), JOINChannel->getNickList());
 }
 
@@ -216,14 +207,14 @@ void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 {
 	std::vector<Channel*>::iterator	it;
 
-	it = _InChannels.begin();
+	it = _inChannels.begin();
 		std::cout << (*it)->getName() << '.' << std::endl;
 		std::cout << destination << '.' << std::endl;
-	while (it != _InChannels.end() && (*it)->getName() != destination)
+	while (it != _inChannels.end() && (*it)->getName() != destination)
 	{
 		it++;
 	}
-	if (it == _InChannels.end())
+	if (it == _inChannels.end())
 	{
 		std::cout << RED << "client " << _nick << " try to talk to a channel but is not inside" << RESET << std::endl;
 		return ;
@@ -233,7 +224,7 @@ void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 
 void	Client::QUIT()
 {
-	FormatIRC::QUIT(this->_fd, this->getNick(), this->getUsername());
+	FormatIRC::sendQUIT(this->_fd, this->getNick(), this->getUsername());
 	_server->clearClient(*this);
 }
 
@@ -263,7 +254,7 @@ void	Client::ParseAndRespond(std::string& input)
 			PASS(*(it + 1));
 		it = std::find(cmds.begin(), cmds.end(), "PING");
 		if (it != cmds.end() && it + 1 != cmds.end())
-			FormatIRC::PONG(this->_fd, *(it + 1));
+			FormatIRC::sendPONG(this->_fd, *(it + 1));
 		it = std::find(cmds.begin(), cmds.end(), "PRIVMSG");
 		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
 			PRIVMSG(*(it + 1), *(it + 2));
@@ -278,7 +269,7 @@ void	Client::ParseAndRespond(std::string& input)
 		if (_nickIsSet && _passIsSet && !_isConnected)
 		{
 			_isConnected = true;
-			FormatIRC::SendWelcome(this->_fd, this->_nick, _server->getDate());
+			FormatIRC::sendWelcome(this->_fd, this->_nick, _server->getDate());
 		}
 		it = std::find(cmds.begin(), cmds.end(), "JOIN");
 		if (it != cmds.end() && it + 1 != cmds.end())

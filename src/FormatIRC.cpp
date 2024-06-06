@@ -1,4 +1,5 @@
 #include "../FormatIRC.hpp"
+# include "../Client.hpp"
 
 FormatIRC::FormatIRC()
 {
@@ -24,13 +25,13 @@ void	FormatIRC::sender(int fd, const std::string& format)
 	std::cout << CYAN << "[Server send]" << format << RESET << std::endl;
 }
 
-void	FormatIRC::SendPRIVMESS(int fd, const std::string& senderNick, const std::string& destination, const std::string& msg)
+void	FormatIRC::sendPRIVMESS(int fd, const std::string& senderNick, const std::string& destination, const std::string& msg)
 {
 	const std::string format(":" + senderNick + " PRIVMSG" + ' ' + destination + ' ' + msg + "\r\n");
 	sender(fd, format);
 }
 
-void	FormatIRC::SendWelcome(int fd, const std::string& Nick, const std::string& ServerCreationDate)
+void	FormatIRC::sendWelcome(int fd, const std::string& Nick, const std::string& ServerCreationDate)
 {
 	const std::string format(msg_serv(std::string("001"), Nick) + "Welcome to the IRC server\r\n"
 				+ msg_serv(std::string("002"), Nick) + GREEN + "Your host is 42IRCserver, running version 0.1\r\n"
@@ -41,19 +42,19 @@ void	FormatIRC::SendWelcome(int fd, const std::string& Nick, const std::string& 
 	sender(fd, format);
 }
 
-void	FormatIRC::PONG(int fd, const std::string& host)
+void	FormatIRC::sendPONG(int fd, const std::string& host)
 {
 	const std::string format("PONG :" + host + "\r\n");
 	sender(fd, format);
 }
 
-void	FormatIRC::NICK(int fd, const std::string& client_nick, const std::string& client_username, const std::string& newName)
+void	FormatIRC::sendNICK(int fd, const std::string& client_nick, const std::string& client_username, const std::string& newName)
 {
 	const std::string format(user_id(client_nick, client_username) + " NICK :" + newName + "\r\n");
 	sender(fd, format);
 }
 
-void	FormatIRC::JOIN(int fd, const std::string& client_nick, const std::string& client_username,
+void	FormatIRC::sendJOIN(int fd, const std::string& client_nick, const std::string& client_username,
 const std::string& chan_name, const std::string& topic, const std::string& topic_info, const std::string& nick_list)
 {
 	std::string format(user_id(client_nick, client_username) + " JOIN :" + chan_name + "\r\n");
@@ -69,10 +70,9 @@ const std::string& chan_name, const std::string& topic, const std::string& topic
 
 }
 
-void	FormatIRC::QUIT(int fd, const std::string& client_nick, const std::string& client_username)
+void	FormatIRC::sendQUIT(int fd, const std::string& client_nick, const std::string& client_username)
 {
 	const std::string format(user_id(client_nick, client_username) + " QUIT :BYE BYE");
 	sender(fd, format);
 }
 
-//:42IRCserv 333 mablatie #lol mablatie Wed Jun  5 16:30:09 2024

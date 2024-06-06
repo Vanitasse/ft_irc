@@ -22,7 +22,7 @@ class	Client
 		std::string	_message;
 
 		Server* 	_server;
-		std::vector<Channel*>		_InChannels;
+		std::vector<Channel*>		_inChannels;
 	public:
 					Client();
 					Client(Server& server);

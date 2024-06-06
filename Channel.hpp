@@ -30,6 +30,6 @@ class Channel
 		const std::string					getNickList();
 
 
-		void								addClient(Client& client);
+		void								addClient(Client *client);
 		void								sendToClients(const Client& sender, const std::string& msg);
 };

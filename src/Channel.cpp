@@ -60,28 +60,28 @@ const std::vector<Client*>& Channel::getChanClients() const
 	return (this->_chanClients);
 }
 
-void	Channel::addClient(Client& client)
+void	Channel::addClient(Client *client)
 {
 	if (_operators.size() == 0)
 	{
-		_operators.push_back(&client);
-		std::cout << BG_BLUE << "client " << client.getNick() << " added to channel " << this->_name << " as Operator" << RESET << std::endl;
+		_operators.push_back(client);
+		std::cout << BG_BLUE << "client " << client->getNick() << " added to channel " << this->_name << " as Operator" << RESET << std::endl;
 	}
 	else
 	{
-		_chanClients.push_back(&client);
-		std::cout<<  BG_GREEN << "client " << client.getNick() << " added to channel " << this->_name << " as Simple user" << RESET << std::endl;
+		_chanClients.push_back(client);
+		std::cout<<  BG_GREEN << "client " << client->getNick() << " added to channel " << this->_name << " as Simple user" << RESET << std::endl;
 	}
 }
 
 void	Channel::sendToClients(const Client& sender, const std::string& msg)
 {
-	for (auto& client : _operators)
-		if (client->getFd() != sender.getFd())
-			FormatIRC::SendPRIVMESS(client->getFd(), user_id(sender.getNick(), sender.getUsername()), this->_name, msg);
-	for (auto& client : _chanClients)
-		if (client->getFd() != sender.getFd())
-			FormatIRC::SendPRIVMESS(client->getFd(), user_id(sender.getNick(), sender.getUsername()), this->_name, msg);
+	for (unsigned int i = 0; i < _operators.size(); i++)
+		if (_operators[i] && _operators[i] != &sender)
+			FormatIRC::sendPRIVMESS(_operators[i]->getFd(), sender.getNick(), this->_name, msg);
+	for (unsigned int i = 0; i < _chanClients.size(); i++)
+		if (_chanClients[i] && _chanClients[i] != &sender)
+			FormatIRC::sendPRIVMESS(_chanClients[i]->getFd(), sender.getNick(), this->_name, msg);
 }
 
 const std::string Channel::getNickList()
@@ -106,6 +106,3 @@ const std::string Channel::getTopicInfo() const
 	const std::string format = this->_who_topic + ' ' + this->_date;
 	return format;
 }
-
-
-// Thu Jan  1 01:33:44 1970

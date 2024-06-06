@@ -11,7 +11,7 @@ Server::~Server()
 {
 	std::vector<Client>::iterator	it;
 
-	it = _Clients.begin() + 1; // bot est au debut sans fd ouvert
+	it = _Clients.begin();
 	
 	while (it != _Clients.end())
 	{
@@ -56,8 +56,6 @@ void	Server::serverInit()
 	struct sockaddr_in	sock_addr; //structure pour l'adresse internet
 	int uh = 1; // necessaire car parametre opt_value de setsockopt() = const void *
 
-	_Clients.push_back(Bot(*this));
-
 	sock_addr.sin_family = AF_INET; //on set le type en IPV4
 	sock_addr.sin_port = htons(_port); // converti le port(int) en big endian (pour le network byte order)
 	sock_addr.sin_addr.s_addr = INADDR_ANY; // IMADDR_ANY = n'importe quel adresse donc full local
@@ -92,7 +90,7 @@ void Server::serverExec()
 				if (i == 0)
 					connectClient();
 				else
-					readData(_Clients[i]);
+					readData(_Clients[i - 1]);
 			}
 		}
 	}
