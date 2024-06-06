@@ -195,7 +195,7 @@ void	Client::JOIN(const std::string& chanName)
 	for (auto& channel : _inChannels)
 		if (channel->getName() == chanName)
 			return ;
-	JOINChannel = _server->newChannelAccess(chanName);
+	JOINChannel = _server->checkChannels(chanName);
 	JOINChannel->addClient(this);
 	JOINChannel->setTopic("Default", *this);
 	_inChannels.push_back(JOINChannel);

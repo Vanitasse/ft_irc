@@ -3,10 +3,7 @@
 
 Channel::Channel()
 {
-	struct timeval t;
-	
-	gettimeofday(&t, NULL);
-	_date = std::to_string(t.tv_sec);
+	_date = std::to_string(std::time(NULL));
 }
 
 Channel::Channel(const Channel& cpy)
@@ -76,6 +73,8 @@ void	Channel::addClient(Client *client)
 
 void	Channel::sendToClients(const Client& sender, const std::string& msg)
 {
+	for (unsigned int i = 0; i < _chanClients.size(); i++)
+		std::cout << "channel: " << _chanClients[i] << std::endl;
 	for (unsigned int i = 0; i < _operators.size(); i++)
 		if (_operators[i] && _operators[i] != &sender)
 			FormatIRC::sendPRIVMESS(_operators[i]->getFd(), sender.getNick(), this->_name, msg);

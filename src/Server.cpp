@@ -9,16 +9,12 @@ Server::Server()
 
 Server::~Server()
 {
-	std::vector<Client>::iterator	it;
-
-	it = _Clients.begin();
-	
-	while (it != _Clients.end())
-	{
-		close (it->getFd());
-		it++;
-	}
-	close (_pfds[0].fd);
+	for (std::vector<Client*>::iterator	it = _Clients.begin(); it != _Clients.end(); it++)
+		delete (*it);
+	for (std::vector<Channel*>::iterator	it = _Channels.begin(); it != _Channels.end(); it++)
+		delete (*it);
+	for (std::vector<struct pollfd>::iterator	it = _pfds.begin(); it != _pfds.end(); it++)
+		close (it->fd);
 	std::cout << RED << "Server destructed" << RESET << std::endl;
 }
 
@@ -77,24 +73,6 @@ void	Server::serverInit()
 	getServerCreationTime();
 }
 
-void Server::serverExec()
-{
-	while (this->_signal == false)
-	{
-		if (poll(&_pfds[0], _pfds.size(), -1) == -1 && this->_signal == false) //-1 = bloque ici attend un event, 0 = bloque pas tourne dans le while
-			throw(std::runtime_error("poll() function failed"));
-		for (size_t i = 0; i < _pfds.size(); i++)
-		{
-			if (_pfds[i].revents && POLLIN)
-			{
-				if (i == 0)
-					connectClient();
-				else
-					readData(_Clients[i - 1]);
-			}
-		}
-	}
-}
 
 void	Server::run()
 {
@@ -109,7 +87,7 @@ void	Server::run()
 
 void	Server::connectClient()
 {
-	Client				client(*this);
+	Client				*client = new Client(*this);
 	struct sockaddr_in 	sock_addr;
 	socklen_t 			len;
 	struct pollfd		new_poll = {};
@@ -123,7 +101,7 @@ void	Server::connectClient()
 	new_poll.events = POLLIN;
 	new_poll.revents = 0;
 	_pfds.push_back(new_poll);
-	client.setFd(new_poll.fd);
+	client->setFd(new_poll.fd);
 	_Clients.push_back(client);
 }
 
@@ -155,3 +133,22 @@ void	Server::readData(Client& client)
 	client.ParseAndRespond(_receivedBuffer);
 }
 
+
+void Server::serverExec()
+{
+	while (this->_signal == false)
+	{
+		if (poll(&_pfds[0], _pfds.size(), -1) == -1 && this->_signal == false) //-1 = bloque ici attend un event, 0 = bloque pas tourne dans le while
+			throw(std::runtime_error("poll() function failed"));
+		for (size_t i = 0; i < _pfds.size(); i++)
+		{
+			if (_pfds[i].revents && POLLIN)
+			{
+				if (i == 0)
+					connectClient();
+				else
+					readData(*_Clients[i - 1]);
+			}
+		}
+	}
+}

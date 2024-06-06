@@ -16,8 +16,8 @@ class	Server
 		static bool					_signal;
 	
 		std::vector<struct pollfd>	_pfds;
-		std::vector<Client>			_Clients;
-		std::vector<Channel>		_Channels;
+		std::vector<Client*>		_Clients;
+		std::vector<Channel*>		_Channels;
 	
 		void						serverInit();
 		void						serverExec();
@@ -28,6 +28,7 @@ class	Server
 		std::string					_receivedBuffer;
 		std::string					_date;
 
+		Channel*					createNewChannel(const std::string& chanName);
 	public:
 							Server();
 							~Server();
@@ -47,6 +48,6 @@ class	Server
 		const std::string&			getDate() const ;
 
 		int							newNickAccess(const std::string& nickname);
-		Channel*					newChannelAccess(const std::string& chanName);
+		Channel*					checkChannels(const std::string& chanName);
 		
 };
