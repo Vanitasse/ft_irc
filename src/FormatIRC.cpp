@@ -1,6 +1,6 @@
 #include "../FormatIRC.hpp"
-# include "../Client.hpp"
-
+#include "../Client.hpp"
+#include "../Channel.hpp"
 FormatIRC::FormatIRC()
 {
 
@@ -48,25 +48,33 @@ void	FormatIRC::sendPONG(int fd, const std::string& host)
 	sender(fd, format);
 }
 
+void	FormatIRC::sendPART(const Client& client, const std::string& channelName, const std::string& partMsg)
+{
+	(void)client;
+	(void)channelName;
+	(void)partMsg;
+	// const std::string format("PONG :" + host + "\r\n");
+	// sender(fd, format);
+}
+
 void	FormatIRC::sendNICK(int fd, const std::string& client_nick, const std::string& client_username, const std::string& newName)
 {
 	const std::string format(user_id(client_nick, client_username) + " NICK :" + newName + "\r\n");
 	sender(fd, format);
 }
 
-void	FormatIRC::sendJOIN(int fd, const std::string& client_nick, const std::string& client_username,
-const std::string& chan_name, const std::string& topic, const std::string& topic_info, const std::string& nick_list)
+void	FormatIRC::sendJOIN(const Client& client, Channel& channel, const std::string& domain)
 {
-	std::string format(user_id(client_nick, client_username) + " JOIN :" + chan_name + "\r\n");
-	sender(fd, format);
-	format = msg_serv2(std::string("332"), client_nick) + chan_name + " :" + topic + "\r\n";
-	sender(fd, format);
-	format = msg_serv2(std::string("333"), client_nick) + chan_name + " " + topic_info + "\r\n";
-	sender(fd, format);
-	format = msg_serv2(std::string("353"), client_nick) + "= " + chan_name + " :" + nick_list + "\r\n";
-	sender(fd, format);
-	format = msg_serv2(std::string("366"), client_nick) + chan_name + " :End of /NAMES list\r\n";
-	sender(fd, format);
+	std::string format(":" + client.getNick() + "!~" + client.getUsername() +  " JOIN :" + channel.getName() + "\r\n");
+	sender(client.getFd(), format);
+	format = ":" + domain +  "329 " + client.getNick() + " " + client.getUsername() + " :" + channel.getTopic() + "\r\n";
+	sender(client.getFd(), format);
+	format = msg_serv2(std::string("333"), client.getNick()) + channel.getName() + " " + channel.getTopicInfo() + "\r\n";
+	sender(client.getFd(), format);
+	format = msg_serv2(std::string("353"), client.getNick()) + "= " + channel.getName() + " :" + channel.getNickList() + "\r\n";
+	sender(client.getFd(), format);
+	format = msg_serv2(std::string("366"), client.getNick()) + channel.getName() + " :End of /NAMES list\r\n";
+	sender(client.getFd(), format);
 
 }
 

@@ -47,15 +47,15 @@ void Channel::setTopic(const std::string& topic, const Client& client)
 	this->_who_topic = client.getNick();
 }
 
-const std::vector<Client*>& Channel::getOperators() const
-{
-	return (this->_operators);
-}
+// const std::vector<Client*>& Channel::getOperators() const
+// {
+// 	return (this->_operators);
+// }
 
-const std::vector<Client*>& Channel::getChanClients() const
-{
-	return (this->_chanClients);
-}
+// const std::vector<Client*>& Channel::getChanClients() const
+// {
+// 	return (this->_chanClients);
+// }
 
 void	Channel::addClient(Client *client)
 {
@@ -73,8 +73,6 @@ void	Channel::addClient(Client *client)
 
 void	Channel::sendToClients(const Client& sender, const std::string& msg)
 {
-	for (unsigned int i = 0; i < _chanClients.size(); i++)
-		std::cout << "channel: " << _chanClients[i] << std::endl;
 	for (unsigned int i = 0; i < _operators.size(); i++)
 		if (_operators[i] && _operators[i] != &sender)
 			FormatIRC::sendPRIVMESS(_operators[i]->getFd(), sender.getNick(), this->_name, msg);
@@ -85,23 +83,31 @@ void	Channel::sendToClients(const Client& sender, const std::string& msg)
 
 const std::string Channel::getNickList()
 {
-	std::string res;
+	std::string list;
+
 	for (auto& client : _chanClients)
-	{
-		std::cout << "ChanClient name : " << client->getNick() << std::endl;
-		res += client->getNick() + " ";
-	}
+		list += client->getNick() + " ";
 	for (auto& client : _operators)
-	{
-		std::cout << "Operators name : " << client->getNick() << std::endl;
-		res += "@" + client->getNick() + " ";
-	}
-	std::cout << "RES = " << res << std::endl;
-	return res;
+		list += "@" + client->getNick() + " ";
+	return (list);
 }
 
 const std::string Channel::getTopicInfo() const
 {
 	const std::string format = this->_who_topic + ' ' + this->_date;
-	return format;
+	
+	return (format);
 }
+
+void	Channel::channelClearClient(const Client* client)
+{
+	std::vector<Client*>::iterator it;
+
+	it = std::find(_operators.begin(), _operators.end(), client);
+	if (it != _operators.end())
+		_operators.erase(it);
+	it = std::find(_chanClients.begin(), _chanClients.end(), client);
+	if (it != _chanClients.end())
+		_chanClients.erase(it);
+}
+

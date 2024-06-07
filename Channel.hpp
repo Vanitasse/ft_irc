@@ -23,8 +23,8 @@ class Channel
 		const std::string&				getTopic() const;
 		void							setTopic(const std::string& topic, const Client& client);
 
-		const std::vector<Client*>&		getOperators() const;
-		const std::vector<Client*>& 	getChanClients() const;
+		// const std::vector<Client*>&		getOperators() const;
+		// const std::vector<Client*>& 	getChanClients() const;
 
 		const std::string					getTopicInfo() const;
 		const std::string					getNickList();
@@ -32,4 +32,5 @@ class Channel
 
 		void								addClient(Client *client);
 		void								sendToClients(const Client& sender, const std::string& msg);
+		void								channelClearClient(const Client* client);
 };

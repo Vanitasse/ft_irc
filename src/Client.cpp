@@ -159,16 +159,9 @@ std::vector<std::string>	Client::splitInput(const std::string& input) //static
 }
 
 
-void	Client::Answer(const std::string& answer)
-{
-	send(getFd(),answer.c_str(), answer.length(), 0);
-	std::cout << CYAN << "[Server send]" << answer << RESET << std::endl;
-}
-
-
 void	Client::NICK(const std::string& newName)
 {
-	if (!_server->newNickAccess(newName))
+	if (!_server->checkNicks(newName))
 	{
 		std::cout << "SetNick refused nick" << std::endl;
 		return ;
@@ -199,8 +192,7 @@ void	Client::JOIN(const std::string& chanName)
 	JOINChannel->addClient(this);
 	JOINChannel->setTopic("Default", *this);
 	_inChannels.push_back(JOINChannel);
-	FormatIRC::sendJOIN(this->_fd, this->getNick(), this->getUsername(), JOINChannel->getName(),
-					JOINChannel->getTopic(), JOINChannel->getTopicInfo(), JOINChannel->getNickList());
+	FormatIRC::sendJOIN(*this, *JOINChannel , _server->getDomain());
 }
 
 void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
@@ -211,9 +203,7 @@ void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 		std::cout << (*it)->getName() << '.' << std::endl;
 		std::cout << destination << '.' << std::endl;
 	while (it != _inChannels.end() && (*it)->getName() != destination)
-	{
 		it++;
-	}
 	if (it == _inChannels.end())
 	{
 		std::cout << RED << "client " << _nick << " try to talk to a channel but is not inside" << RESET << std::endl;
@@ -225,9 +215,21 @@ void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 void	Client::QUIT()
 {
 	FormatIRC::sendQUIT(this->_fd, this->getNick(), this->getUsername());
-	_server->clearClient(*this);
+	for (std::vector<Channel*>::iterator it = _inChannels.begin(); it != _inChannels.end(); it++)
+		(*it)->channelClearClient(this);
+	_server->clearClient(this);
 }
 
+void	Client::PART(const std::string& channelName, const std::string& partMsg)
+{
+	for (std::vector<Channel*>::iterator it = _inChannels.begin(); it != _inChannels.end(); it++)
+		if (channelName == (*it)->getName())
+		{
+			(*it)->sendToClients(*this, partMsg);
+			_inChannels.erase(it);
+			FormatIRC::sendPART(*this, channelName, partMsg);
+		}
+}
 
 void	Client::ParseAndRespond(std::string& input)
 {
@@ -258,7 +260,9 @@ void	Client::ParseAndRespond(std::string& input)
 		it = std::find(cmds.begin(), cmds.end(), "PRIVMSG");
 		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
 			PRIVMSG(*(it + 1), *(it + 2));
-
+		it = std::find(cmds.begin(), cmds.end(), "PART");
+		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
+			PART(*(it + 1), *(it + 2));
 		it = std::find(cmds.begin(), cmds.end(), "QUIT");
 		if (it != cmds.end() && it + 1 != cmds.end())
 		{

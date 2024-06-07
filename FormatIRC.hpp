@@ -2,10 +2,8 @@
 
 # include "Irc.hpp"
 
-// # include "Channel.hpp"
-
 class Client;
-// class Channel;
+class Channel;
 
 class FormatIRC
 {
@@ -22,7 +20,6 @@ class FormatIRC
 		static void	sendNICK(int fd, const std::string& client_nick, const std::string& client_username, const std::string& newName);
 		static void	sendQUIT(int fd, const std::string& client_nick, const std::string& client_username);
 
-		static void sendJOIN(int fd, const std::string& client_nick, const std::string& client_username,
-						const std::string& chan_name, const std::string& topic,
-						const std::string& topic_info, const std::string& nick_list);
+		static void sendJOIN(const Client& client, Channel& channel, const std::string& domain);
+		static void sendPART(const Client& client, const std::string& channelName, const std::string& partMsg);
 };

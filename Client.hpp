@@ -41,9 +41,6 @@ class	Client
 	
 		const std::vector<Channel*>&	getInChannels() const;
 
-		const std::string&	getPass() const;
-		void				setPass(const std::string& pass_input);
-
 		const std::string&	getNick() const;
 		void				setNick(const std::string& nick_input);
 		
@@ -64,11 +61,12 @@ class	Client
 		static std::vector<std::string>	splitInput(const std::string& input);
 		
 		void							ParseAndRespond(std::string& input);
-		void							Answer(const std::string& answer);
 		void							NICK(const std::string& newName);
 		void							PASS(const std::string& pass);
 		void							JOIN(const std::string& chanName);
 		void							PRIVMSG(const std::string& destination, const std::string& msg);
+		void							WHO(const std::string& channelName);
+		void							PART(const std::string& channelName, const std::string& partMsg);
 		void							QUIT();
 
 		// virtual void		formatText(std::string& input) = 0;

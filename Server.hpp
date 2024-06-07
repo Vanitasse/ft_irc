@@ -10,7 +10,8 @@
 class	Server
 {
 	private:
-		const std::string			_password;
+		std::string					_domain;
+		const	std::string			_password;
 		int							_port;
 
 		static bool					_signal;
@@ -22,7 +23,7 @@ class	Server
 		void						serverInit();
 		void						serverExec();
 		void						connectClient();
-		void						readData(Client& client);
+		void						readData(Client* client);
 		int							ServerRecv(int fd);
 		
 		std::string					_receivedBuffer;
@@ -40,14 +41,15 @@ class	Server
 
 		static void					signalHandler(int signum);
 
-		void						clearClient(Client& client);
+		void						clearClient(Client* client);
 
 		void						run();
 
 		void						getServerCreationTime() ;
 		const std::string&			getDate() const ;
+		const std::string&			getDomain() const ;
 
-		int							newNickAccess(const std::string& nickname);
+		int							checkNicks(const std::string& nickname);
 		Channel*					checkChannels(const std::string& chanName);
 		
 };

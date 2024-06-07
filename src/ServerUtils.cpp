@@ -1,21 +1,23 @@
 #include "../Server.hpp"
 
-void	Server::clearClient(Client& client)
+void	Server::clearClient(Client* client)
 {
-	std::vector<Client*>::iterator			it;
-	std::vector<struct pollfd>::iterator	it2;
-
-	std::cout << "Entering ClearClient" << std::endl;
-	it2 = _pfds.begin();
-	while (it2 != _pfds.end() && it2->fd != client.getFd())
-		it2++;
-	_pfds.erase(it2);
-	it = _Clients.begin();
-	while (it != _Clients.end() && (*it)->getFd() != client.getFd())
-		it++;
-	close((*it)->getFd());
-	delete (*it);
-	_Clients.erase(it);
+	std::cout << "Entering ClearClient to delete " << client->getNick() << " with fd " << client->getFd() << std::endl;
+	for (std::vector<struct pollfd>::iterator	it = _pfds.begin(); it != _pfds.end(); it++)
+		if (it->fd == client->getFd())
+		{
+			close(it->fd);
+			_pfds.erase(it);
+			break ;
+		}
+	for (std::vector<Client*>::iterator	it = _Clients.begin(); it != _Clients.end(); it++)
+		if (*it == client)
+		{
+			delete (*it);
+			*it = NULL;
+			_Clients.erase(it);
+			break ;
+		}
 }
 
 void Server::signalHandler(int signum) //static
@@ -65,7 +67,7 @@ Channel*	Server::checkChannels(const std::string& chanName)
 	return (createNewChannel(chanName));
 }
 
-int	Server::newNickAccess(const std::string& nickname)
+int	Server::checkNicks(const std::string& nickname)
 {
 	for (auto& client : _Clients)
 		if (client->getNick() == nickname)

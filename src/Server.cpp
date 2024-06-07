@@ -4,7 +4,7 @@ bool Server::_signal = false;
 
 Server::Server()
 {
-	
+	_domain = "42IRCserver";
 }
 
 Server::~Server()
@@ -27,6 +27,7 @@ Server&	Server::operator=(const Server& toCpy)
 {
 	if (this != &toCpy)
 	{
+		_domain = toCpy._domain;
 		_Clients = toCpy._Clients;
 		_pfds = toCpy._pfds;
 		_port = toCpy._port;
@@ -34,7 +35,10 @@ Server&	Server::operator=(const Server& toCpy)
 	return (*this);
 }
 
-Server::Server(const int& port, const std::string& password_input) : _password(password_input), _port(port) {}
+Server::Server(const int& port, const std::string& password_input) : _password(password_input), _port(port)
+{
+
+}
 
 const std::string& Server::getDate() const
 {
@@ -44,6 +48,11 @@ const std::string& Server::getDate() const
 const std::string&	Server::getPassword() const
 {
 	return (_password);
+}
+
+const std::string&	Server::getDomain() const
+{
+	return (_domain);
 }
 
 void	Server::serverInit()
@@ -103,6 +112,8 @@ void	Server::connectClient()
 	_pfds.push_back(new_poll);
 	client->setFd(new_poll.fd);
 	_Clients.push_back(client);
+	std:: cout << "New Client  " << _Clients.back()->getNick() << " with fd " << _Clients.back()->getFd() << std::endl;
+	std::cout << "_Clients.size() = " << _Clients.size() << "\n_pfds.size() = " << _pfds.size() << std::endl;
 }
 
 
@@ -126,11 +137,11 @@ int	Server::ServerRecv(int fd)
 	return (1);
 }
 
-void	Server::readData(Client& client)
+void	Server::readData(Client* client)
 {
-	if (!ServerRecv(client.getFd()))
+	if (!ServerRecv(client->getFd()))
 		return (clearClient(client));
-	client.ParseAndRespond(_receivedBuffer);
+	client->ParseAndRespond(_receivedBuffer);
 }
 
 
@@ -147,7 +158,7 @@ void Server::serverExec()
 				if (i == 0)
 					connectClient();
 				else
-					readData(*_Clients[i - 1]);
+					readData(_Clients[i - 1]);
 			}
 		}
 	}
