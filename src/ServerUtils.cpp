@@ -32,7 +32,6 @@ void Server::getServerCreationTime()
 {
 	// Obtenir l'heure actuelle
 	std::time_t now = std::time(nullptr);
-	std::cout << now << std::endl;
 	// Convertir l'heure en structure tm pour le formatage
 	std::tm* now_tm = std::localtime(&now);
 	

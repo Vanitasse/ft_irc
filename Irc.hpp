@@ -121,7 +121,7 @@
 
 #define msg_err(code, nickname) (":42IRCserv " + code + " * " + nickname + " :")
 
-#define supp_info() ("CHANTYPES=# PREFIX=(o)@ MODES=1 CHANLIMIT=#:5 NICKLEN=20 TOPICLEN=200")
+#define supp_info() ("CHANTYPES=# PREFIX=(o)@ MODES=1 CHANLIMIT=#:5 NICKLEN=20 TOPICLEN=200") //ADD Command INFO
 
 #define	priv_mess(nickname, channel, msg) (":" + nickname + " PRIVMSG" + ' ' + channel + ' ' + msg + "\r\n")
 

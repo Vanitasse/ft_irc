@@ -55,6 +55,11 @@ const std::string&	Server::getDomain() const
 	return (_domain);
 }
 
+const std::vector<Channel*>& Server::getChannels() const
+{
+	return (this->_Channels);
+}
+
 void	Server::serverInit()
 {
 	struct pollfd		new_poll= {};
