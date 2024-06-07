@@ -196,7 +196,7 @@ void	Client::JOIN(const std::string& channelName)
 		return ;
 	}
 	JOINChannel->addClient(this);
-	JOINChannel->setTopic("Default", *this);
+	JOINChannel->setTopic("", *this);
 	_inChannels.push_back(JOINChannel);
 	FormatIRC::sendJOIN(*this, *JOINChannel , _server->getDomain());
 }
@@ -312,8 +312,10 @@ void	Client::ParseAndRespond(std::string& input)
 
 
 		it = std::find(cmds.begin(), cmds.end(), "TOPIC");
-		if (it != cmds.end() && it + 1 != cmds.end())
-			TOPIC_1(*(it + 1));
+		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
+			_server->TOPIC_2(*this, *(it + 1), *(it + 2));
+		else if (it != cmds.end() && it + 1 != cmds.end())
+			_server->TOPIC_1(*this, *(it + 1));
 
 
 

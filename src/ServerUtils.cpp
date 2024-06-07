@@ -74,3 +74,17 @@ int	Server::checkNicks(const std::string& nickname)
 			return (0);
 	return (1);
 }
+
+
+bool Server::checkOPs(const std::string& nickname, const std::string& chanName)
+{
+	for (std::vector<Channel*>::iterator it = _Channels.begin(); it < _Channels.end(); it++)
+	{
+		if ((*it)->getName() == chanName)
+		{
+			if ((*it)->listOPs(nickname))
+				return true;
+		}
+	}
+	return false;
+}
