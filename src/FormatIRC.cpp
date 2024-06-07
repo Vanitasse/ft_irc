@@ -50,11 +50,8 @@ void	FormatIRC::sendPONG(int fd, const std::string& host)
 
 void	FormatIRC::sendPART(const Client& client, const std::string& channelName, const std::string& partMsg)
 {
-	(void)client;
-	(void)channelName;
-	(void)partMsg;
-	// const std::string format("PONG :" + host + "\r\n");
-	// sender(fd, format);
+	const std::string format(":" + client.getNick() + "!~" + client.getUsername() + " PART " + channelName + " " + partMsg + "\r\n");
+	sender(client.getFd(), format);
 }
 
 void	FormatIRC::sendNICK(int fd, const std::string& client_nick, const std::string& client_username, const std::string& newName)
@@ -82,5 +79,13 @@ void	FormatIRC::sendQUIT(int fd, const std::string& client_nick, const std::stri
 {
 	const std::string format(user_id(client_nick, client_username) + " QUIT :BYE BYE");
 	sender(fd, format);
+}
+
+//  :roubaix.fr.epiknet.org 448 paul #pooooollllllllingggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh :Cannot join channel: Channel name is too long
+
+void	sendErrorChannelLen(const Client& client, const std::string& channelName, const std::string& domain)
+{
+	const std::string format(domain + " 448 " + client.getNick() + " " + channelName + " :Cannot join channel: Channel name is too long");
+	FormatIRC::sender(client.getFd(), format);
 }
 

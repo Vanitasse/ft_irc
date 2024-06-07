@@ -5,6 +5,11 @@ bool Server::_signal = false;
 Server::Server()
 {
 	_domain = "42IRCserver";
+	_limits._chanType = "#";
+	_limits._prefix = "(o)@";
+	_limits._nbModes = 1;
+	_limits._nickLen = 12;
+	_limits._topicLen = 200;
 }
 
 Server::~Server()
@@ -37,7 +42,13 @@ Server&	Server::operator=(const Server& toCpy)
 
 Server::Server(const int& port, const std::string& password_input) : _password(password_input), _port(port)
 {
-
+	_domain = "42IRCserver";
+	_limits._chanType = "#";
+	_limits._channelLen = 20;
+	_limits._prefix = "(o)@";
+	_limits._nbModes = 1;
+	_limits._nickLen = 15;
+	_limits._topicLen = 200;
 }
 
 const std::string& Server::getDate() const
@@ -53,6 +64,11 @@ const std::string&	Server::getPassword() const
 const std::string&	Server::getDomain() const
 {
 	return (_domain);
+}
+
+const t_limits&	Server::getLimits() const
+{
+	return (_limits);
 }
 
 void	Server::serverInit()

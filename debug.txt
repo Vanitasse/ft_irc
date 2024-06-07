@@ -7,8 +7,8 @@
 >> :roubaix.fr.epiknet.org NOTICE * :*** No ident response; username prefixed with ~
 >> :roubaix.fr.epiknet.org CAP * LS :unrealircd.org/link-security unrealircd.org/plaintext-policy extended-join chghost cap-notify userhost-in-names multi-prefix away-notify sasl tls account-notify message-tags batch account-tag server-time echo-message labeled-response
 << CAP REQ :multi-prefix
->> PING :1B09B768
-<< PONG :1B09B768
+>> PING :1559C24E
+<< PONG :1559C24E
 >> :roubaix.fr.epiknet.org CAP paul ACK :multi-prefix 
 << CAP END
 >> :roubaix.fr.epiknet.org 001 paul :Welcome to the EpiKnet IRC Network paul!~TheUserNa@62.210.32.0
@@ -21,12 +21,12 @@
 >> :roubaix.fr.epiknet.org 005 paul NICKLEN=30 PREFIX=(ohv)@%+ QUITLEN=307 SAFELIST SILENCE=15 STATUSMSG=@%+ TARGMAX=DCCALLOW:,ISON:,JOIN:,KICK:4,KILL:,LIST:,NAMES:1,NOTICE:1,PART:,PRIVMSG:4,SAJOIN:,SAPART:,TAGMSG:1,USERHOST:,USERIP:,WATCH:,WHOIS:1,WHOWAS:1 TOPICLEN=360 UHNAMES USERIP WALLCHOPS WATCH=128 :are supported by this server
 >> :roubaix.fr.epiknet.org 005 paul WATCHOPTS=A WHOX :are supported by this server
 >> :roubaix.fr.epiknet.org 396 paul 6F35C787.B270E442.5F584402.IP :is now your displayed host
->> :roubaix.fr.epiknet.org 251 paul :There are 181 users and 138 invisible on 4 servers
+>> :roubaix.fr.epiknet.org 251 paul :There are 186 users and 141 invisible on 4 servers
 >> :roubaix.fr.epiknet.org 252 paul 52 :operator(s) online
->> :roubaix.fr.epiknet.org 254 paul 307 :channels formed
->> :roubaix.fr.epiknet.org 255 paul :I have 252 clients and 1 servers
->> :roubaix.fr.epiknet.org 265 paul 252 627 :Current local users 252, max 627
->> :roubaix.fr.epiknet.org 266 paul 319 1116 :Current global users 319, max 1116
+>> :roubaix.fr.epiknet.org 254 paul 308 :channels formed
+>> :roubaix.fr.epiknet.org 255 paul :I have 259 clients and 1 servers
+>> :roubaix.fr.epiknet.org 265 paul 259 627 :Current local users 259, max 627
+>> :roubaix.fr.epiknet.org 266 paul 327 1116 :Current global users 327, max 1116
 >> :roubaix.fr.epiknet.org 375 paul :- roubaix.fr.epiknet.org Message of the Day - 
 >> :roubaix.fr.epiknet.org 372 paul :- 18/6/2018 9:27
 >> :roubaix.fr.epiknet.org 372 paul :- Révision 20140328-1
@@ -93,52 +93,148 @@
 << PING roubaix.fr.epiknet.org
 >> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
 --> lag pong
-<< JOIN #lol
->> :paul!~TheUserNa@6F35C787.B270E442.5F584402.IP JOIN :#lol
->> :roubaix.fr.epiknet.org MODE #lol +nt 
->> :roubaix.fr.epiknet.org 353 paul = #lol :@paul
->> :roubaix.fr.epiknet.org 366 paul #lol :End of /NAMES list.
-<< MODE #lol
->> :roubaix.fr.epiknet.org 324 paul #lol +nt 
---> chanquery mode
-<< WHO #lol
->> :roubaix.fr.epiknet.org 329 paul #lol 1717759312
---> event 329
->> :roubaix.fr.epiknet.org 352 paul #lol ~TheUserNa 6F35C787.B270E442.5F584402.IP roubaix.fr.epiknet.org paul H@ :0 TheRealName
---> silent event who
->> :roubaix.fr.epiknet.org 315 paul #lol :End of /WHO list.
---> chanquery who end
-<< MODE #lol b
->> :roubaix.fr.epiknet.org 368 paul #lol :End of Channel Ban List
---> chanquery ban end
 << PING roubaix.fr.epiknet.org
 >> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
 --> lag pong
-<< PART #lol :lol
->> :paul!~TheUserNa@6F35C787.B270E442.5F584402.IP PART #lol :lol
 << PING roubaix.fr.epiknet.org
 >> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
 --> lag pong
-<< JOIN #juju
->> :paul!~TheUserNa@6F35C787.B270E442.5F584402.IP JOIN :#juju
->> :roubaix.fr.epiknet.org MODE #juju +nt 
->> :roubaix.fr.epiknet.org 353 paul = #juju :@paul
->> :roubaix.fr.epiknet.org 366 paul #juju :End of /NAMES list.
-<< MODE #juju
->> :roubaix.fr.epiknet.org 324 paul #juju +nt 
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< JOIN #pooooollllllllingggg
+>> :paul!~TheUserNa@6F35C787.B270E442.5F584402.IP JOIN :#pooooollllllllingggg
+>> :roubaix.fr.epiknet.org MODE #pooooollllllllingggg +nt 
+>> :roubaix.fr.epiknet.org 353 paul = #pooooollllllllingggg :@paul
+>> :roubaix.fr.epiknet.org 366 paul #pooooollllllllingggg :End of /NAMES list.
+<< MODE #pooooollllllllingggg
+>> :roubaix.fr.epiknet.org 324 paul #pooooollllllllingggg +nt 
 --> chanquery mode
-<< WHO #juju
->> :roubaix.fr.epiknet.org 329 paul #juju 1717759435
+<< WHO #pooooollllllllingggg
+>> :roubaix.fr.epiknet.org 329 paul #pooooollllllllingggg 1717764593
 --> event 329
->> :roubaix.fr.epiknet.org 352 paul #juju ~TheUserNa 6F35C787.B270E442.5F584402.IP roubaix.fr.epiknet.org paul H@ :0 TheRealName
+>> :roubaix.fr.epiknet.org 352 paul #pooooollllllllingggg ~TheUserNa 6F35C787.B270E442.5F584402.IP roubaix.fr.epiknet.org paul H@ :0 TheRealName
 --> silent event who
->> :roubaix.fr.epiknet.org 315 paul #juju :End of /WHO list.
+>> :roubaix.fr.epiknet.org 315 paul #pooooollllllllingggg :End of /WHO list.
 --> chanquery who end
-<< MODE #juju b
->> :roubaix.fr.epiknet.org 368 paul #juju :End of Channel Ban List
+<< MODE #pooooollllllllingggg b
+>> :roubaix.fr.epiknet.org 368 paul #pooooollllllllingggg :End of Channel Ban List
 --> chanquery ban end
-<< PART #juju :ciao
->> :paul!~TheUserNa@6F35C787.B270E442.5F584402.IP PART #juju :ciao
+<< PART #pooooollllllllingggg :ciao
+>> :paul!~TheUserNa@6F35C787.B270E442.5F584402.IP PART #pooooollllllllingggg :ciao
+<< JOIN #pooooollllllllingggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+>> :roubaix.fr.epiknet.org 448 paul #pooooollllllllingggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh :Cannot join channel: Channel name is too long
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
 << PING roubaix.fr.epiknet.org
 >> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
 --> lag pong

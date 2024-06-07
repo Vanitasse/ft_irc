@@ -6,10 +6,11 @@
 # include "Channel.hpp"
 # include "Bot.hpp"
 
-
 class	Server
 {
 	private:
+		t_limits					_limits;
+
 		std::string					_domain;
 		const	std::string			_password;
 		int							_port;
@@ -38,6 +39,7 @@ class	Server
 		Server&				operator=(const Server& toCpy);
 
 		const std::string&		getPassword() const;
+		const t_limits&			getLimits() const;
 
 		static void					signalHandler(int signum);
 

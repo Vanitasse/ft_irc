@@ -88,7 +88,7 @@ const std::string Channel::getNickList()
 	for (auto& client : _chanClients)
 		list += client->getNick() + " ";
 	for (auto& client : _operators)
-		list += "@" + client->getNick() + " ";
+		list += "*" + client->getNick() + " ";
 	return (list);
 }
 

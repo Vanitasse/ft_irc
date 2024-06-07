@@ -182,13 +182,19 @@ void	Client::PASS(const std::string& password)
 	_passIsSet = true;
 }
 
-void	Client::JOIN(const std::string& chanName)
+void	Client::JOIN(const std::string& channelName)
 {
 	Channel *JOINChannel;
+
 	for (auto& channel : _inChannels)
-		if (channel->getName() == chanName)
+		if (channel->getName() == channelName)
 			return ;
-	JOINChannel = _server->checkChannels(chanName);
+	JOINChannel = _server->checkChannels(channelName);
+	// if (JOINChannel == NULL)
+	// {
+	// 	FormatIRC::sendErrorChannelLen(*this, channelName , _server->getDomain());
+	// 	return ;
+	// }
 	JOINChannel->addClient(this);
 	JOINChannel->setTopic("Default", *this);
 	_inChannels.push_back(JOINChannel);
@@ -226,8 +232,9 @@ void	Client::PART(const std::string& channelName, const std::string& partMsg)
 		if (channelName == (*it)->getName())
 		{
 			(*it)->sendToClients(*this, partMsg);
-			_inChannels.erase(it);
 			FormatIRC::sendPART(*this, channelName, partMsg);
+			_inChannels.erase(it);
+			break ;
 		}
 }
 
@@ -270,7 +277,7 @@ void	Client::ParseAndRespond(std::string& input)
 			return;
 		}
 
-		if (_nickIsSet && _passIsSet && !_isConnected)
+		if (!_isConnected && _nickIsSet && _passIsSet)
 		{
 			_isConnected = true;
 			FormatIRC::sendWelcome(this->_fd, this->_nick, _server->getDate());

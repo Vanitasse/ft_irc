@@ -121,7 +121,7 @@
 
 #define msg_err(code, nickname) (":42IRCserv " + code + " * " + nickname + " :")
 
-#define supp_info() ("CHANTYPES=# PREFIX=(o)@ MODES=1 CHANLIMIT=#:5 NICKLEN=20 TOPICLEN=200")
+#define supp_info() ("CHANTYPES=# PREFIX=(o)@ MODES=1CHANNELLEN=20 NICKLEN=20 TOPICLEN=200")
 
 #define	priv_mess(nickname, channel, msg) (":" + nickname + " PRIVMSG" + ' ' + channel + ' ' + msg + "\r\n")
 
@@ -131,12 +131,12 @@
 #define ERR_INVALIDMODEPARAM(client, channel, mode, password) ("696 " + client + " #" + channel + " " + mode + " " + password + " : password must only contained alphabetic character\r\n")
 
 
-// :nick!user@host JOIN :#channel
-// :yourserver.com 332 <nick> #channel :<channel topic>
-// :yourserver.com 333 <nick> #channel <topic set by> <set time>
-
-
-
-
-// :yourserver.com 353 <nick> = #channel :<nick list>
-// :yourserver.com 366 <nick> #channel :End of /NAMES list
+typedef struct s_limits
+{
+	std::string	_chanType;
+	std::string	_prefix;
+	unsigned int			_nbModes;
+	unsigned int			_channelLen;
+	unsigned int			_nickLen;
+	unsigned int			_topicLen;
+}				t_limits;

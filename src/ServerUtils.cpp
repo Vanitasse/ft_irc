@@ -56,7 +56,8 @@ Channel*	Server::createNewChannel(const std::string& chanName)
 
 Channel*	Server::checkChannels(const std::string& chanName)
 {
-
+	if (chanName.length() > _limits._channelLen)
+		return (NULL);
 	std::cout << "newChannelAccess look for channel " << chanName << std::endl;
 	for (auto& channel : _Channels)
 		if (channel->getName() == chanName)
