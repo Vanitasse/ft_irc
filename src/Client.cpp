@@ -190,11 +190,11 @@ void	Client::JOIN(const std::string& channelName)
 		if (channel->getName() == channelName)
 			return ;
 	JOINChannel = _server->checkChannels(channelName);
-	// if (JOINChannel == NULL)
-	// {
-	// 	FormatIRC::sendErrorChannelLen(*this, channelName , _server->getDomain());
-	// 	return ;
-	// }
+	if (JOINChannel == NULL)
+	{
+		FormatIRC::sendErrorChannelLen(*this, channelName , _server->getDomain());
+		return ;
+	}
 	JOINChannel->addClient(this);
 	JOINChannel->setTopic("Default", *this);
 	_inChannels.push_back(JOINChannel);
@@ -206,8 +206,6 @@ void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 	std::vector<Channel*>::iterator	it;
 
 	it = _inChannels.begin();
-		std::cout << (*it)->getName() << '.' << std::endl;
-		std::cout << destination << '.' << std::endl;
 	while (it != _inChannels.end() && (*it)->getName() != destination)
 		it++;
 	if (it == _inChannels.end())
@@ -260,7 +258,7 @@ void	Client::TOPIC_2(const std::string& param, const std::string param_2)
 		for (std::vector<Channel*>::iterator it = chan.begin(); it < chan.end(); it++)
 		{
 			if ((*it)->getName() == param_2)
-				
+				;
 		}
 
 	}

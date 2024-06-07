@@ -94,9 +94,9 @@ void	FormatIRC::sendQUIT(int fd, const std::string& client_nick, const std::stri
 
 //  :roubaix.fr.epiknet.org 448 paul #pooooollllllllingggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh :Cannot join channel: Channel name is too long
 
-void	sendErrorChannelLen(const Client& client, const std::string& channelName, const std::string& domain)
+void	FormatIRC::sendErrorChannelLen(const Client& client, const std::string& channelName, const std::string& domain)
 {
-	const std::string format(domain + " 448 " + client.getNick() + " " + channelName + " :Cannot join channel: Channel name is too long");
+	const std::string format(":" + domain + " 448 " + client.getNick() + " " + channelName + " :Cannot join channel: Channel name is too long" + "\r\n");
 	FormatIRC::sender(client.getFd(), format);
 }
 

@@ -133,8 +133,8 @@
 
 typedef struct s_limits
 {
-	std::string	_chanType;
-	std::string	_prefix;
+	std::string				_chanType;
+	std::string				_prefix;
 	unsigned int			_nbModes;
 	unsigned int			_channelLen;
 	unsigned int			_nickLen;

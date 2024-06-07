@@ -19,11 +19,10 @@ class FormatIRC
 		static void	sendPONG(int fd, const std::string& host);
 		static void	sendNICK(int fd, const Client& client, const std::string& newName);
 		static void	sendQUIT(int fd, const std::string& client_nick, const std::string& client_username);
-
 		static void sendJOIN(const Client& client, Channel& channel, const std::string& domain);
 		static void sendPART(const Client& client, const std::string& channelName, const std::string& partMsg);
+		static void	sendTOPIC(const Client& client, const Channel* chan);
 
 		static void	sendErrorChannelLen(const Client& client, const std::string& channelName, const std::string& domain);
-		static void	sendTOPIC(const Client& client, const Channel* chan);
 
 };
