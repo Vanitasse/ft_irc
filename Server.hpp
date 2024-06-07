@@ -54,5 +54,13 @@ class	Server
 
 		int							checkNicks(const std::string& nickname);
 		Channel*					checkChannels(const std::string& chanName);
+		bool 						listOPs(const Channel& chan, const std::string nickname);
+		bool 						checkOPs(const std::string& nickname, const std::string& chanName);
+
+
+		void						TOPIC_1(const Client& client, const std::string& channelName);
+		void						TOPIC_2(const Client& client, const std::string& param, const std::string param_2);
+
+
 		
 };

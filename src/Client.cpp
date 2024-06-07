@@ -196,7 +196,7 @@ void	Client::JOIN(const std::string& channelName)
 	// 	return ;
 	// }
 	JOINChannel->addClient(this);
-	JOINChannel->setTopic("Default", *this);
+	JOINChannel->setTopic("", *this);
 	_inChannels.push_back(JOINChannel);
 	FormatIRC::sendJOIN(*this, *JOINChannel , _server->getDomain());
 }
@@ -237,40 +237,6 @@ void	Client::PART(const std::string& channelName, const std::string& partMsg)
 			break ;
 		}
 }
-
-void	Client::TOPIC_1(const std::string& channelName)
-{
-	std::cout << "TOPIC_1" << std::endl;
-
-	std::vector<Channel*> chan = _server->getChannels();
-
-	for (std::vector<Channel*>::iterator it = chan.begin(); it < chan.end(); it++)
-	{
-		if ((*it)->getName() == channelName)
-			FormatIRC::sendTOPIC(*this, *it);
-	}
-}
-
-void	Client::TOPIC_2(const std::string& param, const std::string param_2)
-{
-
-	std::vector<Channel*> chan = _server->getChannels();
-	if (param == "-delete")
-	{
-		for (std::vector<Channel*>::iterator it = chan.begin(); it < chan.end(); it++)
-		{
-			if ((*it)->getName() == param_2)
-				
-		}
-
-	}
-	else
-	{
-
-	}
-}
-
-// TOPIC [-delete] [<channel>] [<topic>]
 
 void	Client::ParseAndRespond(std::string& input)
 {
@@ -314,8 +280,10 @@ void	Client::ParseAndRespond(std::string& input)
 
 
 		it = std::find(cmds.begin(), cmds.end(), "TOPIC");
-		if (it != cmds.end() && it + 1 != cmds.end())
-			TOPIC_1(*(it + 1));
+		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
+			_server->TOPIC_2(*this, *(it + 1), *(it + 2));
+		else if (it != cmds.end() && it + 1 != cmds.end())
+			_server->TOPIC_1(*this, *(it + 1));
 
 
 

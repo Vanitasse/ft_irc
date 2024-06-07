@@ -45,6 +45,7 @@ void Channel::setTopic(const std::string& topic, const Client& client)
 {
 	this->_topic = topic;
 	this->_who_topic = client.getNick();
+	this->_date = std::to_string(std::time(NULL));
 }
 
 // const std::vector<Client*>& Channel::getOperators() const
@@ -88,14 +89,13 @@ const std::string Channel::getNickList()
 	for (auto& client : _chanClients)
 		list += client->getNick() + " ";
 	for (auto& client : _operators)
-		list += "*" + client->getNick() + " ";
+		list += "@" + client->getNick() + " ";
 	return (list);
 }
 
 const std::string Channel::getTopicInfo() const
 {
 	const std::string format = this->_who_topic + ' ' + this->_date;
-	
 	return (format);
 }
 
@@ -111,3 +111,12 @@ void	Channel::channelClearClient(const Client* client)
 		_chanClients.erase(it);
 }
 
+bool Channel::listOPs(const std::string nickname)
+{
+	for (std::vector<Client*>::iterator it = _operators.begin(); it < _operators.end(); it++)
+	{
+		if ((*it)->getNick() == nickname)
+			return true;
+	}
+	return false;
+}

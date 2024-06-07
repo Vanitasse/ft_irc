@@ -22,12 +22,13 @@ class Channel
 		void							setName(const std::string& name);
 		const std::string&				getTopic() const;
 		void							setTopic(const std::string& topic, const Client& client);
-
 		// const std::vector<Client*>&		getOperators() const;
 		// const std::vector<Client*>& 	getChanClients() const;
 
 		const std::string					getTopicInfo() const;
 		const std::string					getNickList();
+		bool 								listOPs(const std::string nickname);
+
 
 
 		void								addClient(Client *client);
