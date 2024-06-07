@@ -50,6 +50,7 @@ class	Server
 		void						getServerCreationTime() ;
 		const std::string&			getDate() const ;
 		const std::string&			getDomain() const ;
+		const std::vector<Channel*>&	getChannels() const;
 
 		int							checkNicks(const std::string& nickname);
 		Channel*					checkChannels(const std::string& chanName);

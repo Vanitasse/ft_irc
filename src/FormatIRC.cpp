@@ -54,9 +54,9 @@ void	FormatIRC::sendPART(const Client& client, const std::string& channelName, c
 	sender(client.getFd(), format);
 }
 
-void	FormatIRC::sendNICK(int fd, const std::string& client_nick, const std::string& client_username, const std::string& newName)
+void	FormatIRC::sendNICK(int fd, const Client& client, const std::string& newName)
 {
-	const std::string format(user_id(client_nick, client_username) + " NICK :" + newName + "\r\n");
+	const std::string format(user_id(client.getNick(), client.getUsername()) + " NICK :" + newName + "\r\n");
 	sender(fd, format);
 }
 
@@ -66,6 +66,8 @@ void	FormatIRC::sendJOIN(const Client& client, Channel& channel, const std::stri
 	sender(client.getFd(), format);
 	format = ":" + domain +  "329 " + client.getNick() + " " + client.getUsername() + " :" + channel.getTopic() + "\r\n";
 	sender(client.getFd(), format);
+	format = msg_serv2(std::string("332"), client.getNick()) + channel.getName() + " :" + channel.getTopic() + "\r\n";
+	sender(client.getFd(), format);
 	format = msg_serv2(std::string("333"), client.getNick()) + channel.getName() + " " + channel.getTopicInfo() + "\r\n";
 	sender(client.getFd(), format);
 	format = msg_serv2(std::string("353"), client.getNick()) + "= " + channel.getName() + " :" + channel.getNickList() + "\r\n";
@@ -73,6 +75,15 @@ void	FormatIRC::sendJOIN(const Client& client, Channel& channel, const std::stri
 	format = msg_serv2(std::string("366"), client.getNick()) + channel.getName() + " :End of /NAMES list\r\n";
 	sender(client.getFd(), format);
 
+}
+
+
+void	FormatIRC::sendTOPIC(const Client& client, const Channel* chan)
+{
+	std::string format(msg_serv2(std::string("332"), client.getNick()) + chan->getName() + " :" + chan->getTopic() + "\r\n");
+	sender(client.getFd(), format);
+	format = msg_serv2(std::string("333"), client.getNick()) + chan->getName() + " " + chan->getTopicInfo() + "\r\n";
+	sender(client.getFd(), format);
 }
 
 void	FormatIRC::sendQUIT(int fd, const std::string& client_nick, const std::string& client_username)

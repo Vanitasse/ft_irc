@@ -168,7 +168,7 @@ void	Client::NICK(const std::string& newName)
 	}
 	std::cout << "Nick Set to " << newName << std::endl;
 	_nickIsSet = true;
-	FormatIRC::sendNICK(this->_fd, this->getNick(), this->getUsername(), newName);
+	FormatIRC::sendNICK(this->_fd, *this, newName);
 	setNick(newName);
 }
 
@@ -238,6 +238,40 @@ void	Client::PART(const std::string& channelName, const std::string& partMsg)
 		}
 }
 
+void	Client::TOPIC_1(const std::string& channelName)
+{
+	std::cout << "TOPIC_1" << std::endl;
+
+	std::vector<Channel*> chan = _server->getChannels();
+
+	for (std::vector<Channel*>::iterator it = chan.begin(); it < chan.end(); it++)
+	{
+		if ((*it)->getName() == channelName)
+			FormatIRC::sendTOPIC(*this, *it);
+	}
+}
+
+void	Client::TOPIC_2(const std::string& param, const std::string param_2)
+{
+
+	std::vector<Channel*> chan = _server->getChannels();
+	if (param == "-delete")
+	{
+		for (std::vector<Channel*>::iterator it = chan.begin(); it < chan.end(); it++)
+		{
+			if ((*it)->getName() == param_2)
+				
+		}
+
+	}
+	else
+	{
+
+	}
+}
+
+// TOPIC [-delete] [<channel>] [<topic>]
+
 void	Client::ParseAndRespond(std::string& input)
 {
 	std::vector<std::string>			cmds;
@@ -252,6 +286,12 @@ void	Client::ParseAndRespond(std::string& input)
 	{
 		std::cout << "message finished" << std::endl;
 		cmds = Client::splitInput(_message);
+		it = std::find(cmds.begin(), cmds.end(), "QUIT");
+		if (it != cmds.end() && it + 1 != cmds.end())
+		{
+			QUIT();
+			return;
+		}
 		it = std::find(cmds.begin(), cmds.end(), "USER");
 		if (it != cmds.end() && it + 1 != cmds.end())
 			setUsername(*(it + 1));
@@ -270,12 +310,15 @@ void	Client::ParseAndRespond(std::string& input)
 		it = std::find(cmds.begin(), cmds.end(), "PART");
 		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
 			PART(*(it + 1), *(it + 2));
-		it = std::find(cmds.begin(), cmds.end(), "QUIT");
+
+
+
+		it = std::find(cmds.begin(), cmds.end(), "TOPIC");
 		if (it != cmds.end() && it + 1 != cmds.end())
-		{
-			QUIT();
-			return;
-		}
+			TOPIC_1(*(it + 1));
+
+
+
 
 		if (!_isConnected && _nickIsSet && _passIsSet)
 		{

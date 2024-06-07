@@ -71,6 +71,11 @@ const t_limits&	Server::getLimits() const
 	return (_limits);
 }
 
+const std::vector<Channel*>& Server::getChannels() const
+{
+	return (this->_Channels);
+}
+
 void	Server::serverInit()
 {
 	struct pollfd		new_poll= {};
