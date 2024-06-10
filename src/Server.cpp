@@ -153,7 +153,50 @@ void	Server::TOPIC_2(const Client& client, const std::string& param, const std::
 	}
 }
 
-// TOPIC [-delete] [<channel>] [<topic>]
+void	Server::KICK(const Client& client, const std::string& channelName, const std::string& user_kicked, const std::string& reason)
+{
+	if (!checkOPs(client.getNick(), channelName))
+		return;
+	std::vector<std::string> users = splitUsernames(user_kicked);
+
+	for(std::vector<Channel*>::iterator it = _Channels.begin(); it < _Channels.end(); it++)
+	{
+		if ((*it)->getName() == channelName)
+		{
+			for(std::vector<std::string>::iterator its = users.begin(); its < users.end(); its++)
+			{
+				// if (chan_users[i] == (*its))
+				// 	(*it)->removeClient((*its));
+			}
+		}
+	}
+	(void)reason;
+
+
+	FormatIRC::sendKICK(client, channelName, users);
+}
+
+
+void	Server::KICK(const Client& client, const std::string& channelName, const std::string& user_kicked)
+{
+	if (!checkOPs(client.getNick(), channelName))
+		return;
+	(void)user_kicked;
+}
+
+// KICK [<channel>] <nicks> [<reason>]
+
+
+// void	Server::KICK(const Client& client, const std::string& user_kicked)
+// {
+// 	if (!checkOPs(client.getNick(), client.getWhere()))
+// 		return;
+// 	if (!checkWhere())
+// }
+
+
+
+
 
 
 void	Server::connectClient()

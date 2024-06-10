@@ -111,7 +111,7 @@ void	Channel::channelClearClient(const Client* client)
 		_chanClients.erase(it);
 }
 
-bool Channel::listOPs(const std::string nickname)
+bool	Channel::listOPs(const std::string nickname)
 {
 	for (std::vector<Client*>::iterator it = _operators.begin(); it < _operators.end(); it++)
 	{
@@ -120,3 +120,8 @@ bool Channel::listOPs(const std::string nickname)
 	}
 	return false;
 }
+
+// void	Channel::removeClient(const std::string nickname)
+// {
+
+// }

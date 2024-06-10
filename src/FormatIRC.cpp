@@ -109,3 +109,14 @@ void	FormatIRC::sendErrorChannelLen(const Client& client, const std::string& cha
 	FormatIRC::sender(client.getFd(), format);
 }
 
+void	FormatIRC::sendKICK(const Client& client, const std::string& channelName, const std::vector<std::string>& users)
+{
+	for (std::vector<std::string>::const_iterator it = users.begin(); it < users.end(); it++)
+	{
+		const std::string format(user_id(client.getNick(), client.getUsername()) + " KICK " + channelName + " " + *it + " :" + client.getNick());
+		sender(client.getFd(), format);
+	}
+}
+
+// KICK #aa maxou :
+// >> :max!~vanitas@EpiK-A30BA23B.rev.sfr.net KICK #aa maxou :max

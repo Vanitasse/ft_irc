@@ -34,4 +34,6 @@ class Channel
 		void								addClient(Client *client);
 		void								sendToClients(const Client& sender, const std::string& msg);
 		void								channelClearClient(const Client* client);
+		// void								removeClient(const std::string nickname);
+
 };

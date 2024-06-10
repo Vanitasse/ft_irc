@@ -134,7 +134,6 @@ void 	Client::setIsConnected(const bool& isConnected_input)
 	_isConnected = isConnected_input;
 }
 
-
 void	Client::smiley(std::string& input)
 {
     size_t    pos;
@@ -236,39 +235,6 @@ void	Client::PART(const std::string& channelName, const std::string& partMsg)
 		}
 }
 
-void	Client::TOPIC_1(const std::string& channelName)
-{
-	std::cout << "TOPIC_1" << std::endl;
-
-	std::vector<Channel*> chan = _server->getChannels();
-
-	for (std::vector<Channel*>::iterator it = chan.begin(); it < chan.end(); it++)
-	{
-		if ((*it)->getName() == channelName)
-			FormatIRC::sendTOPIC(*this, *it);
-	}
-}
-
-void	Client::TOPIC_2(const std::string& param, const std::string param_2)
-{
-
-	std::vector<Channel*> chan = _server->getChannels();
-	if (param == "-delete")
-	{
-		for (std::vector<Channel*>::iterator it = chan.begin(); it < chan.end(); it++)
-		{
-			if ((*it)->getName() == param_2)
-				;
-		}
-
-	}
-	else
-	{
-
-	}
-}
-
-// TOPIC [-delete] [<channel>] [<topic>]
 
 void	Client::ParseAndRespond(std::string& input)
 {
@@ -317,6 +283,15 @@ void	Client::ParseAndRespond(std::string& input)
 		else if (it != cmds.end() && it + 1 != cmds.end())
 			_server->TOPIC_1(*this, *(it + 1));
 
+
+		// it = std::find(cmds.begin(), cmds.end(), "KICK");
+		// if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end() && it + 3 != cmds.end())
+		// 	_server->KICK();
+		// else if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
+		// 	_server->KICK();
+
+		// else if (it != cmds.end() && it + 1 != cmds.end())
+		// 	_server->KICK();
 
 
 

@@ -56,7 +56,6 @@ class	Client
 		const bool& 		getIsConnected() const;
 		void 				setIsConnected(const bool& isConnected_input);
 
-
 		void							smiley(std::string& input);
 
 		static std::vector<std::string>	splitInput(const std::string& input);

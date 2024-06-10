@@ -88,3 +88,35 @@ bool Server::checkOPs(const std::string& nickname, const std::string& chanName)
 	}
 	return false;
 }
+
+std::vector<std::string> Server::splitUsernames(const std::string& usernames)
+{
+	std::vector<std::string> result;
+	std::stringstream ss(usernames);
+	std::string username;
+
+	while (std::getline(ss, username, ',')) {
+		result.push_back(username);
+	}
+
+	return result;
+}
+
+
+
+// std::vector<Client*> Server::checkUsers(const std::string& user_kicked)
+// {
+// 	"max,maxou";
+// 	if (user_kicked.find(',') == user_kicked.npos)
+// 	{
+// 		for(std::vector<Client*>::iterator it = _Clients.begin(); it < _Clients.end(); it++)
+// 		{
+
+// 		}
+// 	}
+// 	else
+// 	{
+
+// 	}
+
+// }
