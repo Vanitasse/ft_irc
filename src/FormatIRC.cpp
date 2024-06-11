@@ -63,9 +63,10 @@ void	FormatIRC::sendNICK(int fd, const Client& client, const std::string& newNam
 
 void	FormatIRC::sendJOIN(const Client& client, Channel& channel, const std::string& domain)
 {
+	(void)domain;
 	std::string format(":" + client.getNick() + "!~" + client.getUsername() +  " JOIN :" + channel.getName());
 	sender(client.getFd(), format);
-	format = ":" + domain +  " 329 " + client.getNick() + " " + client.getUsername() + " :" + channel.getTopic();
+	format = msg_serv2(std::string("329"), client.getNick()) + channel.getName() + " " + channel.getDate();
 	sender(client.getFd(), format);
 	format = msg_serv2(std::string("332"), client.getNick()) + channel.getName() + " :" + channel.getTopic();
 	sender(client.getFd(), format);
@@ -77,7 +78,7 @@ void	FormatIRC::sendJOIN(const Client& client, Channel& channel, const std::stri
 	sender(client.getFd(), format);
 
 }
-
+// >> :montreal.ca.epiknet.org 329 cuck #lol 1718108998
 
 void	FormatIRC::sendTOPIC(const Client& client, const Channel* chan)
 {

@@ -161,12 +161,20 @@ void	Server::KICK(const Client& client, const std::string& channelName, const st
 
 	for(std::vector<Channel*>::iterator it = _Channels.begin(); it < _Channels.end(); it++)
 	{
+		std::vector<Client*> chanClient = (*it)->getChanClients();
 		if ((*it)->getName() == channelName)
 		{
 			for(std::vector<std::string>::iterator its = users.begin(); its < users.end(); its++)
 			{
-				// if (chan_users[i] == (*its))
-				// 	(*it)->removeClient((*its));
+				for (std::vector<Client*>::iterator itc = chanClient.begin(); itc < chanClient.end(); itc++)
+				{
+					if ((*itc)->getNick() == (*its))
+					{
+						(*it)->removeClient((*its));
+						(chanClient.erase(itc));
+						(*itc)->PART(channelName, "You have been kicked from " + channelName);
+					}
+				}
 			}
 		}
 	}
@@ -220,6 +228,7 @@ void	Server::connectClient()
 	std:: cout << "New Client  " << _Clients.back()->getNick() << " with fd " << _Clients.back()->getFd() << std::endl;
 	std::cout << "_Clients.size() = " << _Clients.size() << "\n_pfds.size() = " << _pfds.size() << std::endl;
 }
+
 
 
 

@@ -66,7 +66,6 @@ class	Server
 		void						TOPIC_2(const Client& client, const std::string& param, const std::string param_2);
 		void						KICK(const Client& client, const std::string& channelName, const std::string& user_kicked, const std::string& reason);
 		void						KICK(const Client& client, const std::string& channelName, const std::string& user_kicked);
-		void						KICK(const Client& client, const std::string& user_kicked);
 
 
 		
