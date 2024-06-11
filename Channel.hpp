@@ -6,6 +6,7 @@
 class Channel
 {
 	private:
+		t_chanModes			_modes;
 		std::string			_name;
 		std::string			_topic;
 		std::string			_date;
@@ -22,6 +23,14 @@ class Channel
 		void							setName(const std::string& name);
 		const std::string&				getTopic() const;
 		void							setTopic(const std::string& topic, const Client& client);
+
+		const t_chanModes&				getModes() const;
+		void							setI(const bool i);
+		void							setT(const bool t);
+		void							setK(const bool k);
+		void							setO(const bool o);
+		void							setL(const bool l);
+
 		// const std::vector<Client*>&		getOperators() const;
 		// const std::vector<Client*>& 	getChanClients() const;
 

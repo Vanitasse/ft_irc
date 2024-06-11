@@ -4,6 +4,11 @@
 Channel::Channel()
 {
 	_date = std::to_string(std::time(NULL));
+	_modes._i = false;
+	_modes._t = false;
+	_modes._k = false;
+	_modes._o = false;
+	_modes._l = false;
 }
 
 Channel::Channel(const Channel& cpy)
@@ -34,6 +39,30 @@ const std::string& Channel::getName() const
 void Channel::setName(const std::string& name)
 {
 	this->_name = name;
+}
+const t_chanModes&	Channel::getModes() const
+{
+	return (this->_modes);
+}
+void	Channel::setI(const bool i)
+{
+	_modes._i = i;
+}
+void	Channel::setT(const bool t)
+{
+	_modes._t = t;
+}
+void	Channel::setK(const bool k)
+{
+	_modes._k = k;
+}
+void	Channel::setO(const bool o)
+{
+	_modes._o = o;
+}
+void	Channel::setL(const bool l)
+{
+	_modes._l = l;
 }
 
 const std::string& Channel::getTopic() const

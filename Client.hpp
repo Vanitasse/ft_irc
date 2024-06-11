@@ -64,8 +64,6 @@ class	Client
 		void							NICK(const std::string& newName);
 		void							PASS(const std::string& pass);
 		void							JOIN(const std::string& chanName);
-		void							TOPIC_1(const std::string& channelName);
-		void							TOPIC_2(const std::string& param, const std::string param_2);
 
 		void							PRIVMSG(const std::string& destination, const std::string& msg);
 		void							WHO(const std::string& channelName);

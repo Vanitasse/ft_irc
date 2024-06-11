@@ -51,7 +51,7 @@ void	FormatIRC::sendPONG(int fd, const std::string& host)
 
 void	FormatIRC::sendPART(const Client& client, const std::string& channelName, const std::string& partMsg)
 {
-	const std::string format(":" + client.getNick() + "!~" + client.getUsername() + " PART " + channelName + " " + partMsg);
+	const std::string format(":" + client.getNick() + "!~" + client.getUsername() + "@42IRCerver PART " + channelName + " " + partMsg);
 	sender(client.getFd(), format);
 }
 
@@ -65,7 +65,7 @@ void	FormatIRC::sendJOIN(const Client& client, Channel& channel, const std::stri
 {
 	std::string format(":" + client.getNick() + "!~" + client.getUsername() +  " JOIN :" + channel.getName());
 	sender(client.getFd(), format);
-	format = ":" + domain +  "329 " + client.getNick() + " " + client.getUsername() + " :" + channel.getTopic();
+	format = ":" + domain +  " 329 " + client.getNick() + " " + client.getUsername() + " :" + channel.getTopic();
 	sender(client.getFd(), format);
 	format = msg_serv2(std::string("332"), client.getNick()) + channel.getName() + " :" + channel.getTopic();
 	sender(client.getFd(), format);

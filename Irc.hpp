@@ -123,12 +123,12 @@
 
 #define supp_info() ("CHANTYPES=# PREFIX=(o)@ MODES=1CHANNELLEN=20 NICKLEN=20 TOPICLEN=200")
 
-#define	priv_mess(nickname, channel, msg) (":" + nickname + " PRIVMSG" + ' ' + channel + ' ' + msg + "\r\n")
+#define	priv_mess(nickname, channel, msg) (":" + nickname + " PRIVMSG" + ' ' + channel + ' ' + msg)
 
 #define user_id(nickname, username) (":" + nickname + "!" + username + "@localhost")
-#define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " #" + channel + "\r\n")
+#define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " #" + channel)
 // [...]
-#define ERR_INVALIDMODEPARAM(client, channel, mode, password) ("696 " + client + " #" + channel + " " + mode + " " + password + " : password must only contained alphabetic character\r\n")
+#define ERR_INVALIDMODEPARAM(client, channel, mode, password) ("696 " + client + " #" + channel + " " + mode + " " + password + " : password must only contained alphabetic character")
 
 
 typedef struct s_limits
@@ -140,3 +140,12 @@ typedef struct s_limits
 	unsigned int			_nickLen;
 	unsigned int			_topicLen;
 }				t_limits;
+
+typedef struct s_chanModes
+{
+	bool					_i;
+	bool					_t;
+	bool					_k;
+	bool					_o;
+	bool					_l;
+}				t_chanModes;

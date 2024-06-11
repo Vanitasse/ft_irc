@@ -21,6 +21,7 @@ Client::Client(Server& server) : _server(&server)
 
 Client::~Client()
 {
+	std::cout << RED << "Client destructed" << RESET << std::endl;
 }
 
 Client::Client(const Client& cpy)
@@ -166,11 +167,13 @@ void	Client::NICK(const std::string& newName)
 		return ;
 	}
 	std::cout << "Nick Set to " << newName << std::endl;
-	_nickIsSet = true;
+	_nickIsSet = true;void							TOPIC_1(const std::string& channelName);
+		void							TOPIC_2(const std::string& param, const std::string param_2);
 	FormatIRC::sendNICK(this->_fd, *this, newName);
 	setNick(newName);
 }
-
+void							TOPIC_1(const std::string& channelName);
+		void							TOPIC_2(const std::string& param, const std::string param_2);
 void	Client::PASS(const std::string& password)
 {
 	if (password != _server->getPassword())
@@ -180,7 +183,8 @@ void	Client::PASS(const std::string& password)
 	}
 	_passIsSet = true;
 }
-
+void							TOPIC_1(const std::string& channelName);
+		void							TOPIC_2(const std::string& param, const std::string param_2);
 void	Client::JOIN(const std::string& channelName)
 {
 	Channel *JOINChannel;
