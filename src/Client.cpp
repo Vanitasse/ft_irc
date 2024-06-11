@@ -286,14 +286,11 @@ void	Client::ParseAndRespond(std::string& input)
 			_server->TOPIC_1(*this, *(it + 1));
 
 
-		// it = std::find(cmds.begin(), cmds.end(), "KICK");
-		// if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end() && it + 3 != cmds.end())
-		// 	_server->KICK();
-		// else if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
-		// 	_server->KICK();
-
-		// else if (it != cmds.end() && it + 1 != cmds.end())
-		// 	_server->KICK();
+		it = std::find(cmds.begin(), cmds.end(), "KICK");
+		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end() && it + 3 != cmds.end())
+			_server->KICK(*this, *(it + 1), *(it + 2), *(it + 3));
+		else if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
+			_server->KICK(*this, *(it + 1), *(it + 2));
 
 
 
