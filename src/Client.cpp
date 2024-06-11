@@ -172,8 +172,7 @@ void	Client::NICK(const std::string& newName)
 	FormatIRC::sendNICK(this->_fd, *this, newName);
 	setNick(newName);
 }
-void							TOPIC_1(const std::string& channelName);
-		void							TOPIC_2(const std::string& param, const std::string param_2);
+
 void	Client::PASS(const std::string& password)
 {
 	if (password != _server->getPassword())
@@ -183,8 +182,7 @@ void	Client::PASS(const std::string& password)
 	}
 	_passIsSet = true;
 }
-void							TOPIC_1(const std::string& channelName);
-		void							TOPIC_2(const std::string& param, const std::string param_2);
+
 void	Client::JOIN(const std::string& channelName)
 {
 	Channel *JOINChannel;

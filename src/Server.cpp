@@ -172,7 +172,7 @@ void	Server::KICK(const Client& client, const std::string& channelName, const st
 					{
 						(*it)->removeClient((*its));
 						(chanClient.erase(itc));
-						(*itc)->PART(channelName, "You have been kicked from " + channelName);
+						(*itc)->PART(channelName, "" + channelName);
 					}
 				}
 			}
