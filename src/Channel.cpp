@@ -58,19 +58,6 @@ void Channel::setTopic(const std::string& topic, const Client& client)
 // 	return (this->_chanClients);
 // }
 
-void	Channel::addClient(Client *client)
-{
-	if (_operators.size() == 0)
-	{
-		_operators.push_back(client);
-		std::cout << BG_BLUE << "client " << client->getNick() << " added to channel " << this->_name << " as Operator" << RESET << std::endl;
-	}
-	else
-	{
-		_chanClients.push_back(client);
-		std::cout<<  BG_GREEN << "client " << client->getNick() << " added to channel " << this->_name << " as Simple user" << RESET << std::endl;
-	}
-}
 
 void	Channel::sendToClients(const Client& sender, const std::string& msg)
 {
@@ -99,18 +86,6 @@ const std::string Channel::getTopicInfo() const
 	return (format);
 }
 
-void	Channel::channelClearClient(const Client* client)
-{
-	std::vector<Client*>::iterator it;
-
-	it = std::find(_operators.begin(), _operators.end(), client);
-	if (it != _operators.end())
-		_operators.erase(it);
-	it = std::find(_chanClients.begin(), _chanClients.end(), client);
-	if (it != _chanClients.end())
-		_chanClients.erase(it);
-}
-
 bool	Channel::listOPs(const std::string nickname)
 {
 	for (std::vector<Client*>::iterator it = _operators.begin(); it < _operators.end(); it++)
@@ -121,7 +96,31 @@ bool	Channel::listOPs(const std::string nickname)
 	return false;
 }
 
-// void	Channel::removeClient(const std::string nickname)
-// {
+void	Channel::addClient(Client *client)
+{
+	if (_operators.size() == 0)
+	{
+		_operators.push_back(client);
+		std::cout << BG_BLUE << "client " << client->getNick() << " added to channel " << this->_name << " as Operator" << RESET << std::endl;
+	}
+	else
+	{
+		_chanClients.push_back(client);
+		std::cout<<  BG_GREEN << "client " << client->getNick() << " added to channel " << this->_name << " as Simple user" << RESET << std::endl;
+	}
+}
 
-// }
+void	Channel::removeClient(const Client *client)
+{
+	std::vector<Client*>::iterator	it;
+
+	it = std::find(_operators.begin(), _operators.end(), client);
+	if (it != _operators.end())
+		_operators.erase(it);
+	else
+	{
+		it = std::find(_chanClients.begin(), _chanClients.end(), client);
+		if (it != _chanClients.end())
+		_chanClients.erase(it);
+	}
+}

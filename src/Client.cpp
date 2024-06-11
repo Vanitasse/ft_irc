@@ -219,7 +219,7 @@ void	Client::QUIT()
 {
 	FormatIRC::sendQUIT(this->_fd, this->getNick(), this->getUsername());
 	for (std::vector<Channel*>::iterator it = _inChannels.begin(); it != _inChannels.end(); it++)
-		(*it)->channelClearClient(this);
+		(*it)->removeClient(this);
 	_server->clearClient(this);
 }
 
@@ -230,9 +230,11 @@ void	Client::PART(const std::string& channelName, const std::string& partMsg)
 		{
 			(*it)->sendToClients(*this, partMsg);
 			FormatIRC::sendPART(*this, channelName, partMsg);
-			_inChannels.erase(it);
+			(*it)->removeClient(this);
+			this->_inChannels.erase(it);
 			break ;
 		}
+
 }
 
 
