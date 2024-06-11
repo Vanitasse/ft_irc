@@ -23,7 +23,7 @@ class Channel
 		const std::string&				getTopic() const;
 		void							setTopic(const std::string& topic, const Client& client);
 		const std::string&				getDate() const;
-		
+
 		// const std::vector<Client*>&		getOperators() const;
 		const std::vector<Client*>&		getChanClients() const;
 
