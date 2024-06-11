@@ -43,17 +43,18 @@ void Server::getServerCreationTime()
 	this->_date = buffer;
 }
 
-Channel*	Server::createNewChannel(const std::string& chanName)
+Channel*	Server::createNewChannel(const std::string& chanName, Client& client)
 {
 	Channel *newChannel = new Channel();
 
 	newChannel->setName(chanName);
+	client.setOPChannels(newChannel);
 	_Channels.push_back(newChannel);
 	std::cout << chanName << " created" << std::endl;
 	return (_Channels.back());
 }
 
-Channel*	Server::checkChannels(const std::string& chanName)
+Channel*	Server::checkChannels(const std::string& chanName, Client& client)
 {
 	if (chanName.length() > _limits._channelLen)
 		return (NULL);
@@ -64,7 +65,8 @@ Channel*	Server::checkChannels(const std::string& chanName)
 			std::cout << chanName << " exists, returning it" << std::endl;
 			return (channel);
 		}
-	return (createNewChannel(chanName));
+	
+	return (createNewChannel(chanName, client));
 }
 
 int	Server::checkNicks(const std::string& nickname)
@@ -100,6 +102,16 @@ std::vector<std::string> Server::splitUsernames(const std::string& usernames)
 	}
 
 	return result;
+}
+
+Client*	Server::findClient(const std::string& nick)
+{
+	for(std::vector<Client*>::iterator it = _Clients.begin(); it < _Clients.end(); it++)
+	{
+		if ((*it)->getNick() == nick)
+			return *it;
+	}
+	return nullptr;
 }
 
 

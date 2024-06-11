@@ -45,7 +45,10 @@ class Channel
 		void								addClient(Client *client);
 		void								removeClient(const Client *client);
 		void								removeClient(const std::string& nick);
+		void								removeOP(const Client& client);
 
 	
 		void								sendToClients(const Client& sender, const std::string& msg);
+		void								sendKicks(const Client* client, const std::string& user_kicked, const std::string& reason);
+
 };

@@ -135,6 +135,12 @@ void 	Client::setIsConnected(const bool& isConnected_input)
 	_isConnected = isConnected_input;
 }
 
+void	Client::setOPChannels(Channel* chan)
+{
+	this->_OPChannels.push_back(chan);
+}
+
+
 void	Client::smiley(std::string& input)
 {
     size_t    pos;
@@ -190,7 +196,7 @@ void	Client::JOIN(const std::string& channelName)
 	for (auto& channel : _inChannels)
 		if (channel->getName() == channelName)
 			return ;
-	JOINChannel = _server->checkChannels(channelName);
+	JOINChannel = _server->checkChannels(channelName, *this);
 	if (JOINChannel == NULL)
 	{
 		FormatIRC::sendErrorChannelLen(*this, channelName , _server->getDomain());
@@ -221,12 +227,18 @@ void	Client::QUIT()
 {
 	FormatIRC::sendQUIT(this->_fd, this->getNick(), this->getUsername());
 	for (std::vector<Channel*>::iterator it = _inChannels.begin(); it != _inChannels.end(); it++)
+	{
+		(*it)->removeOP(*this);
 		(*it)->removeClient(this);
+	}
+
 	_server->clearClient(this);
 }
 
 void	Client::PART(const std::string& channelName, const std::string& partMsg)
 {
+	// if (!partMsg)
+	// 	return ;
 	for (std::vector<Channel*>::iterator it = _inChannels.begin(); it != _inChannels.end(); it++)
 		if (channelName == (*it)->getName())
 		{
@@ -239,6 +251,26 @@ void	Client::PART(const std::string& channelName, const std::string& partMsg)
 
 }
 
+void	Client::KICK(const std::string & chanName, const std::string& user_kicked, const std::string& reason)
+{
+	Client* client_kicked = _server->findClient(user_kicked);
+	std::vector<Client*> sndclients;
+
+	for(std::vector<Channel*>::iterator it = _OPChannels.begin(); it < _OPChannels.end(); it++)
+	{
+		std::cout << "CHANNEL NAME = " << (*it)->getName() << std::endl;
+		if ((*it)->getName() == chanName)
+		{
+			client_kicked->PART(chanName, "");
+			(*it)->removeClient(user_kicked);
+			sndclients = (*it)->getChanClients();
+			break;
+
+		}
+	}
+	FormatIRC::sendKICK(*this, chanName, user_kicked, sndclients);
+	(void)reason;
+}
 
 void	Client::ParseAndRespond(std::string& input)
 {
@@ -290,9 +322,9 @@ void	Client::ParseAndRespond(std::string& input)
 
 		it = std::find(cmds.begin(), cmds.end(), "KICK");
 		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end() && it + 3 != cmds.end())
-			_server->KICK(*this, *(it + 1), *(it + 2), *(it + 3));
+			KICK(*(it + 1), *(it + 2), *(it + 3));
 		else if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
-			_server->KICK(*this, *(it + 1), *(it + 2));
+			KICK(*(it + 1), *(it + 2), "");
 
 
 

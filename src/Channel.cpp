@@ -162,6 +162,21 @@ void	Channel::removeClient(const std::string& nick)
 	for (std::vector<Client*>::iterator	it = _chanClients.begin(); it < _chanClients.end(); it++)
 	{
 		if ((*it)->getNick() == nick)
+		{
 			_chanClients.erase(it);
+			break;
+		}
+	}
+}
+
+void	Channel::removeOP(const Client& client)
+{
+	for (std::vector<Client*>::iterator	it = _operators.begin(); it < _operators.end(); it++)
+	{
+		if ((*it)->getNick() == client.getNick())
+		{
+			_operators.erase(it);
+			break;
+		}
 	}
 }

@@ -23,7 +23,7 @@ class FormatIRC
 		static void sendPART(const Client& client, const std::string& channelName, const std::string& partMsg);
 		static void	sendTOPIC(const Client& client, const Channel* chan);
 		static void	updateTOPIC(const Client& client, const Channel* chan);
-		static void	sendKICK(const Client& client, const std::string& channelName, const std::vector<std::string>& users);
+		static void	sendKICK(const Client& client, const std::string& channelName, const std::string& user_kicked, std::vector<Client*> allclients);
 
 
 

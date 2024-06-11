@@ -23,6 +23,7 @@ class	Client
 
 		Server* 	_server;
 		std::vector<Channel*>		_inChannels;
+		std::vector<Channel*>		_OPChannels;
 	public:
 					Client();
 					Client(Server& server);
@@ -56,6 +57,8 @@ class	Client
 		const bool& 		getIsConnected() const;
 		void 				setIsConnected(const bool& isConnected_input);
 
+		void				setOPChannels(Channel* chan);
+
 		void							smiley(std::string& input);
 
 		static std::vector<std::string>	splitInput(const std::string& input);
@@ -68,6 +71,8 @@ class	Client
 		void							PRIVMSG(const std::string& destination, const std::string& msg);
 		void							WHO(const std::string& channelName);
 		void							PART(const std::string& channelName, const std::string& partMsg);
+		void							KICK(const std::string & chanName, const std::string& user_kicked, const std::string& reason);
+
 		void							QUIT();
 
 		// virtual void		formatText(std::string& input) = 0;

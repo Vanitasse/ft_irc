@@ -30,7 +30,7 @@ class	Server
 		std::string					_receivedBuffer;
 		std::string					_date;
 
-		Channel*					createNewChannel(const std::string& chanName);
+		Channel*					createNewChannel(const std::string& chanName, Client& client);
 	public:
 							Server();
 							~Server();
@@ -51,9 +51,11 @@ class	Server
 		const std::string&			getDate() const ;
 		const std::string&			getDomain() const ;
 		const std::vector<Channel*>&	getChannels() const;
+		Client*						findClient(const std::string& nick);
+
 
 		int							checkNicks(const std::string& nickname);
-		Channel*					checkChannels(const std::string& chanName);
+		Channel*					checkChannels(const std::string& chanName, Client& client);
 		bool 						listOPs(const Channel& chan, const std::string nickname);
 		bool 						checkOPs(const std::string& nickname, const std::string& chanName);
 		std::vector<std::string>	splitUsernames(const std::string& usernames);
@@ -64,8 +66,8 @@ class	Server
 
 		void						TOPIC_1(const Client& client, const std::string& channelName);
 		void						TOPIC_2(const Client& client, const std::string& param, const std::string param_2);
-		void						KICK(const Client& client, const std::string& channelName, const std::string& user_kicked, const std::string& reason);
-		void						KICK(const Client& client, const std::string& channelName, const std::string& user_kicked);
+		// void						KICK(const Client& client, const std::string& channelName, const std::string& user_kicked, const std::string& reason);
+		// void						KICK(const Client& client, const std::string& channelName, const std::string& user_kicked);
 
 
 		

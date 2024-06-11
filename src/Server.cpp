@@ -103,14 +103,11 @@ void	Server::serverInit()
 	getServerCreationTime();
 }
 
-
 void	Server::run()
 {
 	serverInit();
 	serverExec();
 }
-
-
 
 void	Server::TOPIC_1(const Client& client, const std::string& channelName)
 {
@@ -153,60 +150,6 @@ void	Server::TOPIC_2(const Client& client, const std::string& param, const std::
 	}
 }
 
-void	Server::KICK(const Client& client, const std::string& channelName, const std::string& user_kicked, const std::string& reason)
-{
-	if (!checkOPs(client.getNick(), channelName))
-		return;
-	std::vector<std::string> users = splitUsernames(user_kicked);
-
-	for(std::vector<Channel*>::iterator it = _Channels.begin(); it < _Channels.end(); it++)
-	{
-		std::vector<Client*> chanClient = (*it)->getChanClients();
-		if ((*it)->getName() == channelName)
-		{
-			for(std::vector<std::string>::iterator its = users.begin(); its < users.end(); its++)
-			{
-				for (std::vector<Client*>::iterator itc = chanClient.begin(); itc < chanClient.end(); itc++)
-				{
-					if ((*itc)->getNick() == (*its))
-					{
-						(*it)->removeClient((*its));
-						(chanClient.erase(itc));
-						(*itc)->PART(channelName, "" + channelName);
-					}
-				}
-			}
-		}
-	}
-	(void)reason;
-
-
-	FormatIRC::sendKICK(client, channelName, users);
-}
-
-
-void	Server::KICK(const Client& client, const std::string& channelName, const std::string& user_kicked)
-{
-	if (!checkOPs(client.getNick(), channelName))
-		return;
-	(void)user_kicked;
-}
-
-// KICK [<channel>] <nicks> [<reason>]
-
-
-// void	Server::KICK(const Client& client, const std::string& user_kicked)
-// {
-// 	if (!checkOPs(client.getNick(), client.getWhere()))
-// 		return;
-// 	if (!checkWhere())
-// }
-
-
-
-
-
-
 void	Server::connectClient()
 {
 	Client				*client = new Client(*this);
@@ -228,14 +171,6 @@ void	Server::connectClient()
 	std:: cout << "New Client  " << _Clients.back()->getNick() << " with fd " << _Clients.back()->getFd() << std::endl;
 	std::cout << "_Clients.size() = " << _Clients.size() << "\n_pfds.size() = " << _pfds.size() << std::endl;
 }
-
-
-
-
-
-
-
-
 
 int	Server::ServerRecv(int fd)
 {
