@@ -66,5 +66,5 @@ class	Server
 
 
 		void						TOPIC(const Client& client, const std::string& channelName);
-		void						TOPIC(const Client& client, const std::string& param, const std::string param_2);
+		void						TOPIC(const Client& client, const std::string& param, const std::string& param_2, const std::string& topic);
 };

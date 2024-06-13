@@ -112,7 +112,7 @@ void	Server::TOPIC(const Client& client, const std::string& channelName)
 	}
 }
 
-void	Server::TOPIC(const Client& client, const std::string& param, const std::string param_2)
+void	Server::TOPIC(const Client& client, const std::string& param, const std::string& param_2, const std::string& topic)
 {
 	if (param == "-delete")
 	{
@@ -135,7 +135,7 @@ void	Server::TOPIC(const Client& client, const std::string& param, const std::st
 		{
 			if ((*it)->getName() == param)
 			{
-				(*it)->setTopic(param_2, client);
+				(*it)->setTopic(topic, client);
 				FormatIRC::updateTOPIC(client, *it);
 			}
 		}

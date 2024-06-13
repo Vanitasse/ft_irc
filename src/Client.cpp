@@ -143,14 +143,14 @@ void	Client::setOPChannels(Channel* chan)
 
 void	Client::smiley(std::string& input)
 {
-    size_t    pos;
+	size_t    pos;
 
-    pos = input.find("=)", 0);
-    if (pos != input.npos)
-    {
-        input.erase(pos, 2);
-        input.insert(pos, SMILE);
-    }
+	pos = input.find("=)", 0);
+	if (pos != input.npos)
+	{
+		input.erase(pos, 2);
+		input.insert(pos, SMILE);
+	}
 }
 
 std::vector<std::string>	Client::splitInput(const std::string& input) //static
@@ -164,6 +164,15 @@ std::vector<std::string>	Client::splitInput(const std::string& input) //static
 	return (split);
 }
 
+const std::string Client::splitTopic(const std::string& input)
+{
+    size_t pos = input.find(':');
+
+    if (pos != std::string::npos)
+        return input.substr(pos);
+    else
+        return "";
+}
 
 void	Client::NICK(const std::string& newName)
 {
@@ -173,8 +182,7 @@ void	Client::NICK(const std::string& newName)
 		return ;
 	}
 	std::cout << "Nick Set to " << newName << std::endl;
-	_nickIsSet = true;void							TOPIC_1(const std::string& channelName);
-		void							TOPIC_2(const std::string& param, const std::string param_2);
+	_nickIsSet = true;
 	FormatIRC::sendNICK(this->_fd, *this, newName);
 	setNick(newName);
 }
@@ -368,15 +376,18 @@ void	Client::ParseAndRespond(std::string& input)
 	std::vector<std::string>			cmds;
 	std::vector<std::string>::iterator	it;
 	std::string							rep;
+	std::string							topic;
 	size_t								nl_pos;
 
 	_message += input;
 	nl_pos = _message.find('\n');
+	// std::cout << "RECEIVE = " << _message << std::endl;
 	std::cout << "message en cours" << std::endl; //remove
 	if (nl_pos != _message.npos)
 	{
 		std::cout << "message finished" << std::endl; //remove
 		cmds = Client::splitInput(_message);
+		topic = Client::splitTopic(_message);
 		it = std::find(cmds.begin(), cmds.end(), "QUIT");
 		if (it != cmds.end() && it + 1 != cmds.end())
 			return (QUIT());
@@ -412,7 +423,7 @@ void	Client::ParseAndRespond(std::string& input)
 
 		it = std::find(cmds.begin(), cmds.end(), "TOPIC");
 		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
-			_server->TOPIC(*this, *(it + 1), *(it + 2));
+			_server->TOPIC(*this, *(it + 1), *(it + 2), topic);
 		else if (it != cmds.end() && it + 1 != cmds.end())
 			_server->TOPIC(*this, *(it + 1));
 

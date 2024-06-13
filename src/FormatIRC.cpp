@@ -91,6 +91,7 @@ void	FormatIRC::sendJOIN(const Client& client, Channel& channel)
 
 void	FormatIRC::sendTOPIC(const Client& client, const Channel* chan)
 {
+	std::cout << "chanGetTopic = " << chan->getTopic() << std::endl;
 	std::string format(msg_serv2(std::string("332"), client.getNick()) + chan->getName() + " :" + chan->getTopic());
 	sender(client.getFd(), format);
 	format = msg_serv2(std::string("333"), client.getNick()) + chan->getName() + " " + chan->getTopicInfo();

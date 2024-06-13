@@ -62,6 +62,8 @@ class	Client
 		void							smiley(std::string& input);
 
 		static std::vector<std::string>	splitInput(const std::string& input);
+		const std::string				splitTopic(const std::string& input);
+
 		
 		void							ParseAndRespond(std::string& input);
 		void							NICK(const std::string& newName);
