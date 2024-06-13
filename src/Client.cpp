@@ -143,14 +143,14 @@ void	Client::setOPChannels(Channel* chan)
 
 void	Client::smiley(std::string& input)
 {
-    size_t    pos;
+	size_t    pos;
 
-    pos = input.find("=)", 0);
-    if (pos != input.npos)
-    {
-        input.erase(pos, 2);
-        input.insert(pos, SMILE);
-    }
+	pos = input.find("=)", 0);
+	if (pos != input.npos)
+	{
+		input.erase(pos, 2);
+		input.insert(pos, SMILE);
+	}
 }
 
 std::vector<std::string>	Client::splitInput(const std::string& input) //static
@@ -164,6 +164,15 @@ std::vector<std::string>	Client::splitInput(const std::string& input) //static
 	return (split);
 }
 
+const std::string Client::splitTopic(const std::string& input)
+{
+    size_t pos = input.find(':');
+
+    if (pos != std::string::npos)
+        return input.substr(pos);
+    else
+        return "";
+}
 
 void	Client::NICK(const std::string& newName)
 {
@@ -173,8 +182,7 @@ void	Client::NICK(const std::string& newName)
 		return ;
 	}
 	std::cout << "Nick Set to " << newName << std::endl;
-	_nickIsSet = true;void							TOPIC_1(const std::string& channelName);
-		void							TOPIC_2(const std::string& param, const std::string param_2);
+	_nickIsSet = true;
 	FormatIRC::sendNICK(this->_fd, *this, newName);
 	setNick(newName);
 }
@@ -205,10 +213,22 @@ void	Client::JOIN(const std::string& channelName)
 		return ;
 	}
 	JOINChannel->addClient(this);
-	JOINChannel->setTopic("", *this);
+	JOINChannel->setTopic(JOINChannel->getTopic(), *this);
 	_inChannels.push_back(JOINChannel);
 	FormatIRC::sendJOIN(*this, *JOINChannel);
 }
+
+// :maxou!~mablatie@B2ED245D.B270E442.5F584402.IP JOIN :#aa
+// >> :roubaix.fr.epiknet.org 353 maxou = #aa :maxou @max
+// >> :roubaix.fr.epiknet.org 366 maxou #aa :End of /NAMES list.
+
+// >> :maxz!~mablatie@B2ED245D.B270E442.5F584402.IP JOIN :#aa
+// >> :max!~mablatie@B2ED245D.B270E442.5F584402.IP QUIT :Quit:: leaving
+
+
+// void	Client::JOIN(const std::string& channelName)
+// {
+// 	Channel *JOINChannel;
 
 void	Client::JOIN(const std::string& channelName, const std::string& password)
 {
@@ -273,21 +293,24 @@ void	Client::PART(const std::string& channelName, const std::string& partMsg)
 
 void	Client::KICK(const std::string & chanName, const std::string& user_kicked, const std::string& reason)
 {
+	if (this->getNick() == user_kicked)
+		return;
 	Client* client_kicked = _server->findClient(user_kicked);
+	if (!client_kicked)
+		return;
 	std::vector<Client*> sndclients;
-
 	for(std::vector<Channel*>::iterator it = _OPChannels.begin(); it < _OPChannels.end(); it++)
 	{
 		if ((*it)->getName() == chanName)
 		{
-			client_kicked->PART(chanName, reason);
+			client_kicked->PART(chanName, RED + std::string("IM KICKED BYE") + RESET);
 			(*it)->removeClient(user_kicked);
 			sndclients = (*it)->getChanClients();
 			break;
 
 		}
 	}
-	FormatIRC::sendKICK(*this, chanName, user_kicked, sndclients);
+	FormatIRC::sendKICK(*this, chanName, user_kicked, sndclients, reason);
 }
 
 void	Client::MODE(const std::string& channelName, const std::string& mode)
@@ -348,10 +371,12 @@ void	Client::ParseAndRespond(std::string& input)
 	std::vector<std::string>			cmds;
 	std::vector<std::string>::iterator	it;
 	std::string							rep;
+	std::string							topic;
 	size_t								nl_pos;
 
 	_message += input;
 	nl_pos = _message.find('\n');
+	// std::cout << "RECEIVE = " << _message << std::endl;
 	std::cout << "message en cours" << std::endl; //remove
 	if (nl_pos != _message.npos)
 	{
@@ -359,6 +384,7 @@ void	Client::ParseAndRespond(std::string& input)
 		try
 		{
 			cmds = Client::splitInput(_message);
+			topic = splitTopic(_message);
 			it = std::find(cmds.begin(), cmds.end(), "QUIT");
 			if (it != cmds.end() && it + 1 != cmds.end())
 				return (QUIT());
@@ -396,10 +422,7 @@ void	Client::ParseAndRespond(std::string& input)
 
 			it = std::find(cmds.begin(), cmds.end(), "TOPIC");
 			if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
-				_server->TOPIC(*this, *(it + 1), *(it + 2));
-			else if (it != cmds.end() && it + 1 != cmds.end())
-				_server->TOPIC(*this, *(it + 1));
-
+				_server->TOPIC(*this, *(it + 1), *(it + 2), topic);
 
 			it = std::find(cmds.begin(), cmds.end(), "KICK");
 			if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end() && it + 3 != cmds.end())
