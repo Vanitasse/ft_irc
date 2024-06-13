@@ -203,10 +203,18 @@ void	Client::JOIN(const std::string& channelName)
 		return ;
 	}
 	JOINChannel->addClient(this);
-	JOINChannel->setTopic("", *this);
+	JOINChannel->setTopic(JOINChannel->getTopic(), *this);
 	_inChannels.push_back(JOINChannel);
 	FormatIRC::sendJOIN(*this, *JOINChannel);
 }
+
+// :maxou!~mablatie@B2ED245D.B270E442.5F584402.IP JOIN :#aa
+// >> :roubaix.fr.epiknet.org 353 maxou = #aa :maxou @max
+// >> :roubaix.fr.epiknet.org 366 maxou #aa :End of /NAMES list.
+
+// >> :maxz!~mablatie@B2ED245D.B270E442.5F584402.IP JOIN :#aa
+// >> :max!~mablatie@B2ED245D.B270E442.5F584402.IP QUIT :Quit:: leaving
+
 
 // void	Client::JOIN(const std::string& channelName)
 // {
@@ -271,21 +279,24 @@ void	Client::PART(const std::string& channelName, const std::string& partMsg)
 
 void	Client::KICK(const std::string & chanName, const std::string& user_kicked, const std::string& reason)
 {
+	if (this->getNick() == user_kicked)
+		return;
 	Client* client_kicked = _server->findClient(user_kicked);
+	if (!client_kicked)
+		return;
 	std::vector<Client*> sndclients;
-
 	for(std::vector<Channel*>::iterator it = _OPChannels.begin(); it < _OPChannels.end(); it++)
 	{
 		if ((*it)->getName() == chanName)
 		{
-			client_kicked->PART(chanName, reason);
+			client_kicked->PART(chanName, RED + std::string("IM KICKED BYE") + RESET);
 			(*it)->removeClient(user_kicked);
 			sndclients = (*it)->getChanClients();
 			break;
 
 		}
 	}
-	FormatIRC::sendKICK(*this, chanName, user_kicked, sndclients);
+	FormatIRC::sendKICK(*this, chanName, user_kicked, sndclients, reason);
 }
 
 void	Client::MODE(const std::string& channelName, const std::string& mode)

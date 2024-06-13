@@ -54,6 +54,8 @@ void	FormatIRC::sendPONG(int fd, const std::string& host)
 
 void	FormatIRC::sendPART(const Client& client, const std::string& channelName, const std::string& partMsg)
 {
+	if (partMsg.empty())
+		return ;
 	const std::string format(":" + client.getNick() + "!~" + client.getUsername() + "@" + _domain + " PART " + channelName + " " + partMsg);
 	sender(client.getFd(), format);
 }
@@ -79,8 +81,13 @@ void	FormatIRC::sendJOIN(const Client& client, Channel& channel)
 	format = msg_serv2(std::string("366"), client.getNick()) + channel.getName() + " :End of /NAMES list\r\n";
 	sender(client.getFd(), format);
 
+
+	// format = user_id(client.getNick(), client.getUsername()) + " JOIN :" + channel.getName();
+	// sender(client.getFd(), format);
 }
-// >> :montreal.ca.epiknet.org 329 cuck #lol 1718108998
+
+// >> :maxz!~mablatie@B2ED245D.B270E442.5F584402.IP JOIN :#aa
+// >> :max!~mablatie@B2ED245D.B270E442.5F584402.IP QUIT :Quit:: leaving
 
 void	FormatIRC::sendTOPIC(const Client& client, const Channel* chan)
 {
@@ -93,7 +100,9 @@ void	FormatIRC::sendTOPIC(const Client& client, const Channel* chan)
 void	FormatIRC::updateTOPIC(const Client& client, const Channel* chan)
 {
 	std::string format(user_id(client.getNick(), "~" + client.getUsername()) + " TOPIC " + chan->getName() + " " + chan->getTopic());
-	sender(client.getFd(), format);
+	std::vector<Client*> allclients = chan->getChanClients();
+	for (std::vector<Client*>::iterator it = allclients.begin(); it != allclients.end(); it++)
+		sender((*it)->getFd(), format);
 }
 
 void	FormatIRC::sendQUIT(int fd, const std::string& client_nick, const std::string& client_username)
@@ -102,9 +111,9 @@ void	FormatIRC::sendQUIT(int fd, const std::string& client_nick, const std::stri
 	sender(fd, format);
 }
 
-void	FormatIRC::sendKICK(const Client& client, const std::string& channelName, const std::string& user_kicked, std::vector<Client*> allclients)
+void	FormatIRC::sendKICK(const Client& client, const std::string& channelName, const std::string& user_kicked, std::vector<Client*> allclients, const std::string& reason)
 {
-	const std::string format(user_id(client.getNick(), client.getUsername()) + " KICK " + channelName + " " + user_kicked + " :");
+	const std::string format(user_id(client.getNick(), client.getUsername()) + " KICK " + channelName + " " + user_kicked + " :" + reason);
 	for (std::vector<Client*>::iterator it = allclients.begin(); it != allclients.end(); it++)
 		sender((*it)->getFd(), format);
 }
@@ -114,8 +123,6 @@ void	FormatIRC::sendMODE(const Client& client, const std::string& channelName, c
 	const std::string format(":" + client.getNick() + "!~" + client.getUsername() + "@" + _domain + " MODE " + channelName + " " + mode);
 	FormatIRC::sender(client.getFd(), format);
 }
-
-
 
 void	FormatIRC::sendCodeMsg(const Client& client, const std::string& code, const std::string& channelName, const std::string& msg)
 {
