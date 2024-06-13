@@ -197,6 +197,8 @@ void	Client::JOIN(const std::string& channelName)
 		if (channel->getName() == channelName)
 			return ;
 	JOINChannel = _server->checkChannels(channelName, *this);
+	if (JOINChannel->getModes()._k == true)
+		return (FormatIRC::sendCodeMsg(*this, "475", channelName, "Cannot join channel (+k)"));
 	if (JOINChannel == NULL)
 	{
 		FormatIRC::sendCodeMsg(*this, "448", channelName , "Cannot join channel: Channel name is too long");
@@ -208,26 +210,26 @@ void	Client::JOIN(const std::string& channelName)
 	FormatIRC::sendJOIN(*this, *JOINChannel);
 }
 
-// void	Client::JOIN(const std::string& channelName)
-// {
-// 	Channel *JOINChannel;
+void	Client::JOIN(const std::string& channelName, const std::string& password)
+{
+	Channel *JOINChannel;
 
-// 	for (auto& channel : _inChannels)
-// 		if (channel->getName() == channelName)
-// 			return ;
-// 	JOINChannel = _server->checkChannels(channelName, *this);
-// 	if (JOINChannel == NULL)
-// 	{
-// 		FormatIRC::sendCodeMsg(*this, "448", channelName , "Cannot join channel: Channel name is too long");
-// 		return ;
-// 	}
-// 	else if (1)
-// 		;
-// 	JOINChannel->addClient(this);
-// 	JOINChannel->setTopic("", *this);
-// 	_inChannels.push_back(JOINChannel);
-// 	FormatIRC::sendJOIN(*this, *JOINChannel);
-// }
+	for (auto& channel : _inChannels)
+		if (channel->getName() == channelName)
+			return ;
+	JOINChannel = _server->checkChannels(channelName, *this);
+	if (JOINChannel->getModes()._k == true && JOINChannel->getPassword() != password)
+		return (FormatIRC::sendCodeMsg(*this, "475", channelName, "Cannot join channel (+k)"));
+	if (JOINChannel == NULL)
+	{
+		FormatIRC::sendCodeMsg(*this, "448", channelName , "Cannot join channel: Channel name is too long");
+		return ;
+	}
+	JOINChannel->addClient(this);
+	JOINChannel->setTopic("", *this);
+	_inChannels.push_back(JOINChannel);
+	FormatIRC::sendJOIN(*this, *JOINChannel);
+}
 
 void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 {
@@ -290,66 +292,55 @@ void	Client::KICK(const std::string & chanName, const std::string& user_kicked, 
 
 void	Client::MODE(const std::string& channelName, const std::string& mode)
 {
-	Channel*	channel;
-
-	if (channelName[0] != '#') // ca serait un mode sur user
-		return ;
-	channel = _server->findChannel(channelName);
-	if (channel == NULL)
-	{
-		FormatIRC::sendCodeMsg(*this, "401", channelName , "NO SUCH CHANNEL");
-		return ;
-	}
+	// Channel*	channel = channelThrower(channelName);
+	(void)channelName;
+	(void)mode;
 	if (mode[0] == '+')
-		for (std::size_t i = 0; i < mode.length(); i++)
-		{
-			if (mode[1] == 'i' && channel->setI(true))
-				FormatIRC::sendMODE(*this, channelName, "+i");
-			else if (mode[1] == 't' && channel->setT(true))
-				FormatIRC::sendMODE(*this, channelName, "+t");
-		}
+		;
 	else if (mode[0] == '-')
-		for (std::size_t i = 0; i < mode.length(); i++)
-		{
-			if (mode[1] == 'i' && channel->setI(true))
-				FormatIRC::sendMODE(*this, channelName, "-i");
-			else if (mode[1] == 't' && channel->setT(true))
-				FormatIRC::sendMODE(*this, channelName, "-t");
-			else if (mode[1] == 'l' && channel->setT(true))
-				FormatIRC::sendMODE(*this, channelName, "-l");
-		}
+		;
 }
 
 void	Client::MODE(const std::string& channelName, const std::string& mode, const std::string& arg)
 {
-	(void)arg;
+	Channel*	channel = channelThrower(channelName);
+
+	if (mode[0] == '+')
+	{
+		for (std::size_t i = 1; i < mode.length(); i++)
+		{
+			if (mode[1] == 'k' && channel->setK(true, arg))
+				FormatIRC::sendMODE(*this, channelName, std::string("+k") + " " + arg); // arg
+		}
+	}
+	else if (mode[0] == '-')
+	{
+		for (std::size_t i = 1; i < mode.length(); i++)
+		{
+			if (mode[1] == 'k' && channel->setK(false, arg))
+				FormatIRC::sendMODE(*this, channelName, std::string("-k") + " " + arg); // arg
+		}
+	}
+}
+
+Channel*	Client::channelThrower(const std::string& channelName)
+{
 	Channel*	channel;
 
 	if (channelName[0] != '#') // ca serait un mode sur user
-		return ;
+		throw(ChannelError("user modes not supported"));
 	channel = _server->findChannel(channelName);
 	if (channel == NULL)
 	{
 		FormatIRC::sendCodeMsg(*this, "401", channelName , "NO SUCH CHANNEL");
-		return ;
+		throw(ChannelError("channel dont exist"));
 	}
-	if (mode[0] == '+')
+	else if (!channel->IsAnOp(this->_nick))
 	{
-		// FormatIRC::sendMODE(*this, channelName, mode);
-		for (std::size_t i = 0; i < mode.length(); i++)
-		{
-			// if (mode[1] == 'i' && channel->setI(true))
-			// 	FormatIRC::sendMODE(*this, channelName, "+i");
-			// else if (mode[1] == 't' && channel->setT(true))
-				FormatIRC::sendMODE(*this, channelName, "+t");
-			if (mode[1] == 'k' && channel->setK(true, arg))
-				FormatIRC::sendMODE(*this, channelName, std::string("+k") + " " + arg); // arg
-		// 	else if (mode[1] == 'o' && channel->setO(true))
-		// 		FormatIRC::sendMODE(*this, channelName, "+o"); //arg
-		// 	else if (mode[1] == 'l' && channel->setL(true))
-		// 		FormatIRC::sendMODE(*this, channelName, "+l"); //arg
-		}
+		FormatIRC::sendCodeMsg(*this, "482", channelName , "You're not channel operator");
+		throw(ChannelError("operator failure"));
 	}
+	return (channel);
 }
 
 void	Client::ParseAndRespond(std::string& input)
@@ -365,65 +356,73 @@ void	Client::ParseAndRespond(std::string& input)
 	if (nl_pos != _message.npos)
 	{
 		std::cout << "message finished" << std::endl; //remove
-		cmds = Client::splitInput(_message);
-		it = std::find(cmds.begin(), cmds.end(), "QUIT");
-		if (it != cmds.end() && it + 1 != cmds.end())
-			return (QUIT());
-
-		it = std::find(cmds.begin(), cmds.end(), "USER");
-		if (it != cmds.end() && it + 1 != cmds.end())
-			setUsername(*(it + 1));
-
-		it = std::find(cmds.begin(), cmds.end(), "NICK");
-		if (it != cmds.end() && it + 1 != cmds.end())
-			NICK(*(it + 1));
-
-		it = std::find(cmds.begin(), cmds.end(), "PASS");
-		if (it != cmds.end() && it + 1 != cmds.end())
-			PASS(*(it + 1));
-
-		it = std::find(cmds.begin(), cmds.end(), "PING");
-		if (it != cmds.end() && it + 1 != cmds.end())
-			FormatIRC::sendPONG(this->_fd, *(it + 1));
-
-		it = std::find(cmds.begin(), cmds.end(), "PRIVMSG");
-		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
-			PRIVMSG(*(it + 1), *(it + 2));
-
-		it = std::find(cmds.begin(), cmds.end(), "PART");
-		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
-			PART(*(it + 1), *(it + 2));
-
-		it = std::find(cmds.begin(), cmds.end(), "MODE");
-		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
-			MODE(*(it + 1), *(it + 2));
-
-
-		it = std::find(cmds.begin(), cmds.end(), "TOPIC");
-		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
-			_server->TOPIC(*this, *(it + 1), *(it + 2));
-		else if (it != cmds.end() && it + 1 != cmds.end())
-			_server->TOPIC(*this, *(it + 1));
-
-
-		it = std::find(cmds.begin(), cmds.end(), "KICK");
-		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end() && it + 3 != cmds.end())
-			KICK(*(it + 1), *(it + 2), *(it + 3));
-		else if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
-			KICK(*(it + 1), *(it + 2), "");
-
-
-
-		if (!_isConnected && _nickIsSet && _passIsSet)
+		try
 		{
-			_isConnected = true;
-			FormatIRC::sendWelcome(this->_fd, this->_nick, _server->getDate());
+			cmds = Client::splitInput(_message);
+			it = std::find(cmds.begin(), cmds.end(), "QUIT");
+			if (it != cmds.end() && it + 1 != cmds.end())
+				return (QUIT());
+
+			it = std::find(cmds.begin(), cmds.end(), "USER");
+			if (it != cmds.end() && it + 1 != cmds.end())
+				setUsername(*(it + 1));
+
+			it = std::find(cmds.begin(), cmds.end(), "NICK");
+			if (it != cmds.end() && it + 1 != cmds.end())
+				NICK(*(it + 1));
+
+			it = std::find(cmds.begin(), cmds.end(), "PASS");
+			if (it != cmds.end() && it + 1 != cmds.end())
+				PASS(*(it + 1));
+
+			it = std::find(cmds.begin(), cmds.end(), "PING");
+			if (it != cmds.end() && it + 1 != cmds.end())
+				FormatIRC::sendPONG(this->_fd, *(it + 1));
+
+			it = std::find(cmds.begin(), cmds.end(), "PRIVMSG");
+			if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
+				PRIVMSG(*(it + 1), *(it + 2));
+
+			it = std::find(cmds.begin(), cmds.end(), "PART");
+			if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
+				PART(*(it + 1), *(it + 2));
+
+			it = std::find(cmds.begin(), cmds.end(), "MODE");
+			if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end() && it + 3 != cmds.end())
+				MODE(*(it + 1), *(it + 2), *(it + 3));
+			else if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
+				MODE(*(it + 1), *(it + 2));
+
+
+			it = std::find(cmds.begin(), cmds.end(), "TOPIC");
+			if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
+				_server->TOPIC(*this, *(it + 1), *(it + 2));
+			else if (it != cmds.end() && it + 1 != cmds.end())
+				_server->TOPIC(*this, *(it + 1));
+
+
+			it = std::find(cmds.begin(), cmds.end(), "KICK");
+			if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end() && it + 3 != cmds.end())
+				KICK(*(it + 1), *(it + 2), *(it + 3));
+			else if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
+				KICK(*(it + 1), *(it + 2), "");
+
+			it = std::find(cmds.begin(), cmds.end(), "JOIN");
+			if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
+				JOIN(*(it + 1), *(it + 2));
+			else if (it != cmds.end() && it + 1 != cmds.end())
+				JOIN(*(it + 1));
+			if (!_isConnected && _nickIsSet && _passIsSet)
+			{
+				_isConnected = true;
+				FormatIRC::sendWelcome(this->_fd, this->_nick, _server->getDate());
+			}
+			_message.clear();
 		}
-		it = std::find(cmds.begin(), cmds.end(), "JOIN");
-		// if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
-		// 	JOIN(*(it + 1), *(it + 2));
-		if (it != cmds.end() && it + 1 != cmds.end())
-			JOIN(*(it + 1));
-		_message.clear();
+		catch(const std::exception& e)
+		{
+			std::cerr << e.what() << '\n';
+		}
+		
 	}
 }

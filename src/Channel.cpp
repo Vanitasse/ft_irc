@@ -60,7 +60,11 @@ bool	Channel::setT(const bool t)
 }
 bool	Channel::setK(const bool k, const std::string& password)
 {
-	if (_modes._k == k || this->_password == password)
+	if (_modes._k == k)
+		return (false);
+	if (k == true && this->_password == password)
+		return (false);
+	if (k == false && this->_password != password)
 		return (false);
 	_modes._k = k;
 	this->_password = password;
@@ -98,11 +102,14 @@ const std::string&	Channel::getDate() const
 	return this->_date;
 }
 
-
-// const std::vector<Client*>& Channel::getOperators() const
-// {
-// 	return (this->_operators);
-// }
+const std::string&	Channel::getPassword() const
+{
+	return (this->_password);
+}
+const std::vector<Client*>& Channel::getOperators() const
+{
+	return (this->_operators);
+}
 
 const std::vector<Client*>& Channel::getChanClients() const
 {
@@ -112,9 +119,6 @@ const std::vector<Client*>& Channel::getChanClients() const
 
 void	Channel::sendToClients(const Client& sender, const std::string& msg)
 {
-	// for (unsigned int i = 0; i < _operators.size(); i++)
-	// 	if (_operators[i] && _operators[i] != &sender)
-	// 		FormatIRC::sendPRIVMESS(_operators[i]->getFd(), sender.getNick(), this->_name, msg);
 	for (unsigned int i = 0; i < _chanClients.size(); i++)
 		if (_chanClients[i] && _chanClients[i] != &sender)
 			FormatIRC::sendPRIVMESS(_chanClients[i]->getFd(), sender.getNick(), this->_name, msg);
@@ -143,7 +147,7 @@ const std::string Channel::getTopicInfo() const
 	return (format);
 }
 
-bool	Channel::listOPs(const std::string nickname)
+bool	Channel::IsAnOp(const std::string nickname)
 {
 	for (std::vector<Client*>::iterator it = _operators.begin(); it < _operators.end(); it++)
 	{

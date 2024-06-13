@@ -24,6 +24,19 @@ class	Client
 		Server* 	_server;
 		std::vector<Channel*>		_inChannels;
 		std::vector<Channel*>		_OPChannels;
+
+		Channel*	channelThrower(const std::string& channelName);
+		class ChannelError : public std::exception
+		{
+			private:
+				char const* _error;
+			public:
+				ChannelError(const char* error) : _error(error){}
+				virtual char const* what() const throw()
+				{
+					return (_error);
+				};
+		};
 	public:
 					Client();
 					Client(Server& server);
@@ -76,5 +89,4 @@ class	Client
 
 		void							QUIT();
 
-		// virtual void		formatText(std::string& input) = 0;
 };

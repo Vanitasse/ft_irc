@@ -83,7 +83,7 @@ bool Server::checkOPs(const std::string& nickname, const std::string& chanName)
 	{
 		if ((*it)->getName() == chanName)
 		{
-			if ((*it)->listOPs(nickname))
+			if ((*it)->IsAnOp(nickname))
 				return true;
 		}
 	}

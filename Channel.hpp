@@ -24,7 +24,7 @@ class Channel
 		void							setName(const std::string& name);
 		const std::string&				getTopic() const;
 		void							setTopic(const std::string& topic, const Client& client);
-		// const std::string&				getPassword() const;
+		const std::string&				getPassword() const;
 		const t_chanModes&				getModes() const;
 		bool							setI(const bool i); //renvoie change/non change
 		bool							setT(const bool t); //renvoie change/non change
@@ -34,12 +34,13 @@ class Channel
 
 		const std::string&				getDate() const;
 
-		// const std::vector<Client*>&		getOperators() const;
+		const std::vector<Client*>&		getOperators() const;
 		const std::vector<Client*>&		getChanClients() const;
 
 		const std::string					getTopicInfo() const;
 		const std::string					getNickList();
-		bool 								listOPs(const std::string nickname);
+		
+		bool 								IsAnOp(const std::string nickname);
 
 
 
