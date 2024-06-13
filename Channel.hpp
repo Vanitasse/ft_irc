@@ -7,6 +7,7 @@ class Channel
 {
 	private:
 		t_chanModes			_modes;
+		std::string			_password; // mode +k
 		std::string			_name;
 		std::string			_topic;
 		std::string			_date;
@@ -23,13 +24,13 @@ class Channel
 		void							setName(const std::string& name);
 		const std::string&				getTopic() const;
 		void							setTopic(const std::string& topic, const Client& client);
-
+		// const std::string&				getPassword() const;
 		const t_chanModes&				getModes() const;
-		void							setI(const bool i);
-		void							setT(const bool t);
-		void							setK(const bool k);
-		void							setO(const bool o);
-		void							setL(const bool l);
+		bool							setI(const bool i); //renvoie change/non change
+		bool							setT(const bool t); //renvoie change/non change
+		bool							setK(const bool k, const std::string& password); //renvoie change/non change et set le password
+		bool							setO(const bool o); //renvoie change/non change
+		bool							setL(const bool l); //renvoie change/non change
 
 		const std::string&				getDate() const;
 
@@ -49,6 +50,4 @@ class Channel
 
 	
 		void								sendToClients(const Client& sender, const std::string& msg);
-		void								sendKicks(const Client* client, const std::string& user_kicked, const std::string& reason);
-
 };

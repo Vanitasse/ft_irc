@@ -67,9 +67,10 @@ class	Client
 		void							NICK(const std::string& newName);
 		void							PASS(const std::string& pass);
 		void							JOIN(const std::string& chanName);
-
+		void							JOIN(const std::string& chanName, const std::string& password);
 		void							PRIVMSG(const std::string& destination, const std::string& msg);
-		void							WHO(const std::string& channelName);
+		void							MODE(const std::string& channelName, const std::string& mode);
+		void							MODE(const std::string& channelName, const std::string& mode, const std::string& arg);
 		void							PART(const std::string& channelName, const std::string& partMsg);
 		void							KICK(const std::string & chanName, const std::string& user_kicked, const std::string& reason);
 

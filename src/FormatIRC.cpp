@@ -1,6 +1,9 @@
 #include "../FormatIRC.hpp"
 #include "../Client.hpp"
 #include "../Channel.hpp"
+
+std::string FormatIRC::_domain = "42IRC";
+
 FormatIRC::FormatIRC()
 {
 
@@ -38,7 +41,7 @@ void	FormatIRC::sendWelcome(int fd, const std::string& Nick, const std::string& 
 				+ msg_serv(std::string("002"), Nick) + GREEN + "Your host is 42IRCserver, running version 0.1\r\n"
 				+ msg_serv(std::string("003"), Nick) + GREEN + "This server was created " + ServerCreationDate + "\r\n"
 				+ msg_serv2(std::string("004"), Nick) + GREEN + "42IRCserver 0.1 connected \r\n"
-				+ msg_serv3(std::string("005"), Nick, supp_info() + RESET));
+				+ msg_serv3(std::string("005"), Nick, supp_info + RESET));
 	
 	sender(fd, format);
 }
@@ -51,7 +54,7 @@ void	FormatIRC::sendPONG(int fd, const std::string& host)
 
 void	FormatIRC::sendPART(const Client& client, const std::string& channelName, const std::string& partMsg)
 {
-	const std::string format(":" + client.getNick() + "!~" + client.getUsername() + "@42IRCerver PART " + channelName + " " + partMsg);
+	const std::string format(":" + client.getNick() + "!~" + client.getUsername() + "@" + _domain + " PART " + channelName + " " + partMsg);
 	sender(client.getFd(), format);
 }
 
@@ -61,9 +64,8 @@ void	FormatIRC::sendNICK(int fd, const Client& client, const std::string& newNam
 	sender(fd, format);
 }
 
-void	FormatIRC::sendJOIN(const Client& client, Channel& channel, const std::string& domain)
+void	FormatIRC::sendJOIN(const Client& client, Channel& channel)
 {
-	(void)domain;
 	std::string format(":" + client.getNick() + "!~" + client.getUsername() +  " JOIN :" + channel.getName());
 	sender(client.getFd(), format);
 	format = msg_serv2(std::string("329"), client.getNick()) + channel.getName() + " " + channel.getDate();
@@ -94,30 +96,35 @@ void	FormatIRC::updateTOPIC(const Client& client, const Channel* chan)
 	sender(client.getFd(), format);
 }
 
-// :maxou!~mablatie@6F35C787.B270E442.5F584402.IP TOPIC #42 :Hello
-
 void	FormatIRC::sendQUIT(int fd, const std::string& client_nick, const std::string& client_username)
 {
 	const std::string format(user_id(client_nick, client_username) + " QUIT :BYE BYE");
 	sender(fd, format);
 }
 
-//  :roubaix.fr.epiknet.org 448 paul #pooooollllllllingggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh :Cannot join channel: Channel name is too long
-
-void	FormatIRC::sendErrorChannelLen(const Client& client, const std::string& channelName, const std::string& domain)
-{
-	const std::string format(":" + domain + " 448 " + client.getNick() + " " + channelName + " :Cannot join channel: Channel name is too long" + "\r\n");
-	FormatIRC::sender(client.getFd(), format);
-}
-
 void	FormatIRC::sendKICK(const Client& client, const std::string& channelName, const std::string& user_kicked, std::vector<Client*> allclients)
 {
 	const std::string format(user_id(client.getNick(), client.getUsername()) + " KICK " + channelName + " " + user_kicked + " :");
-	for (std::vector<Client*>::iterator it = allclients.begin(); it != allclients.end(); it ++)
+	for (std::vector<Client*>::iterator it = allclients.begin(); it != allclients.end(); it++)
 		sender((*it)->getFd(), format);
 }
 
+void	FormatIRC::sendMODE(const Client& client, const std::string& channelName, const std::string& mode)
+{
+	const std::string format(":" + client.getNick() + "!~" + client.getUsername() + "@" + _domain + " MODE " + channelName + " " + mode);
+	FormatIRC::sender(client.getFd(), format);
+}
 
-// KICK #aa maxou :
-// >> :max!~vanitas@EpiK-A30BA23B.rev.sfr.net KICK #aa maxou :max
 
+
+void	FormatIRC::sendCodeMsg(const Client& client, const std::string& code, const std::string& channelName, const std::string& msg)
+{
+	const std::string format(":" + _domain + " " + code + " " + client.getNick() + " " + channelName + " :" + msg);
+	FormatIRC::sender(client.getFd(), format);
+}
+
+void	FormatIRC::sendCodeMsg(const Client& client, const std::string& code, const std::string& msg)
+{
+	const std::string format(":" + _domain + " " + code + " " + client.getNick() + " :" + msg);
+	FormatIRC::sender(client.getFd(), format);
+}

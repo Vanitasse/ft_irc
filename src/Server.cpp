@@ -4,7 +4,6 @@ bool Server::_signal = false;
 
 Server::Server()
 {
-	_domain = "42IRCserver";
 	_limits._chanType = "#";
 	_limits._prefix = "(o)@";
 	_limits._nbModes = 1;
@@ -32,7 +31,6 @@ Server&	Server::operator=(const Server& toCpy)
 {
 	if (this != &toCpy)
 	{
-		_domain = toCpy._domain;
 		_Clients = toCpy._Clients;
 		_pfds = toCpy._pfds;
 		_port = toCpy._port;
@@ -42,7 +40,6 @@ Server&	Server::operator=(const Server& toCpy)
 
 Server::Server(const int& port, const std::string& password_input) : _password(password_input), _port(port)
 {
-	_domain = "42IRCserver";
 	_limits._chanType = "#";
 	_limits._channelLen = 20;
 	_limits._prefix = "(o)@";
@@ -59,11 +56,6 @@ const std::string& Server::getDate() const
 const std::string&	Server::getPassword() const
 {
 	return (_password);
-}
-
-const std::string&	Server::getDomain() const
-{
-	return (_domain);
 }
 
 const t_limits&	Server::getLimits() const
@@ -109,7 +101,7 @@ void	Server::run()
 	serverExec();
 }
 
-void	Server::TOPIC_1(const Client& client, const std::string& channelName)
+void	Server::TOPIC(const Client& client, const std::string& channelName)
 {
 	std::cout << "TOPIC_1" << std::endl;
 
@@ -120,7 +112,7 @@ void	Server::TOPIC_1(const Client& client, const std::string& channelName)
 	}
 }
 
-void	Server::TOPIC_2(const Client& client, const std::string& param, const std::string param_2)
+void	Server::TOPIC(const Client& client, const std::string& param, const std::string param_2)
 {
 	if (param == "-delete")
 	{

@@ -65,7 +65,6 @@ Channel*	Server::checkChannels(const std::string& chanName, Client& client)
 			std::cout << chanName << " exists, returning it" << std::endl;
 			return (channel);
 		}
-	
 	return (createNewChannel(chanName, client));
 }
 
@@ -114,21 +113,12 @@ Client*	Server::findClient(const std::string& nick)
 	return nullptr;
 }
 
-
-
-// std::vector<Client*> Server::checkUsers(const std::string& user_kicked)
-// {
-// 	"max,maxou";
-// 	if (user_kicked.find(',') == user_kicked.npos)
-// 	{
-// 		for(std::vector<Client*>::iterator it = _Clients.begin(); it < _Clients.end(); it++)
-// 		{
-
-// 		}
-// 	}
-// 	else
-// 	{
-
-// 	}
-
-// }
+Channel*	Server::findChannel(const std::string& channelName)
+{
+	for(std::vector<Channel*>::iterator it = _Channels.begin(); it < _Channels.end(); it++)
+	{
+		if ((*it)->getName() == channelName)
+			return *it;
+	}
+	return nullptr;
+}

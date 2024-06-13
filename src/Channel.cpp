@@ -44,25 +44,41 @@ const t_chanModes&	Channel::getModes() const
 {
 	return (this->_modes);
 }
-void	Channel::setI(const bool i)
+bool	Channel::setI(const bool i)
 {
+	if (_modes._i == i)
+		return (false);
 	_modes._i = i;
+	return (true);
 }
-void	Channel::setT(const bool t)
+bool	Channel::setT(const bool t)
 {
+	if (_modes._t == t)
+		return (false);
 	_modes._t = t;
+	return (true);
 }
-void	Channel::setK(const bool k)
+bool	Channel::setK(const bool k, const std::string& password)
 {
+	if (_modes._k == k || this->_password == password)
+		return (false);
 	_modes._k = k;
+	this->_password = password;
+	return (true);
 }
-void	Channel::setO(const bool o)
+bool	Channel::setO(const bool o)
 {
+	if (_modes._o == o)
+		return (false);
 	_modes._o = o;
+	return (true);
 }
-void	Channel::setL(const bool l)
+bool	Channel::setL(const bool l)
 {
+	if (_modes._l == l)
+		return (false);
 	_modes._l = l;
+	return (true);
 }
 
 const std::string& Channel::getTopic() const

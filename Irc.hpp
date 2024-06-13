@@ -119,16 +119,10 @@
 #define msg_serv2(code, nickname) (":42IRCserv " + code + " " + nickname + " ")
 #define msg_serv3(code, nickname, support_info) (":42IRCserv " + code + " " + nickname + " " + support_info + " :are supported by this server\r\n")
 
-#define msg_err(code, nickname) (":42IRCserv " + code + " * " + nickname + " :")
 
-#define supp_info() ("CHANTYPES=# PREFIX=(o)@ MODES=1CHANNELLEN=20 NICKLEN=20 TOPICLEN=200")
-
-#define	priv_mess(nickname, channel, msg) (":" + nickname + " PRIVMSG" + ' ' + channel + ' ' + msg)
+#define supp_info "CHANTYPES=# PREFIX=(o)@ MODES=1CHANNELLEN=20 NICKLEN=20 TOPICLEN=200"
 
 #define user_id(nickname, username) (":" + nickname + "!" + username + "@localhost")
-#define RPL_INVITE(user_id, invited, channel) (user_id + " INVITE " + invited + " #" + channel)
-// [...]
-#define ERR_INVALIDMODEPARAM(client, channel, mode, password) ("696 " + client + " #" + channel + " " + mode + " " + password + " : password must only contained alphabetic character")
 
 
 typedef struct s_limits
