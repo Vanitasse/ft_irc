@@ -25,7 +25,7 @@ class	Client
 		std::vector<Channel*>		_inChannels;
 		std::vector<Channel*>		_OPChannels;
 
-		Channel*	channelThrower(const std::string& channelName);
+		Channel*	OperatorChannelThrower(const std::string& channelName);
 		class ChannelError : public std::exception
 		{
 			private:

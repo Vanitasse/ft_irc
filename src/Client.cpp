@@ -315,18 +315,21 @@ void	Client::KICK(const std::string & chanName, const std::string& user_kicked, 
 
 void	Client::MODE(const std::string& channelName, const std::string& mode)
 {
-	// Channel*	channel = channelThrower(channelName);
-	(void)channelName;
-	(void)mode;
+	Channel*	channel = OperatorChannelThrower(channelName);
+
 	if (mode[0] == '+')
 		;
 	else if (mode[0] == '-')
-		;
+		for (std::size_t i = 1; i < mode.length(); i++)
+		{
+			if (mode[1] == 'k' && channel->setK(false, channel->getPassword()))
+				FormatIRC::sendMODE(*this, channelName, std::string("-k") + " " + channel->getPassword()); // arg
+		}
 }
 
 void	Client::MODE(const std::string& channelName, const std::string& mode, const std::string& arg)
 {
-	Channel*	channel = channelThrower(channelName);
+	Channel*	channel = OperatorChannelThrower(channelName);
 
 	if (mode[0] == '+')
 	{
@@ -334,6 +337,16 @@ void	Client::MODE(const std::string& channelName, const std::string& mode, const
 		{
 			if (mode[1] == 'k' && channel->setK(true, arg))
 				FormatIRC::sendMODE(*this, channelName, std::string("+k") + " " + arg); // arg
+			else if (mode[1] == 'o' && !channel->IsAnOp(arg))
+			{
+				if (channel->IsInChan(arg))
+				{
+					FormatIRC::sendMODE(*this, channelName, std::string("+o") + " " + arg);
+					channel->addOperator(_server->findClient(arg));
+				}
+				else
+					FormatIRC::sendCodeMsg(*this, "401", channelName , "No such nick/channel");
+			}
 		}
 	}
 	else if (mode[0] == '-')
@@ -342,11 +355,16 @@ void	Client::MODE(const std::string& channelName, const std::string& mode, const
 		{
 			if (mode[1] == 'k' && channel->setK(false, arg))
 				FormatIRC::sendMODE(*this, channelName, std::string("-k") + " " + arg); // arg
+			else if (mode[1] == 'o' && channel->IsAnOp(arg))
+			{
+				FormatIRC::sendMODE(*this, channelName, std::string("-o") + " " + arg); // arg
+				channel->removeOP(*_server->findClient(arg));
+			}
 		}
 	}
 }
-
-Channel*	Client::channelThrower(const std::string& channelName)
+// Throw une exception si le channel n'existe pas ou si le client n'est pas operateur
+Channel*	Client::OperatorChannelThrower(const std::string& channelName)
 {
 	Channel*	channel;
 
@@ -376,7 +394,6 @@ void	Client::ParseAndRespond(std::string& input)
 
 	_message += input;
 	nl_pos = _message.find('\n');
-	// std::cout << "RECEIVE = " << _message << std::endl;
 	std::cout << "message en cours" << std::endl; //remove
 	if (nl_pos != _message.npos)
 	{

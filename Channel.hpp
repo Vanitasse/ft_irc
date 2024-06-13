@@ -41,10 +41,12 @@ class Channel
 		const std::string					getNickList();
 		
 		bool 								IsAnOp(const std::string nickname);
+		bool 								IsInChan(const std::string nickname);
 
 
 
 		void								addClient(Client *client);
+		void								addOperator(Client *client);
 		void								removeClient(const Client *client);
 		void								removeClient(const std::string& nick);
 		void								removeOP(const Client& client);

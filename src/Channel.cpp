@@ -149,7 +149,7 @@ const std::string Channel::getTopicInfo() const
 
 bool	Channel::IsAnOp(const std::string nickname)
 {
-	for (std::vector<Client*>::iterator it = _operators.begin(); it < _operators.end(); it++)
+	for (std::vector<Client*>::iterator it = _operators.begin(); it != _operators.end(); it++)
 	{
 		if ((*it)->getNick() == nickname)
 			return true;
@@ -157,15 +157,29 @@ bool	Channel::IsAnOp(const std::string nickname)
 	return false;
 }
 
+bool	Channel::IsInChan(const std::string nickname)
+{
+	for (std::vector<Client*>::iterator it = _chanClients.begin(); it != _chanClients.end(); it++)
+	{
+		if ((*it)->getNick() == nickname)
+			return true;
+	}
+	return false;
+}
+
+
+
 void	Channel::addClient(Client *client)
 {
 	if (_operators.size() == 0)
-	{
-		_operators.push_back(client);
-		std::cout << BG_BLUE << "client " << client->getNick() << " added to channel " << this->_name << " as Operator" << RESET << std::endl;
-	}
+		addOperator(client);
 	_chanClients.push_back(client);	
 	std::cout<<  BG_GREEN << "client " << client->getNick() << " added to channel " << this->_name << " as Simple user" << RESET << std::endl;
+}
+void	Channel::addOperator(Client *client)
+{
+	_operators.push_back(client);
+	std::cout << BG_BLUE << "client " << client->getNick() << " added to channel " << this->_name << " as Operator" << RESET << std::endl;
 }
 
 void	Channel::removeClient(const Client *client)
