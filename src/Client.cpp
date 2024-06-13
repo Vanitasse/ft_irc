@@ -424,8 +424,6 @@ void	Client::ParseAndRespond(std::string& input)
 		it = std::find(cmds.begin(), cmds.end(), "TOPIC");
 		if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
 			_server->TOPIC(*this, *(it + 1), *(it + 2), topic);
-		else if (it != cmds.end() && it + 1 != cmds.end())
-			_server->TOPIC(*this, *(it + 1));
 
 
 		it = std::find(cmds.begin(), cmds.end(), "KICK");

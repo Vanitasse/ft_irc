@@ -101,17 +101,6 @@ void	Server::run()
 	serverExec();
 }
 
-void	Server::TOPIC(const Client& client, const std::string& channelName)
-{
-	std::cout << "TOPIC_1" << std::endl;
-
-	for (std::vector<Channel*>::iterator it = _Channels.begin(); it < _Channels.end(); it++)
-	{
-		if ((*it)->getName() == channelName)
-			FormatIRC::sendTOPIC(client, *it);
-	}
-}
-
 void	Server::TOPIC(const Client& client, const std::string& param, const std::string& param_2, const std::string& topic)
 {
 	if (param == "-delete")
