@@ -29,6 +29,7 @@ void	FormatIRC::sender(int fd, const std::string& format)
 	std::cout << CYAN << "[Server send]" << res << RESET << std::endl;
 }
 
+
 void	FormatIRC::sendPRIVMESS(int fd, const std::string& senderNick, const std::string& destination, const std::string& msg)
 {
 	const std::string format(":" + senderNick + " PRIVMSG" + ' ' + destination + ' ' + msg);
@@ -66,6 +67,22 @@ void	FormatIRC::sendNICK(int fd, const Client& client, const std::string& newNam
 	sender(fd, format);
 }
 
+void	FormatIRC::sendJoinInfo(const Client& client, const Channel& chan)
+{
+	std::vector<Client*> clients = chan.getChanClients();
+	if (clients.size() == 1)
+		return ;
+	else
+	{
+		std::string format = user_id(client.getNick(), client.getUsername()) + " JOIN :" + chan.getName();
+		for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); it++)
+		{
+			if ((*it)->getNick() != client.getNick())
+				sender((*it)->getFd(), format);
+		}
+	}
+}
+
 void	FormatIRC::sendJOIN(const Client& client, Channel& channel)
 {
 	std::string format(":" + client.getNick() + "!~" + client.getUsername() +  " JOIN :" + channel.getName());
@@ -80,14 +97,9 @@ void	FormatIRC::sendJOIN(const Client& client, Channel& channel)
 	sender(client.getFd(), format);
 	format = msg_serv2(std::string("366"), client.getNick()) + channel.getName() + " :End of /NAMES list\r\n";
 	sender(client.getFd(), format);
+	FormatIRC::sendJoinInfo(client, channel);
 
-
-	// format = user_id(client.getNick(), client.getUsername()) + " JOIN :" + channel.getName();
-	// sender(client.getFd(), format);
 }
-
-// >> :maxz!~mablatie@B2ED245D.B270E442.5F584402.IP JOIN :#aa
-// >> :max!~mablatie@B2ED245D.B270E442.5F584402.IP QUIT :Quit:: leaving
 
 void	FormatIRC::sendTOPIC(const Client& client, const Channel* chan)
 {
@@ -106,11 +118,54 @@ void	FormatIRC::updateTOPIC(const Client& client, const Channel* chan)
 		sender((*it)->getFd(), format);
 }
 
-void	FormatIRC::sendQUIT(int fd, const std::string& client_nick, const std::string& client_username)
+void	FormatIRC::sendQuitInfo(const Client& client, const Channel* chan)
 {
-	const std::string format(user_id(client_nick, client_username) + " QUIT :BYE BYE");
-	sender(fd, format);
+	std::vector<Client*> clients = chan->getChanClients();
+	if (clients.size() == 1)
+		return ;
+	else
+	{
+		std::string format = user_id(client.getNick(), client.getUsername()) + " QUIT :by using /quit";
+		for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); it++)
+		{
+			if ((*it)->getNick() != client.getNick())
+				sender((*it)->getFd(), format);
+		}
+	}
 }
+
+void	FormatIRC::sendQUIT(const Client& client)
+{
+	std::cout << "OUI ICI" << std::endl;
+	std::vector<Channel*> allchan = client.getInChannels();
+	for (std::vector<Channel*>::iterator it = allchan.begin(); it != allchan.end(); it++)
+		sendQuitInfo(client, *it);
+
+
+
+
+
+	// std::vector<Client*> clients = chan.getChanClients();
+	// if (clients.size() == 1)
+	// 	return ;
+	// else
+	// {
+	// 	std::string format = user_id(client.getNick(), client.getUsername()) + " JOIN :" + chan.getName();
+	// 	for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); it++)
+	// 	{
+	// 		if ((*it)->getNick() != client.getNick())
+	// 			sender((*it)->getFd(), format);
+	// 	}
+	// }
+
+
+
+
+	// const std::string format(user_id(client.getNick(), client.getUsername()) + " QUIT :BYE BYE");
+	// sender(client.getFd(), format);
+}
+
+// >> :max!~mablatie@B2ED245D.B270E442.5F584402.IP QUIT :Quit:: leaving
 
 void	FormatIRC::sendKICK(const Client& client, const std::string& channelName, const std::string& user_kicked, std::vector<Client*> allclients, const std::string& reason)
 {
