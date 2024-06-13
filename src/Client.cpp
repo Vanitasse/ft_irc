@@ -268,13 +268,12 @@ void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 
 void	Client::QUIT()
 {
-	FormatIRC::sendQUIT(this->_fd, this->getNick(), this->getUsername());
+	FormatIRC::sendQUIT(*this);
 	for (std::vector<Channel*>::iterator it = _inChannels.begin(); it != _inChannels.end(); it++)
 	{
 		(*it)->removeOP(*this);
 		(*it)->removeClient(this);
 	}
-
 	_server->clearClient(this);
 }
 
