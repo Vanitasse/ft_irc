@@ -495,3 +495,6 @@
 << PING roubaix.fr.epiknet.org
 >> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
 --> lag pong
+<< PING roubaix.fr.epiknet.org
+>> :roubaix.fr.epiknet.org PONG roubaix.fr.epiknet.org :roubaix.fr.epiknet.org
+--> lag pong
