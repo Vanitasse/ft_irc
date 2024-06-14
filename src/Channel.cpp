@@ -4,10 +4,10 @@
 Channel::Channel()
 {
 	_date = std::to_string(std::time(NULL));
+	_userLimit = 0;
 	_modes._i = false;
 	_modes._t = false;
 	_modes._k = false;
-	_modes._o = false;
 	_modes._l = false;
 }
 
@@ -22,6 +22,10 @@ Channel& Channel::operator=(const Channel& rhs)
 {
 	if (this != &rhs)
 	{
+		this->_modes = rhs._modes;
+		this->_who_topic = rhs._who_topic;
+		this->_password = rhs._password;
+		this->_userLimit = rhs._userLimit;
 		this->_name = rhs.getName();
 		this->_topic = rhs.getTopic();
 		this->_operators = rhs._operators;
@@ -44,21 +48,22 @@ const t_chanModes&	Channel::getModes() const
 {
 	return (this->_modes);
 }
-bool	Channel::setI(const bool i)
+bool	Channel::enable_I(const bool i)
 {
 	if (_modes._i == i)
 		return (false);
 	_modes._i = i;
 	return (true);
 }
-bool	Channel::setT(const bool t)
+bool	Channel::enable_T(const bool t)
 {
 	if (_modes._t == t)
 		return (false);
 	_modes._t = t;
 	return (true);
 }
-bool	Channel::setK(const bool k, const std::string& password)
+
+bool	Channel::enable_K(const bool k, const std::string& password)
 {
 	if (_modes._k == k)
 		return (false);
@@ -70,18 +75,13 @@ bool	Channel::setK(const bool k, const std::string& password)
 	this->_password = password;
 	return (true);
 }
-bool	Channel::setO(const bool o)
+
+//renvoie change/non change
+bool	Channel::enable_L(const std::size_t limit)
 {
-	if (_modes._o == o)
+	if (limit == _userLimit)
 		return (false);
-	_modes._o = o;
-	return (true);
-}
-bool	Channel::setL(const bool l)
-{
-	if (_modes._l == l)
-		return (false);
-	_modes._l = l;
+	_userLimit = limit;
 	return (true);
 }
 
@@ -171,6 +171,11 @@ bool	Channel::IsInChan(const std::string nickname)
 
 void	Channel::addClient(Client *client)
 {
+	if (_chanClients.size() >= this->_userLimit)
+	{
+		// FormatIRC::sendCodeMsg()
+		;
+	}
 	if (_operators.size() == 0)
 		addOperator(client);
 	_chanClients.push_back(client);	

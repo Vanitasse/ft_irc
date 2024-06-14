@@ -8,6 +8,7 @@ OBJ_DIR	=	./obj/
 
 FILES	=	main.cpp		\
 			Client.cpp		\
+			ClientCmd.cpp	\
 			Server.cpp		\
 			ServerUtils.cpp	\
 			Channel.cpp		\
@@ -21,7 +22,7 @@ OBJ		= $(addprefix $(OBJ_DIR), $(FILES:.cpp=.o))
 
 CC		= c++
 
-FLAGS = -Wall -Werror -Wextra -g
+FLAGS = -Wall -Werror -Wextra
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp $(INCLUDE)
 	mkdir -p $(OBJ_DIR)
@@ -35,6 +36,7 @@ $(NAME): $(OBJ) Makefile
 
 clean:
 	rm -rf $(OBJ_DIR) 
+	rm *.log
 
 fclean: clean
 	rm -rf $(NAME)

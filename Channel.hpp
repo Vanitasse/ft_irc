@@ -8,6 +8,7 @@ class Channel
 	private:
 		t_chanModes			_modes;
 		std::string			_password; // mode +k
+		std::size_t			_userLimit; // mode +l
 		std::string			_name;
 		std::string			_topic;
 		std::string			_date;
@@ -26,11 +27,10 @@ class Channel
 		void							setTopic(const std::string& topic, const Client& client);
 		const std::string&				getPassword() const;
 		const t_chanModes&				getModes() const;
-		bool							setI(const bool i); //renvoie change/non change
-		bool							setT(const bool t); //renvoie change/non change
-		bool							setK(const bool k, const std::string& password); //renvoie change/non change et set le password
-		bool							setO(const bool o); //renvoie change/non change
-		bool							setL(const bool l); //renvoie change/non change
+		bool							enable_I(const bool i); //renvoie change/non change
+		bool							enable_L(const std::size_t limit); //renvoie change/non change
+		bool							enable_T(const bool t); //renvoie change/non change
+		bool							enable_K(const bool k, const std::string& password); //renvoie change/non change et set le password
 
 		const std::string&				getDate() const;
 
@@ -39,7 +39,6 @@ class Channel
 
 		const std::string					getTopicInfo() const;
 		const std::string					getNickList();
-		
 		bool 								IsAnOp(const std::string nickname);
 		bool 								IsInChan(const std::string nickname);
 

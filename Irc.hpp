@@ -15,6 +15,7 @@
 # include <sstream>
 # include <algorithm> 
 # include <ctime>
+# include <limits>
 
 # include "FormatIRC.hpp"
 
@@ -120,7 +121,7 @@
 #define msg_serv3(code, nickname, support_info) (":42IRCserv " + code + " " + nickname + " " + support_info + " :are supported by this server\r\n")
 
 
-#define supp_info "CHANTYPES=# PREFIX=(o)@ MODES=1CHANNELLEN=20 NICKLEN=20 TOPICLEN=200"
+#define supp_info "CHANTYPES=# PREFIX=(o)@ MODES=1 CHANNELLEN=20 NICKLEN=20 TOPICLEN=200"
 
 #define user_id(nickname, username) (":" + nickname + "!" + username + "@localhost")
 
@@ -140,6 +141,5 @@ typedef struct s_chanModes
 	bool					_i;
 	bool					_t;
 	bool					_k;
-	bool					_o;
 	bool					_l;
 }				t_chanModes;

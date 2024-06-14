@@ -25,13 +25,14 @@ class	Client
 		std::vector<Channel*>		_inChannels;
 		std::vector<Channel*>		_OPChannels;
 
-		Channel*	OperatorChannelThrower(const std::string& channelName);
-		class ChannelError : public std::exception
+		void	channelThrow(const std::string& channelName);
+		void	operatorThrow(const std::string& channelName);
+		class Error : public std::exception
 		{
 			private:
 				char const* _error;
 			public:
-				ChannelError(const char* error) : _error(error){}
+				Error(const char* error) : _error(error){}
 				virtual char const* what() const throw()
 				{
 					return (_error);
@@ -75,7 +76,7 @@ class	Client
 		void							smiley(std::string& input);
 
 		static std::vector<std::string>	splitInput(const std::string& input);
-		const std::string				splitTopic(const std::string& input);
+		const std::string				PickMsg(const std::string& input);
 
 		
 		void							ParseAndRespond(std::string& input);
@@ -87,8 +88,7 @@ class	Client
 		void							MODE(const std::string& channelName, const std::string& mode);
 		void							MODE(const std::string& channelName, const std::string& mode, const std::string& arg);
 		void							PART(const std::string& channelName, const std::string& partMsg);
-		void							KICK(const std::string & chanName, const std::string& user_kicked, const std::string& reason);
+		void							KICK(const std::string & channelName, const std::string& user_kicked, const std::string& reason);
 
 		void							QUIT();
-
 };
