@@ -54,7 +54,7 @@ Channel*	Server::createNewChannel(const std::string& chanName, Client& client)
 	return (_Channels.back());
 }
 
-Channel*	Server::checkChannels(const std::string& chanName, Client& client)
+Channel*	Server::FindOrCreateChannel(const std::string& chanName, Client& client)
 {
 	if (chanName.length() > _limits._channelLen)
 		return (NULL);

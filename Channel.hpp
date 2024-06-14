@@ -6,15 +6,15 @@
 class Channel
 {
 	private:
-		t_chanModes			_modes;
-		std::string			_password; // mode +k
-		std::size_t			_userLimit; // mode +l
-		std::string			_name;
-		std::string			_topic;
-		std::string			_date;
-		std::string			_who_topic;
-		std::vector<Client*> _operators;
-		std::vector<Client*> _chanClients;
+		t_chanModes					_modes;
+		std::string					_password; // mode +k
+		std::size_t					_userLimit; // mode +l
+		std::string					_name;
+		std::string					_topic;
+		std::string					_date;
+		std::string					_who_topic;
+		std::vector<Client*>		_operators;
+		std::vector<Client*>		_chanClients;
 	public:
 									Channel();
 									Channel(const Channel &cpy);

@@ -36,10 +36,10 @@ $(NAME): $(OBJ) Makefile
 
 clean:
 	rm -rf $(OBJ_DIR) 
-	rm *.log
 
 fclean: clean
 	rm -rf $(NAME)
+	rm *.log
 
 re: fclean all
 

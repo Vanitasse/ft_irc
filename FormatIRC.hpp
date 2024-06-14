@@ -25,6 +25,7 @@ class FormatIRC
 		static void	sendQuitInfo(const Client& client, const Channel* chan);
 
 		static void sendJOIN(const Client& client, Channel& channel);
+		static void sendINVITE(const Client& inviter, const Client& invited, const std::string& channelName, std::vector<Client*> operators);
 		static void	sendJoinInfo(const Client& client, const Channel& chan);
 		static void sendPART(const Client& client, const std::string& channelName, const std::string& partMsg, std::vector<Client*> chanClients);
 		static void	sendTOPIC(const Client& client, const Channel* chan);

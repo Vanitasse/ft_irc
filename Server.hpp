@@ -55,5 +55,5 @@ class	Server
 
 
 		int							checkNicks(const std::string& nickname);
-		Channel*					checkChannels(const std::string& chanName, Client& client);
+		Channel*					FindOrCreateChannel(const std::string& chanName, Client& client);
 };

@@ -1,9 +1,11 @@
 #pragma once
 
 # include "Irc.hpp"
+# include <map>
 
 class Server;
 class Channel;
+
 
 class	Client
 {
@@ -24,6 +26,8 @@ class	Client
 		Server* 	_server;
 		std::vector<Channel*>		_inChannels;
 		std::vector<Channel*>		_OPChannels;
+		std::vector<Channel*>		_InvitedAt;
+
 
 		void	channelThrow(const std::string& channelName);
 		void	operatorThrow(const std::string& channelName);
@@ -52,7 +56,8 @@ class	Client
 		void							MODE(const std::string& channelName, const std::string& mode, const std::string& arg);
 		void							PART(const std::string& channelName, const std::string& partMsg);
 		void							KICK(const std::string & channelName, const std::string& user_kicked, const std::string& reason);
-		void							TOPIC(const std::string& channelName, const std::string& topic);
+		void							TOPIC(const std::string& channelName, const std::string& topic);void							TOPIC(const std::string& channelName);
+		void							INVITE(const std::string& nick, const std::string& channelName);
 		void							QUIT();
 	public:
 					Client();
@@ -89,5 +94,6 @@ class	Client
 
 		void							setOPChannels(Channel* chan);
 		
+		void							beInvited(Channel *channel);
 		void	ParseAndRespond(std::string& input);
 };

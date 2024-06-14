@@ -38,13 +38,17 @@ Client& Client::operator=(const Client& rhs)
 		this->_fd = rhs._fd;
 		this->_ip_addr = rhs._ip_addr;
 		this->_username = rhs._username;
-		this->_inChannels = rhs._inChannels;
 		this->_nick = rhs._nick;
 		this->_realname = rhs._realname;
 		this->_nickIsSet = rhs._nickIsSet;
 		this->_passIsSet = rhs._passIsSet;
 		this->_isConnected = rhs._isConnected;
 		this->_server = rhs._server;
+		this->_message = rhs._message;
+		this->_inChannels = rhs._inChannels;
+		this->_inChannels = rhs._inChannels;
+		this->_InvitedAt = rhs._InvitedAt;
+
 	}
 	return *this;
 }
@@ -184,7 +188,7 @@ void	Client::channelThrow(const std::string& channelName)
 	if (channel == NULL)
 	{
 		FormatIRC::sendCodeMsg(*this, "401", channelName , "NO SUCH CHANNEL");
-		throw(Error("error: channel dont exist"));
+		throw(Error("error: channel does not exist"));
 	}
 }
 
@@ -198,4 +202,13 @@ void	Client::operatorThrow(const std::string& channelName)
 		FormatIRC::sendCodeMsg(*this, "482", channelName , "You're not channel operator");
 		throw(Error("error: not operator"));
 	}
+}
+
+void	Client::beInvited(Channel *channel)
+{
+	std::vector<Channel*>::iterator it;
+
+	it = std::find(_InvitedAt.begin(), _InvitedAt.end(), channel);
+	if (it == _InvitedAt.end())
+		_InvitedAt.push_back(channel);
 }
