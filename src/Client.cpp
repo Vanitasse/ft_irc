@@ -179,6 +179,8 @@ void	Client::channelThrow(const std::string& channelName)
 	Channel* channel;
 	channel = _server->findChannel(channelName);
 
+	if (channelName[0] != '#')
+		throw(Error("error: Invalid channel key/user mode not supported"));
 	if (channel == NULL)
 	{
 		FormatIRC::sendCodeMsg(*this, "401", channelName , "NO SUCH CHANNEL");

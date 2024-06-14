@@ -171,10 +171,10 @@ bool	Channel::IsInChan(const std::string nickname)
 
 void	Channel::addClient(Client *client)
 {
-	if (_chanClients.size() >= this->_userLimit)
+	if (this->_userLimit != 0 && _chanClients.size() >= this->_userLimit)
 	{
-		// FormatIRC::sendCodeMsg()
-		;
+		FormatIRC::sendCodeMsg(*client, "471", this->_name,  "Cannot join channel (+l)");
+		throw (std::out_of_range("channel is full"));
 	}
 	if (_operators.size() == 0)
 		addOperator(client);

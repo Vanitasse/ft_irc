@@ -56,11 +56,4 @@ class	Server
 
 		int							checkNicks(const std::string& nickname);
 		Channel*					checkChannels(const std::string& chanName, Client& client);
-
-		bool 						checkOPs(const std::string& nickname, const std::string& chanName);
-		std::vector<std::string>	splitUsernames(const std::string& usernames);
-
-		// std::vector<Client*> 		checkUsers(const std::string& user_kicked);
-
-		void						TOPIC(const Client& client, const std::string& param, const std::string& param_2, const std::string& topic);
 };

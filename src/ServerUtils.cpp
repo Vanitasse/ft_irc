@@ -76,33 +76,6 @@ int	Server::checkNicks(const std::string& nickname)
 	return (1);
 }
 
-
-bool Server::checkOPs(const std::string& nickname, const std::string& chanName)
-{
-	for (std::vector<Channel*>::iterator it = _Channels.begin(); it < _Channels.end(); it++)
-	{
-		if ((*it)->getName() == chanName)
-		{
-			if ((*it)->IsAnOp(nickname))
-				return true;
-		}
-	}
-	return false;
-}
-
-std::vector<std::string> Server::splitUsernames(const std::string& usernames)
-{
-	std::vector<std::string> result;
-	std::stringstream ss(usernames);
-	std::string username;
-
-	while (std::getline(ss, username, ',')) {
-		result.push_back(username);
-	}
-
-	return result;
-}
-
 Client*	Server::findClient(const std::string& nick)
 {
 	for(std::vector<Client*>::iterator it = _Clients.begin(); it < _Clients.end(); it++)

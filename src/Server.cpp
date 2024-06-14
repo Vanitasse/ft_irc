@@ -101,36 +101,6 @@ void	Server::run()
 	serverExec();
 }
 
-void	Server::TOPIC(const Client& client, const std::string& param, const std::string& param_2, const std::string& topic)
-{
-	if (param == "-delete")
-	{
-		if (!checkOPs(client.getNick(), param_2))
-				return;
-		for (std::vector<Channel*>::iterator it = _Channels.begin(); it < _Channels.end(); it++)
-		{
-			if ((*it)->getName() == param_2)
-			{
-				(*it)->setTopic("", client);
-				FormatIRC::updateTOPIC(client, *it);
-			}
-		}
-	}
-	else
-	{
-		if (!checkOPs(client.getNick(), param))
-				return;
-		for (std::vector<Channel*>::iterator it = _Channels.begin(); it < _Channels.end(); it++)
-		{
-			if ((*it)->getName() == param)
-			{
-				(*it)->setTopic(topic, client);
-				FormatIRC::updateTOPIC(client, *it);
-			}
-		}
-	}
-}
-
 void	Server::connectClient()
 {
 	Client				*client = new Client(*this);

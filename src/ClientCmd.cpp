@@ -119,14 +119,16 @@ void	Client::PART(const std::string& channelName, const std::string& partMsg)
 
 void	Client::KICK(const std::string & channelName, const std::string& user_kicked, const std::string& reason)
 {
+	std::vector<Client*> sndclients;
+	Client* client_kicked;
+
 	channelThrow(channelName);
 	operatorThrow(channelName);
 	if (this->getNick() == user_kicked)
 		return;
-	Client* client_kicked = _server->findClient(user_kicked);
+	client_kicked = _server->findClient(user_kicked);
 	if (!client_kicked)
 		return;
-	std::vector<Client*> sndclients;
 	for(std::vector<Channel*>::iterator it = _OPChannels.begin(); it < _OPChannels.end(); it++)
 	{
 		if ((*it)->getName() == channelName)
@@ -149,15 +151,33 @@ void	Client::MODE(const std::string& channelName, const std::string& mode)
 	operatorThrow(channelName);
 	channel = _server->findChannel(channelName);
 	if (mode[0] == '+')
-		;
+		switch (mode[1])
+		{
+			case 't':
+				if (channel->enable_T(true))
+				FormatIRC::sendMODE(*this, channelName, "+t", channel->getChanClients());
+				break;
+			default:
+				break;
+		}
 	else if (mode[0] == '-')
-	{
-
-		if (mode[1] == 'k' && channel->enable_K(false, channel->getPassword()))
-			FormatIRC::sendMODE(*this, channelName, std::string("-k") + " " + channel->getPassword(), channel->getChanClients()); // arg
-		if (mode[1] == 'l')
-			FormatIRC::sendMODE(*this, channelName, std::string("-k") + " " + channel->getPassword(), channel->getChanClients()); // arg
-	}
+		switch (mode[1])
+		{
+			case 'k':
+				if (channel->enable_K(false, channel->getPassword()))
+					FormatIRC::sendMODE(*this, channelName, std::string("-k") + " " + channel->getPassword(), channel->getChanClients()); // arg
+				break;
+			case 'l':
+				if (channel->enable_L(0))
+					FormatIRC::sendMODE(*this, channelName, std::string("-l") + " " + channel->getPassword(), channel->getChanClients()); // arg
+				break;
+			case 't':
+				if (channel->enable_T(false))
+					FormatIRC::sendMODE(*this, channelName, "+t", channel->getChanClients());
+				break;
+			default:
+				break;
+		}
 }
 
 void	Client::MODE(const std::string& channelName, const std::string& mode, const std::string& arg)
@@ -169,21 +189,25 @@ void	Client::MODE(const std::string& channelName, const std::string& mode, const
 	channel = _server->findChannel(channelName);
 
 	if (mode[0] == '+')
-	{
-			if (mode[1] == 'k' && channel->enable_K(true, arg))
-				FormatIRC::sendMODE(*this, channelName, std::string("+k") + " " + arg, channel->getChanClients()); // arg
-			else if (mode[1] == 'o' && !channel->IsAnOp(arg))
-			{
-				if (channel->IsInChan(arg))
+		switch (mode[1])
+		{
+			case 'k':
+				if (channel->enable_K(true, arg))
+				FormatIRC::sendMODE(*this, channelName, std::string("+k") + " " + arg, channel->getChanClients());
+				break ;
+			case 'o':
+				if (!channel->IsAnOp(arg))
 				{
-					FormatIRC::sendMODE(*this, channelName, std::string("+o") + " " + arg, channel->getChanClients());
-					channel->addOperator(_server->findClient(arg));
+					if (channel->IsInChan(arg))
+					{
+						FormatIRC::sendMODE(*this, channelName, std::string("+o") + " " + arg, channel->getChanClients());
+						channel->addOperator(_server->findClient(arg));
+					}
+					else
+						FormatIRC::sendCodeMsg(*this, "401", channelName , "No such nick/channel");
+					break ;
 				}
-				else
-					FormatIRC::sendCodeMsg(*this, "401", channelName , "No such nick/channel");
-			}
-			else if (mode[1] == 'l')
-			{
+			case 'l':
 				for (std::size_t i = 0; i < arg.length(); i++)
 					if (!std::isdigit(arg[i]))
 						return (FormatIRC::sendCodeMsg(*this, "349", channelName, "Invalid Arg (+l)"));
@@ -199,18 +223,39 @@ void	Client::MODE(const std::string& channelName, const std::string& mode, const
 					else
 						FormatIRC::sendMODE(*this, channelName, std::string("+l") + " " + arg, channel->getChanClients());
 				}
-			}
-	}
+				break ;
+			default:
+				break;
+		}
 	else if (mode[0] == '-')
-	{
-			if (mode[1] == 'k' && channel->enable_K(false, arg))
-				FormatIRC::sendMODE(*this, channelName, std::string("-k") + " " + arg, channel->getChanClients()); // arg
-			else if (mode[1] == 'o' && channel->IsAnOp(arg))
-			{
-				FormatIRC::sendMODE(*this, channelName, std::string("-o") + " " + arg, channel->getChanClients()); // arg
-				channel->removeOP(*_server->findClient(arg));
-			}
-	}
+		switch (mode[1])
+		{
+			case 'k':
+				if (channel->enable_K(false, arg))
+					FormatIRC::sendMODE(*this, channelName, std::string("-k") + " " + arg, channel->getChanClients());
+				break;
+			case 'o':
+				if (channel->IsAnOp(arg))
+				{
+					FormatIRC::sendMODE(*this, channelName, std::string("-o") + " " + arg, channel->getChanClients());
+					channel->removeOP(*_server->findClient(arg));
+				}
+				break ;
+			default:
+				break;
+		}
+}
+
+void	Client::TOPIC(const std::string& channelName, const std::string& topic)
+{
+	Channel	*channel;
+
+	channelThrow(channelName);
+	channel = _server->findChannel(channelName);
+	if (channel->getModes()._t == true)
+		operatorThrow(channelName);
+	channel->setTopic(topic, *this);
+	FormatIRC::updateTOPIC(*this, channel);
 }
 
 void	Client::ParseAndRespond(std::string& input)
@@ -263,7 +308,7 @@ void	Client::ParseAndRespond(std::string& input)
 
 			it = std::find(cmds.begin(), cmds.end(), "TOPIC");
 			if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end())
-				_server->TOPIC(*this, *(it + 1), *(it + 2), PickMsg(_message));
+				TOPIC(*(it + 1), PickMsg(_message));
 
 			it = std::find(cmds.begin(), cmds.end(), "KICK");
 			if (it != cmds.end() && it + 1 != cmds.end() && it + 2 != cmds.end() && it + 3 != cmds.end())
