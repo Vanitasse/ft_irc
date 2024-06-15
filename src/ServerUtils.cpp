@@ -20,7 +20,7 @@ void	Server::clearClient(Client* client)
 		}
 }
 
-void Server::signalHandler(int signum) //static
+void Server::signalHandler(int signum)
 {
 	(void)signum;
 	std::cout << "SIGNAL RECEIVED" << std::endl;
@@ -30,16 +30,13 @@ void Server::signalHandler(int signum) //static
 
 void Server::getServerCreationTime()
 {
-	// Obtenir l'heure actuelle
-	std::time_t now = std::time(nullptr);
-	// Convertir l'heure en structure tm pour le formatage
-	std::tm* now_tm = std::localtime(&now);
-	
-	// Créer une chaîne de caractères pour la date et l'heure formatées
+	std::time_t now;
+	std::tm* now_tm;
 	char buffer[80] = {0};
+
+	now = std::time(nullptr);
+	now_tm = std::localtime(&now);
 	std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", now_tm);
-	
-	// Retourner la chaîne formatée
 	this->_date = buffer;
 }
 
@@ -66,14 +63,6 @@ Channel*	Server::FindOrCreateChannel(const std::string& chanName, Client& client
 			return (channel);
 		}
 	return (createNewChannel(chanName, client));
-}
-
-int	Server::checkNicks(const std::string& nickname)
-{
-	for (auto& client : _Clients)
-		if (client->getNick() == nickname)
-			return (0);
-	return (1);
 }
 
 Client*	Server::findClient(const std::string& nick)

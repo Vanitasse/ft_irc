@@ -4,9 +4,9 @@
 
 void	Client::NICK(const std::string& newName)
 {
-	if (!_server->checkNicks(newName))
+	if (_server->findClient(newName))
 	{
-		std::cout << "SetNick refused nick" << std::endl;
+		std::cout << "Nick already used" << std::endl;
 		return ;
 	}
 	std::cout << "Nick Set to " << newName << std::endl;
@@ -98,16 +98,31 @@ void	Client::JOIN(const std::string& channelName, const std::string& password)
 void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 {
 	std::vector<Channel*>::iterator	it;
+	Client* client;
 
-	it = _inChannels.begin();
-	while (it != _inChannels.end() && (*it)->getName() != destination)
-		it++;
-	if (it == _inChannels.end())
+	if (destination[0] == '#')
 	{
-		std::cout << RED << "client " << _nick << " try to talk to a channel but is not inside" << RESET << std::endl;
-		return ;
+		channelThrow(destination);
+		it = _inChannels.begin();
+		while (it != _inChannels.end() && (*it)->getName() != destination)
+			it++;
+		if (it == _inChannels.end())
+		{
+			std::cout << RED << "client " << _nick << " try to talk to a channel but is not inside" << RESET << std::endl;
+			return ;
+		}
+		(*it)->sendToClients(*this, msg);
 	}
-	(*it)->sendToClients(*this, msg);
+	else
+	{
+		client = _server->findClient(destination);
+		if (client == NULL)
+		{
+			FormatIRC::sendCodeMsg(*this, "401", destination, "No such nick/channel");
+			throw(Error("error: client does not exist"));
+		}
+		FormatIRC::sendPRIVMESS(client->getFd(), this->_nick, client->_nick, msg);
+	}
 }
 
 void	Client::QUIT()
@@ -288,7 +303,7 @@ void	Client::INVITE(const std::string& nick, const std::string& channelName)
 	invited = _server->findClient(nick);
 	if (invited == NULL)
 	{
-		FormatIRC::sendCodeMsg(*this, "401", channelName , "NO SUCH CLIENT");
+		FormatIRC::sendCodeMsg(*this, "401", channelName , "No such nick/channel");
 		throw(Error("error: client does not exist"));
 	}
 	channel = _server->findChannel(channelName);

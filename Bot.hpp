@@ -1,8 +1,8 @@
 #pragma once
 
-# include "Client.hpp"
+# include "Channel.hpp"
 
-class	Bot : public Client
+class	Bot : public Channel
 {
 	private:
 	public:
@@ -10,5 +10,5 @@ class	Bot : public Client
 		~Bot();
 		Bot(const Bot& toCpy);
 		Bot&	operator=(const Bot& toCpy);
-		Bot(Server& server);
+		void	addClient(Client *client);
 };

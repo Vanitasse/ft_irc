@@ -33,7 +33,7 @@ void	FormatIRC::sender(int fd, const std::string& format)
 
 void	FormatIRC::sendPRIVMESS(int fd, const std::string& senderNick, const std::string& destination, const std::string& msg)
 {
-	const std::string format(":" + senderNick + " PRIVMSG" + ' ' + destination + ' ' + msg);
+	const std::string format(':' + senderNick + " PRIVMSG" + ' ' + destination + " :" + msg);
 
 	sender(fd, format);
 }
@@ -194,7 +194,13 @@ void	FormatIRC::sendMODE(const Client& client, const std::string& channelName, c
 	for (std::vector<Client*>::iterator it = chanClients.begin(); it != chanClients.end(); it++)
 		sender((*it)->getFd(), format);
 }
-// :roubaix.fr.epiknet.org NOTICE @#lol :Claude invited Claudette into the channel.
+
+void FormatIRC::sendNOTICE(const Client& noticer, const Client& noticed, const std::string& notice)
+{
+	const std::string format(":" + noticer.getNick() + "!~" + noticer.getUsername() + '@' + _domain + " NOTICE " + noticed.getNick() + " :" + notice);
+
+	sender(noticed.getFd(), format);
+}
 
 void FormatIRC::sendINVITE(const Client& inviter, const Client& invited, const std::string& channelName,  std::vector<Client*> operators)
 {

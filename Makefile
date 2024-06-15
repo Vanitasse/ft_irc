@@ -2,7 +2,7 @@ NAME	=	ircserv
 
 SRC_DIR	=	./src/
 
-INCLUDE	=	Server.hpp Irc.hpp Client.hpp Channel.hpp FormatIRC.hpp
+INCLUDE	=	Server.hpp Irc.hpp Client.hpp Channel.hpp FormatIRC.hpp Bot.hpp
 
 OBJ_DIR	=	./obj/
 
@@ -13,7 +13,7 @@ FILES	=	main.cpp		\
 			ServerUtils.cpp	\
 			Channel.cpp		\
 			FormatIRC.cpp	\
-			# Bot.cpp			\
+			Bot.cpp			\
 
 
 SRC		= $(addprefix $(SRC_DIR), $(FILES))

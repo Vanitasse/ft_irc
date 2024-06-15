@@ -187,7 +187,7 @@ void	Client::channelThrow(const std::string& channelName)
 		throw(Error("error: Invalid channel key/user mode not supported"));
 	if (channel == NULL)
 	{
-		FormatIRC::sendCodeMsg(*this, "401", channelName , "NO SUCH CHANNEL");
+		FormatIRC::sendCodeMsg(*this, "401", channelName , "No such nick/channel");
 		throw(Error("error: channel does not exist"));
 	}
 }

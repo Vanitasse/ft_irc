@@ -9,7 +9,7 @@ class Channel;
 
 class	Client
 {
-	protected:
+	private:
 		int			_fd;
 		std::string	_ip_addr;
 	
@@ -64,7 +64,7 @@ class	Client
 					Client(Server& server);
 					Client(const Client& cpy);
 		Client		&operator=(const Client &rhs);
-		virtual		~Client();
+					~Client();
 	
 		int								getFd() const;
 		void							setFd(int fd_input);

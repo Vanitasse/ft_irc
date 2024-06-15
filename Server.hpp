@@ -53,7 +53,5 @@ class	Server
 		Client*						findClient(const std::string& nick);
 		Channel*					findChannel(const std::string& channelName);
 
-
-		int							checkNicks(const std::string& nickname);
 		Channel*					FindOrCreateChannel(const std::string& chanName, Client& client);
 };

@@ -23,11 +23,11 @@ Channel& Channel::operator=(const Channel& rhs)
 	if (this != &rhs)
 	{
 		this->_modes = rhs._modes;
-		this->_who_topic = rhs._who_topic;
 		this->_password = rhs._password;
 		this->_userLimit = rhs._userLimit;
-		this->_name = rhs.getName();
-		this->_topic = rhs.getTopic();
+		this->_name = rhs._name;
+		this->_who_topic = rhs._who_topic;
+		this->_topic = rhs._topic;
 		this->_operators = rhs._operators;
 		this->_chanClients = rhs._chanClients;
 		this->_date = rhs._date;
