@@ -5,7 +5,7 @@
 
 class Channel
 {
-	protected:
+	private:
 		t_chanModes					_modes;
 		std::string					_password; // mode +k
 		std::size_t					_userLimit; // mode +l

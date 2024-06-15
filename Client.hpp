@@ -9,7 +9,7 @@ class Channel;
 
 class	Client
 {
-	private:
+	protected:
 		int			_fd;
 		std::string	_ip_addr;
 	

@@ -92,8 +92,8 @@ void	FormatIRC::sendJoinInfo(const Client& client, const Channel& chan)
 void	FormatIRC::sendJOIN(const Client& client, Channel& channel)
 {
 	std::string format(":" + client.getNick() + "!~" + client.getUsername() +  " JOIN :" + channel.getName());
-	sender(client.getFd(), format);
 
+	sender(client.getFd(), format);
 	format = msg_serv2(std::string("329"), client.getNick()) + channel.getName() + " " + channel.getDate();
 	sender(client.getFd(), format);
 	format = msg_serv2(std::string("332"), client.getNick()) + channel.getName() + " :" + channel.getTopic();
@@ -195,11 +195,11 @@ void	FormatIRC::sendMODE(const Client& client, const std::string& channelName, c
 		sender((*it)->getFd(), format);
 }
 
-void FormatIRC::sendNOTICE(const Client& noticer, const Client& noticed, const std::string& notice)
+void FormatIRC::sendNOTICE(int fd, const std::string& noticer, const std::string& destination, const std::string& notice)
 {
-	const std::string format(":" + noticer.getNick() + "!~" + noticer.getUsername() + '@' + _domain + " NOTICE " + noticed.getNick() + " :" + notice);
+	const std::string format(":" + noticer + '@' + _domain + " NOTICE " + destination + " :" + notice);
 
-	sender(noticed.getFd(), format);
+	sender(fd, format);
 }
 
 void FormatIRC::sendINVITE(const Client& inviter, const Client& invited, const std::string& channelName,  std::vector<Client*> operators)
