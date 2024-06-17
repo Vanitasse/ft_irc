@@ -33,6 +33,8 @@ void	Client::JOIN(const std::string& channelName)
 	for (auto& channel : _inChannels)
 		if (channel->getName() == channelName)
 			return ;
+	// if (channelName == "#bot")
+	// 	return (_server->_bot.addClient(this));
 	JOINChannel = _server->FindOrCreateChannel(channelName, *this);
 	if (JOINChannel == NULL)
 	{
@@ -48,10 +50,10 @@ void	Client::JOIN(const std::string& channelName)
 			return (FormatIRC::sendCodeMsg(*this, "473", channelName, "Cannot join channel (+i)"));
 		_InvitedAt.erase(it);
 	}
-	JOINChannel->addClient(this);
 	JOINChannel->setTopic(JOINChannel->getTopic(), *this);
-	_inChannels.push_back(JOINChannel);
 	FormatIRC::sendJOIN(*this, *JOINChannel);
+	JOINChannel->addClient(this);
+	_inChannels.push_back(JOINChannel);
 }
 
 // :maxou!~mablatie@B2ED245D.B270E442.5F584402.IP JOIN :#aa
@@ -74,6 +76,8 @@ void	Client::JOIN(const std::string& channelName, const std::string& password)
 	for (auto& channel : _inChannels)
 		if (channel->getName() == channelName)
 			return ;
+	// if (channelName == "#bot")
+	// 	return (_server->_bot.addClient(this));
 	JOINChannel = _server->FindOrCreateChannel(channelName, *this);
 	if (JOINChannel == NULL)
 	{

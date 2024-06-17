@@ -2,6 +2,13 @@
 
 # include "Channel.hpp"
 
+enum	e_LGphase
+{
+	Day,
+	Night,
+	Witch,
+	
+};
 class	Bot : public Channel
 {
 	private:

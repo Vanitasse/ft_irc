@@ -5,7 +5,7 @@
 
 class Channel
 {
-	private:
+	protected:
 		t_chanModes					_modes;
 		std::string					_password; // mode +k
 		std::size_t					_userLimit; // mode +l
@@ -18,7 +18,7 @@ class Channel
 	public:
 									Channel();
 									Channel(const Channel &cpy);
-									~Channel();
+		virtual						~Channel();
 		Channel    					&operator=(const Channel &rhs);
 
 		const std::string&				getName() const;
@@ -44,7 +44,7 @@ class Channel
 
 
 
-		void								addClient(Client *client);
+		virtual void								addClient(Client *client);
 		void								addOperator(Client *client);
 		void								removeClient(const Client *client);
 		void								removeClient(const std::string& nick);

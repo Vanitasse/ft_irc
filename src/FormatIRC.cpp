@@ -195,9 +195,9 @@ void	FormatIRC::sendMODE(const Client& client, const std::string& channelName, c
 		sender((*it)->getFd(), format);
 }
 
-void FormatIRC::sendNOTICE(int fd, const std::string& noticer, const std::string& destination, const std::string& notice)
+void FormatIRC::sendNOTICE(int fd, const std::string& destination, const std::string& notice)
 {
-	const std::string format(":" + noticer + '@' + _domain + " NOTICE " + destination + " :" + notice);
+	const std::string format(":"  + _domain + " NOTICE " + destination + " :" + notice);
 
 	sender(fd, format);
 }

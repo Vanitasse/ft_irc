@@ -4,7 +4,7 @@
 # include "Irc.hpp"
 # include "Client.hpp"
 # include "Channel.hpp"
-// # include "Bot.hpp"
+# include "Bot.hpp"
 
 class	Server
 {
@@ -30,6 +30,7 @@ class	Server
 
 		Channel*					createNewChannel(const std::string& chanName, Client& client);
 	public:
+		// Bot							_bot;
 							Server();
 							~Server();
 							Server(const int& port, const std::string& password);
@@ -41,7 +42,6 @@ class	Server
 		void							getServerCreationTime() ;
 		const std::string&				getDate() const ;
 		const std::vector<Channel*>&	getChannels() const;
-
 		void						run();
 		
 		static void					signalHandler(int signum);

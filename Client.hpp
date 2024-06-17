@@ -9,7 +9,7 @@ class Channel;
 
 class	Client
 {
-	protected:
+	private:
 		int			_fd;
 		std::string	_ip_addr;
 	
@@ -42,7 +42,6 @@ class	Client
 					return (_error);
 				};
 		};
-
 		void							smiley(std::string& input);
 		std::vector<std::string>		splitInput(const std::string& input);
 		const std::string				PickMsg(const std::string& input);

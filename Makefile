@@ -2,13 +2,14 @@ NAME	=	ircserv
 
 SRC_DIR	=	./src/
 
-INCLUDE	=	Server.hpp Irc.hpp Client.hpp Channel.hpp FormatIRC.hpp
+INCLUDE	=	Server.hpp Irc.hpp Client.hpp Channel.hpp FormatIRC.hpp Bot.hpp
 
 OBJ_DIR	=	./obj/
 
 FILES	=	main.cpp		\
 			Client.cpp		\
 			ClientCmd.cpp	\
+			Bot.cpp		\
 			Server.cpp		\
 			ServerUtils.cpp	\
 			Channel.cpp		\
@@ -20,7 +21,7 @@ OBJ		= $(addprefix $(OBJ_DIR), $(FILES:.cpp=.o))
 
 CC		= c++
 
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -std=c++98
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp $(INCLUDE)
 	mkdir -p $(OBJ_DIR)
@@ -37,7 +38,7 @@ clean:
 
 fclean: clean
 	rm -rf $(NAME)
-	rm *.log
+	rm -rf *.log
 
 re: fclean all
 

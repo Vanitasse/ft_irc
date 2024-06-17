@@ -34,6 +34,7 @@ Server&	Server::operator=(const Server& toCpy)
 		_Clients = toCpy._Clients;
 		_pfds = toCpy._pfds;
 		_port = toCpy._port;
+		// _bot = toCpy._bot;
 	}
 	return (*this);
 }
@@ -97,6 +98,7 @@ void	Server::serverInit()
 
 void	Server::run()
 {
+	_Channels.push_back(new Bot());
 	serverInit();
 	serverExec();
 }

@@ -5,7 +5,7 @@ int	main(int ac, char **av)
 {
 	if (ac == 3)
 	{
-		Server server(std::stoi(av[1]), av[2]);
+		Server server(std::atoi(av[1]), av[2]);
 		try
 		{
 			signal(SIGINT, Server::signalHandler);

@@ -56,11 +56,11 @@ Channel*	Server::FindOrCreateChannel(const std::string& chanName, Client& client
 	if (chanName.length() > _limits._channelLen)
 		return (NULL);
 	std::cout << "newChannelAccess look for channel " << chanName << std::endl;
-	for (auto& channel : _Channels)
-		if (channel->getName() == chanName)
+	for (std::vector<Channel*>::iterator it = _Channels.begin(); it != _Channels.end(); it++)
+		if ((*it)->getName() == chanName)
 		{
 			std::cout << chanName << " exists, returning it" << std::endl;
-			return (channel);
+			return (*it);
 		}
 	return (createNewChannel(chanName, client));
 }
