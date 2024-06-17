@@ -18,6 +18,7 @@ class	Server
 		std::vector<struct pollfd>	_pfds;
 		std::vector<Client*>		_Clients;
 		std::vector<Channel*>		_Channels;
+		Bot*							_bot;
 	
 		void						serverInit();
 		void						serverExec();
@@ -30,7 +31,6 @@ class	Server
 
 		Channel*					createNewChannel(const std::string& chanName, Client& client);
 	public:
-		// Bot							_bot;
 							Server();
 							~Server();
 							Server(const int& port, const std::string& password);
@@ -54,4 +54,6 @@ class	Server
 		Channel*					findChannel(const std::string& channelName);
 
 		Channel*					FindOrCreateChannel(const std::string& chanName, Client& client);
+		void						sendToBot(const Client* client, const std::string& msg);
+
 };

@@ -126,6 +126,8 @@
 
 #define user_id(nickname, username) (":" + nickname + "!" + username + "@localhost")
 
+#define bot_rules "Welcome ! I am totally not a bot so please treat me as one of you thanks. Here's some rules : To use my different commands, use a '!' If you ever feel lost, use !help and remember, stay safe out there.... fellow humans! ^^"
+
 
 typedef struct s_limits
 {

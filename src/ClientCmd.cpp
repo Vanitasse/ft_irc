@@ -56,18 +56,6 @@ void	Client::JOIN(const std::string& channelName)
 	_inChannels.push_back(JOINChannel);
 }
 
-// :maxou!~mablatie@B2ED245D.B270E442.5F584402.IP JOIN :#aa
-// >> :roubaix.fr.epiknet.org 353 maxou = #aa :maxou @max
-// >> :roubaix.fr.epiknet.org 366 maxou #aa :End of /NAMES list.
-
-// >> :maxz!~mablatie@B2ED245D.B270E442.5F584402.IP JOIN :#aa
-// >> :max!~mablatie@B2ED245D.B270E442.5F584402.IP QUIT :Quit:: leaving
-
-
-// void	Client::JOIN(const std::string& channelName)
-// {
-// 	Channel *JOINChannel;
-
 void	Client::JOIN(const std::string& channelName, const std::string& password)
 {
 	Channel *JOINChannel;
@@ -115,6 +103,9 @@ void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 			std::cout << RED << "client " << _nick << " try to talk to a channel but is not inside" << RESET << std::endl;
 			return ;
 		}
+		std::cout << "MSG = " << msg << std::endl;
+		if (msg[0] == '!' && (*it)->getName() == "#bot")
+			_server->sendToBot(this, msg);
 		(*it)->sendToClients(*this, msg);
 	}
 	else
@@ -127,6 +118,7 @@ void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 		}
 		FormatIRC::sendPRIVMESS(client->getFd(), this->_nick, client->_nick, msg);
 	}
+
 }
 
 void	Client::QUIT()

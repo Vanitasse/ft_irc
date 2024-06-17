@@ -98,7 +98,8 @@ void	Server::serverInit()
 
 void	Server::run()
 {
-	_Channels.push_back(new Bot());
+	_bot = new Bot();
+	_Channels.push_back(_bot);
 	serverInit();
 	serverExec();
 }
