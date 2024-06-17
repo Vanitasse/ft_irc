@@ -15,6 +15,7 @@ Bot::Bot()
 	_modes._t = false;
 	_modes._k = false;
 	_modes._l = false;
+	LG_createEmptyGame();
 }
 
 Bot::~Bot() {}
@@ -43,7 +44,6 @@ Bot&	Bot::operator=(const Bot& rhs)
 
 void	Bot::addClient(Client *client)
 {
-	std::cout << "lol" << std::endl;
 	if (this->_userLimit != 0 && _chanClients.size() >= this->_userLimit)
 	{
 		FormatIRC::sendCodeMsg(*client, "471", this->_name,  "Cannot join channel (+l)");
@@ -126,3 +126,61 @@ void	Bot::parseMsg(const Client* client, const std::string& msg)
 		i++;
 	(this->*ptr[i])(client);
 }
+
+void	Bot::LG_createEmptyGame()
+{
+	t_LoupGarouGameID	game;
+
+	game.game_ID = _LG_Games.size();
+	game.phase = Connect;
+	_LG_Games[_LG_Games.size()] = game;
+}
+
+void	Bot::LG_register(Client *client)
+{
+	t_LoupGarouPlayerID NewPlayerID;
+
+
+	NewPlayerID.game_ID = _LG_Games.size();
+	NewPlayerID.isDead = false;
+	NewPlayerID.isPlaying = true;
+	NewPlayerID.speech = 0;
+	NewPlayerID.role = "none";
+	client->setLG(NewPlayerID);
+	_LG_Games[_LG_Games.size()].players.push_back(client);
+	if (_LG_Games[_LG_Games.size()].players.size() == 5)
+		LG_createEmptyGame();
+}
+
+// void	Bot::LG_launch
+void	Bot::LG_play(Client *client)
+{
+	t_LoupGarouGameID*		game;
+
+
+	if (client->getLG().isPlaying == false)
+		LG_register(client);
+	else
+	{
+		game = &_LG_Games[client->getLG().game_ID];
+		switch (game->phase)
+		{
+			case Connect:
+				FormatIRC::sendNOTICE(client->getFd(), "#bot", "We need more players before launching the game, please wait");
+				break;
+			case Roles:
+				;
+			case Election:
+				;
+			case Nuit:
+				;
+			case PetiteFille:
+				;
+			case Sorciere:
+				;
+			case Jour:
+				;
+		}
+	}
+}
+

@@ -9,6 +9,7 @@ Client::Client() : _server(NULL)
 	_passIsSet = false;
 	_nickIsSet = false;
 	_fd = -1;
+	setLG((t_LoupGarouPlayerID){-1, "none", 0, false, false});
 }
 
 Client::Client(Server& server) : _server(&server)
@@ -17,6 +18,7 @@ Client::Client(Server& server) : _server(&server)
 	_passIsSet = false;
 	_nickIsSet = false;
 	_fd = -1;
+	setLG((t_LoupGarouPlayerID){-1, "none", 0, false, false});
 }
 
 Client::~Client()
@@ -48,7 +50,7 @@ Client& Client::operator=(const Client& rhs)
 		this->_inChannels = rhs._inChannels;
 		this->_inChannels = rhs._inChannels;
 		this->_InvitedAt = rhs._InvitedAt;
-
+		this->_LG_PlayerID = rhs._LG_PlayerID;
 	}
 	return *this;
 }
@@ -143,6 +145,19 @@ void	Client::setOPChannels(Channel* chan)
 {
 	this->_OPChannels.push_back(chan);
 }
+
+void	Client::setLG(const t_LoupGarouPlayerID& Player_ID)
+{
+	this->_LG_PlayerID = Player_ID;
+}
+
+const t_LoupGarouPlayerID&		Client::getLG() const
+{
+	return (this->_LG_PlayerID);
+}
+
+
+
 
 
 void	Client::smiley(std::string& input)
