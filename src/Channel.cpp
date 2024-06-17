@@ -3,7 +3,12 @@
 
 Channel::Channel()
 {
-	_date = std::to_string(std::time(NULL));
+	std::time_t currentTime = std::time(NULL);
+	std::ostringstream oss;
+	
+	oss << currentTime;
+	_date = oss.str();
+	// _date = std::to_string(std::time(NULL));
 	_userLimit = 0;
 	_modes._i = false;
 	_modes._t = false;
@@ -92,9 +97,14 @@ const std::string& Channel::getTopic() const
 
 void Channel::setTopic(const std::string& topic, const Client& client)
 {
+	std::time_t currentTime = std::time(NULL);
+	std::ostringstream oss;
+
+	oss << currentTime;
+	this->_date = oss.str();
 	this->_topic = topic;
 	this->_who_topic = client.getNick();
-	this->_date = std::to_string(std::time(NULL));
+	// this->_date = std::to_string(std::time(NULL));
 }
 
 const std::string&	Channel::getDate() const

@@ -16,6 +16,7 @@
 # include <algorithm> 
 # include <ctime>
 # include <limits>
+# include <cstdlib>
 
 # include "FormatIRC.hpp"
 

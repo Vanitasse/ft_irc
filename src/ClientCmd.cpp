@@ -30,8 +30,8 @@ void	Client::JOIN(const std::string& channelName)
 	Channel *JOINChannel;
 	std::vector<Channel*>::iterator it;
 
-	for (auto& channel : _inChannels)
-		if (channel->getName() == channelName)
+	for (std::vector<Channel*>::iterator itc = _inChannels.begin(); itc != _inChannels.end(); itc++)
+		if ((*it)->getName() == channelName)
 			return ;
 	// if (channelName == "#bot")
 	// 	return (_server->_bot.addClient(this));
@@ -73,8 +73,8 @@ void	Client::JOIN(const std::string& channelName, const std::string& password)
 	Channel *JOINChannel;
 	std::vector<Channel*>::iterator it;
 
-	for (auto& channel : _inChannels)
-		if (channel->getName() == channelName)
+	for (std::vector<Channel*>::iterator itc = _inChannels.begin(); itc != _inChannels.end(); itc++)
+		if ((*it)->getName() == channelName)
 			return ;
 	// if (channelName == "#bot")
 	// 	return (_server->_bot.addClient(this));
@@ -248,14 +248,14 @@ void	Client::MODE(const std::string& channelName, const std::string& mode, const
 				for (std::size_t i = 0; i < arg.length(); i++)
 					if (!std::isdigit(arg[i]))
 						return (FormatIRC::sendCodeMsg(*this, "349", channelName, "Invalid Arg (+l)"));
-				if (std::stoull(arg) > std::numeric_limits<std::size_t>::max())
+				if (std::strtoul(arg.c_str(), NULL, 0) > std::numeric_limits<std::size_t>::max())
 				{
 					FormatIRC::sendCodeMsg(*this, "349", channelName, "Invalid Arg (+l)");
 					throw(std::out_of_range("La valeur dépasse les limites de size_t"));
 				}
-				else if (channel->enable_L(std::stoull(arg)))
+				else if (channel->enable_L(std::strtoul(arg.c_str(), NULL, 0)))
 				{
-					if (std::stoull(arg) == 0)
+					if (std::strtoul(arg.c_str(), NULL, 0) == 0)
 						FormatIRC::sendMODE(*this, channelName, std::string("-l"), channel->getChanClients());
 					else
 						FormatIRC::sendMODE(*this, channelName, std::string("+l") + " " + arg, channel->getChanClients());

@@ -34,7 +34,7 @@ void Server::getServerCreationTime()
 	std::tm* now_tm;
 	char buffer[80] = {0};
 
-	now = std::time(nullptr);
+	now = std::time(NULL);
 	now_tm = std::localtime(&now);
 	std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", now_tm);
 	this->_date = buffer;
@@ -72,7 +72,7 @@ Client*	Server::findClient(const std::string& nick)
 		if ((*it)->getNick() == nick)
 			return *it;
 	}
-	return nullptr;
+	return NULL;
 }
 
 Channel*	Server::findChannel(const std::string& channelName)
@@ -82,5 +82,5 @@ Channel*	Server::findChannel(const std::string& channelName)
 		if ((*it)->getName() == channelName)
 			return *it;
 	}
-	return nullptr;
+	return NULL;
 }

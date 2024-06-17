@@ -3,7 +3,12 @@
 Bot::Bot()
 {
 	std::cout << "Bot Created" << std::endl;
-	_date = std::to_string(std::time(NULL));
+	std::time_t currentTime = std::time(NULL);
+	std::ostringstream oss;
+	oss << currentTime;
+	_date = oss.str();
+
+	// _date = std::to_string(std::time(NULL));
 	_userLimit = 10;
 	_name = "#bot";
 	_modes._i = false;
@@ -11,13 +16,14 @@ Bot::Bot()
 	_modes._k = false;
 	_modes._l = false;
 }
-Bot::~Bot()
-{
-}
+
+Bot::~Bot() {}
+
 Bot::Bot(const Bot& toCpy)
 {
 	*this = toCpy;
 }
+
 Bot&	Bot::operator=(const Bot& rhs)
 {
 	if (this != &rhs)
