@@ -44,7 +44,7 @@ class Channel
 
 
 
-		virtual void								addClient(Client *client);
+		virtual void						addClient(Client *client);
 		void								addOperator(Client *client);
 		void								removeClient(const Client *client);
 		void								removeClient(const std::string& nick);

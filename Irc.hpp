@@ -144,3 +144,30 @@ typedef struct s_chanModes
 	bool					_k;
 	bool					_l;
 }				t_chanModes;
+
+enum	e_LoupGarouPhases
+{
+	Connect,
+	Roles,
+	Election,
+	Nuit,
+	PetiteFille,
+	Sorciere,
+	Jour,
+};
+
+typedef struct	s_LoupGarouGameID
+{
+	int						game_ID;
+	e_LoupGarouPhases		phase;
+	std::vector<Client*>	players;
+}				t_LoupGarouGameID;
+
+typedef struct	s_LoupGarouPlayerID
+{
+	int						game_ID;
+	std::string				role;
+	int						speech;
+	bool					isPlaying;
+	bool					isDead;
+}				t_LoupGarouPlayerID;

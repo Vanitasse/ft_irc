@@ -30,7 +30,6 @@ class	Server
 
 		Channel*					createNewChannel(const std::string& chanName, Client& client);
 	public:
-		// Bot							_bot;
 							Server();
 							~Server();
 							Server(const int& port, const std::string& password);

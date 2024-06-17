@@ -58,6 +58,7 @@ class	Client
 		void							TOPIC(const std::string& channelName, const std::string& topic);void							TOPIC(const std::string& channelName);
 		void							INVITE(const std::string& nick, const std::string& channelName);
 		void							QUIT();
+		t_LoupGarouPlayerID				_LG_PlayerID;
 	public:
 					Client();
 					Client(Server& server);
@@ -94,5 +95,8 @@ class	Client
 		void							setOPChannels(Channel* chan);
 		
 		void							beInvited(Channel *channel);
-		void	ParseAndRespond(std::string& input);
+		void							ParseAndRespond(std::string& input);
+
+		void							setLG(const t_LoupGarouPlayerID& Player_ID);
+		const t_LoupGarouPlayerID&		getLG() const;
 };
