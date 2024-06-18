@@ -98,5 +98,5 @@ class	Client
 		void							ParseAndRespond(std::string& input);
 
 		void							setLG(const t_LoupGarouPlayerID& Player_ID);
-		const t_LoupGarouPlayerID&		getLG() const;
+		t_LoupGarouPlayerID&		getLG();
 };

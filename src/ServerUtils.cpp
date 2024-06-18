@@ -85,7 +85,7 @@ Channel*	Server::findChannel(const std::string& channelName)
 	return NULL;
 }
 
-void	Server::sendToBot(const Client* client, const std::string& msg)
+void	Server::sendToBot(Client* client, const std::string& msg)
 {
 	_bot->parseMsg(client, msg);
 }

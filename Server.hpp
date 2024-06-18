@@ -54,6 +54,6 @@ class	Server
 		Channel*					findChannel(const std::string& channelName);
 
 		Channel*					FindOrCreateChannel(const std::string& chanName, Client& client);
-		void						sendToBot(const Client* client, const std::string& msg);
+		void						sendToBot(Client* client, const std::string& msg);
 
 };

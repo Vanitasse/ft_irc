@@ -9,7 +9,7 @@ Client::Client() : _server(NULL)
 	_passIsSet = false;
 	_nickIsSet = false;
 	_fd = -1;
-	setLG((t_LoupGarouPlayerID){-1, "none", 0, false, false});
+	setLG((t_LoupGarouPlayerID){"none", 0, false, false, false, false,0});
 }
 
 Client::Client(Server& server) : _server(&server)
@@ -18,7 +18,7 @@ Client::Client(Server& server) : _server(&server)
 	_passIsSet = false;
 	_nickIsSet = false;
 	_fd = -1;
-	setLG((t_LoupGarouPlayerID){-1, "none", 0, false, false});
+	setLG((t_LoupGarouPlayerID){"none", 0, false, false, false, false,0});
 }
 
 Client::~Client()
@@ -151,7 +151,7 @@ void	Client::setLG(const t_LoupGarouPlayerID& Player_ID)
 	this->_LG_PlayerID = Player_ID;
 }
 
-const t_LoupGarouPlayerID&		Client::getLG() const
+t_LoupGarouPlayerID&		Client::getLG()
 {
 	return (this->_LG_PlayerID);
 }
@@ -170,6 +170,9 @@ void	Client::smiley(std::string& input)
 		input.erase(pos, 2);
 		input.insert(pos, SMILE);
 	}
+	pos = input.find_last_not_of("\r\n");
+    if (pos != std::string::npos)
+        input.erase(pos + 1);
 }
 
 std::vector<std::string>	Client::splitInput(const std::string& input) //static

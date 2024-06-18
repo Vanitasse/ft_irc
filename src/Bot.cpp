@@ -15,7 +15,10 @@ Bot::Bot()
 	_modes._t = false;
 	_modes._k = false;
 	_modes._l = false;
-	LG_createEmptyGame();
+	phase = Connect;
+	fmap["!help"] = &Bot::help;
+	fmap["!joke"] = &Bot::joke;
+	fmap["!LG"] = &Bot::LG_register;
 }
 
 Bot::~Bot() {}
@@ -38,6 +41,7 @@ Bot&	Bot::operator=(const Bot& rhs)
 		this->_operators = rhs._operators;
 		this->_chanClients = rhs._chanClients;
 		this->_date = rhs._date;
+		this->fmap = rhs.fmap;
 	}
 	return *this;
 }
@@ -51,17 +55,10 @@ void	Bot::addClient(Client *client)
 	}
 	_chanClients.push_back(client);
 	FormatIRC::sendNOTICE(client->getFd(), "#bot", bot_rules);
+	help(client);
 }
 
-void	Bot::sender(int fd, const std::string& format)
-{
-	const std::string res(format + "\r\n");
-
-	send(fd, res.c_str(), res.length(), 0);
-	std::cout << CYAN << "[Server send]" << res << RESET << std::endl;
-}
-
-void	Bot::help(const Client* client)
+void	Bot::help(Client* client)
 {
 	std::string format = "---Here is the list of all the available commands---";
 	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
@@ -74,7 +71,7 @@ void	Bot::help(const Client* client)
 
 }
 
-void	Bot::joke(const Client* client)
+void	Bot::joke(Client* client)
 {
 	std::srand(std::time(0));
 	int random_index = std::rand() % 30;
@@ -115,72 +112,17 @@ void	Bot::joke(const Client* client)
 }
 
 
-void	Bot::parseMsg(const Client* client, const std::string& msg)
+void	Bot::parseMsg(Client* client, const std::string& msg)
 {
-	std::cout << "OUI ON Y EST" << std::endl;
-	t_ptr ptr[] = {&Bot::help, &Bot::joke};
-	int i = 0;
-	std::string inputs[] = {"!help\r\n", "!joke\r\n"};
-	std::cout << "MSG = " << msg << std::endl;
-	while (i < 1 && inputs[i] != msg)
-		i++;
-	(this->*ptr[i])(client);
-}
-
-void	Bot::LG_createEmptyGame()
-{
-	t_LoupGarouGameID	game;
-
-	game.game_ID = _LG_Games.size();
-	game.phase = Connect;
-	_LG_Games[_LG_Games.size()] = game;
-}
-
-void	Bot::LG_register(Client *client)
-{
-	t_LoupGarouPlayerID NewPlayerID;
-
-
-	NewPlayerID.game_ID = _LG_Games.size();
-	NewPlayerID.isDead = false;
-	NewPlayerID.isPlaying = true;
-	NewPlayerID.speech = 0;
-	NewPlayerID.role = "none";
-	client->setLG(NewPlayerID);
-	_LG_Games[_LG_Games.size()].players.push_back(client);
-	if (_LG_Games[_LG_Games.size()].players.size() == 5)
-		LG_createEmptyGame();
-}
-
-// void	Bot::LG_launch
-void	Bot::LG_play(Client *client)
-{
-	t_LoupGarouGameID*		game;
-
-
-	if (client->getLG().isPlaying == false)
-		LG_register(client);
-	else
-	{
-		game = &_LG_Games[client->getLG().game_ID];
-		switch (game->phase)
+	std::map<std::string, void (Bot::*)(Client*)>::iterator it;
+		if (msg[0] == '!')
 		{
-			case Connect:
-				FormatIRC::sendNOTICE(client->getFd(), "#bot", "We need more players before launching the game, please wait");
-				break;
-			case Roles:
-				;
-			case Election:
-				;
-			case Nuit:
-				;
-			case PetiteFille:
-				;
-			case Sorciere:
-				;
-			case Jour:
-				;
+			it = fmap.find(msg);
+			if (it != fmap.end())
+				(this->*(it->second))(client);
 		}
-	}
+		else if (client->getLG().isPlaying)
+			LG_play(client, msg);
+		else
+			FormatIRC::sendNOTICE(client->getFd(), "#bot", "Bot channel: you can't chat in this channel, type !help to use bot");
 }
-

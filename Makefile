@@ -9,7 +9,8 @@ OBJ_DIR	=	./obj/
 FILES	=	main.cpp		\
 			Client.cpp		\
 			ClientCmd.cpp	\
-			Bot.cpp		\
+			Bot.cpp			\
+			BotLG.cpp		\
 			Server.cpp		\
 			ServerUtils.cpp	\
 			Channel.cpp		\

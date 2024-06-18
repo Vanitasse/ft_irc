@@ -64,8 +64,6 @@ void	Client::JOIN(const std::string& channelName, const std::string& password)
 	for (std::vector<Channel*>::iterator itc = _inChannels.begin(); itc != _inChannels.end(); itc++)
 		if ((*it)->getName() == channelName)
 			return ;
-	// if (channelName == "#bot")
-	// 	return (_server->_bot.addClient(this));
 	JOINChannel = _server->FindOrCreateChannel(channelName, *this);
 	if (JOINChannel == NULL)
 	{
@@ -103,10 +101,10 @@ void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
 			std::cout << RED << "client " << _nick << " try to talk to a channel but is not inside" << RESET << std::endl;
 			return ;
 		}
-		std::cout << "MSG = " << msg << std::endl;
-		if (msg[0] == '!' && (*it)->getName() == "#bot")
+		if ((*it)->getName() == "#bot")
 			_server->sendToBot(this, msg);
-		(*it)->sendToClients(*this, msg);
+		else
+			(*it)->sendToClients(*this, msg);
 	}
 	else
 	{

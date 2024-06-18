@@ -20,6 +20,7 @@
 
 # include "FormatIRC.hpp"
 
+
 // Smiley
 # define SMILE "\U0001f604"
 
@@ -150,26 +151,22 @@ typedef struct s_chanModes
 enum	e_LoupGarouPhases
 {
 	Connect,
-	Roles,
-	Election,
+	ElectionSpeechs,
+	ElectionVotes,
 	Nuit,
-	PetiteFille,
 	Sorciere,
-	Jour,
+	JourSpeech,
+	JourVotes,
 };
 
-typedef struct	s_LoupGarouGameID
-{
-	int						game_ID;
-	e_LoupGarouPhases		phase;
-	std::vector<Client*>	players;
-}				t_LoupGarouGameID;
 
 typedef struct	s_LoupGarouPlayerID
 {
-	int						game_ID;
 	std::string				role;
 	int						speech;
 	bool					isPlaying;
 	bool					isDead;
+	bool					voted;
+	bool					maire;
+	int						votes;
 }				t_LoupGarouPlayerID;
