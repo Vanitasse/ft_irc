@@ -129,6 +129,51 @@
 
 #define bot_rules "Welcome ! I am totally not a bot so please treat me as one of you thanks. Here's some rules : To use my different commands, use a '!' If you ever feel lost, use !help and remember, stay safe out there.... fellow humans! ^^"
 
+#define	StorySorciere0 "Réveille-toi, Sorcière. Devant toi se dresse la scène d’un massacre imminent. Une victime, choisie par les Loups-Garous, est déjà à demi dévorée, ses cris d’agonie étouffés par les ténèbres. Toi seule, avec ton pouvoir sombre et redoutable, peux décider de son sort. Tu disposes d'une potion de vie et d'une de mort, comptes tu les utiliser? (Entre le nom de la personne tuée cette nuit pour la sauver, ou un autre nom pour le tuer)"
+#define	StorySorciere1 "Réveille-toi, Sorcière. Devant toi se dresse la scène d’un massacre imminent. Une victime, choisie par les Loups-Garous, est déjà à demi dévorée, ses cris d’agonie étouffés par les ténèbres. Toi seule, avec ton pouvoir sombre et redoutable, peux décider de son sort. Il te reste ta potion de vie, vas-tu l'utiliser? (Entre le nom de la personne tuée cette nuit pour la sauver)"
+#define	StorySorciere2 "Réveille-toi, Sorcière. Devant toi se dresse la scène d’un massacre imminent. Une victime, choisie par les Loups-Garous, est déjà à demi dévorée, ses cris d’agonie étouffés par les ténèbres. Toi seule, avec ton pouvoir sombre et redoutable, peux décider de son sort. Il te reste ta potion de mort, vas-tu l'utiliser? (Entre un nom pour le debarassser d'un joueur)"
+#define StoryLoupsGarous "Loups-Garous, réveillez-vous ! Choisissez votre victime parmi les âmes innocentes, dont le cœur bat encore. Sentez les battements d’un cœur terrifié à travers les murs fragiles de ce village maudit. Décidez qui goûtera à la morsure de vos crocs voraces cette nuit. Indiquez en silence celui ou celle dont le destin est scellé dans la terreur et la souffrance."
+#define	StoryVoyante "La nuit enveloppe le village de son voile d'ombre. Tous les villageois sombrent dans un sommeil profond... sauf la Voyante. Celle qui perçoit l'invisible, réveille-toi. Tes yeux percent les ténèbres pour dévoiler la véritable nature de nos voisins. Montre-nous qui se cache derrière les masques. Choisis un villageois et découvre son secret. (entrez un nom)"
+#define	StoryIntro "Dans “l’Est sauvage”, le petit hameau de Thiercelieux est depuis peu devenu la proie des Loups-Garous. Des meurtres sont commis chaque nuit par certains habitants du village, devenus Lycanthropes à cause d’un phénomène mystérieux (peut-être l’effet de serre ?)… Les Villageois doivent se ressaisir pour éradiquer ce nouveau fléau venu du fond des âges, avant que le hameau ne perde ses derniers habitants."
+#define	StoryElection "Villageois, l'heure est grave. Nous devons élire un maire pour nous guider face aux menaces qui planent sur notre village. Chacun d'entre vous peut se porter candidat. Ceux qui souhaitent diriger, faites un pas en avant et présentez-vous. Que le meilleur candidat gagne notre confiance et mène notre communauté avec sagesse. Le scrutin est ouvert. Votez pour celui ou celle qui, selon vous, mérite de devenir notre maire."
+#define	StoryDay "L'aube rouge s'éveille sur Thiercelieux, illuminant le village d'une lumière cruelle et sanglante. Ouvrez les yeux et contemplez l'œuvre des monstres nocturnes, alors que les ombres se retirent lentement."
+#define	StoryNight "La nuit tombe sur Thiercelieux, et une obscurité maléfique engloutit le village. Les habitants se retirent dans leurs maisons, mais la peur les ronge, car quelque chose de terrible se tapit dans les ombres. Fermez les yeux et laissez le voile noir de la nuit vous envelopper..."
+#define	StoryVoteMaire "Le scrutin est ouvert. Votez pour celui ou celle qui, selon vous, mérite de devenir notre maire. (Ecrivez son nom)"
+
+#define	Titre0 "                                                                               "
+#define	Titre1 " ██▓     ▒█████   █    ██  ██▓███    ▄████  ▄▄▄       ██▀███   ▒█████   █    ██"
+#define	Titre2 " ▓██▒    ▒██▒  ██▒ ██  ▓██▒▓██░  ██▒ ██▒ ▀█▒▒████▄    ▓██ ▒ ██▒▒██▒  ██▒ ██  ▓██▒"
+#define	Titre3 " ▒██░    ▒██░  ██▒▓██  ▒██░▓██░ ██▓▒▒██░▄▄▄░▒██  ▀█▄  ▓██ ░▄█ ▒▒██░  ██▒▓██  ▒██░"
+#define	Titre4 " ▒██░    ▒██   ██░▓▓█  ░██░▒██▄█▓▒ ▒░▓█  ██▓░██▄▄▄▄██ ▒██▀▀█▄  ▒██   ██░▓▓█  ░██░"
+#define	Titre5 " ░██████▒░ ████▓▒░▒▒█████▓ ▒██▒ ░  ░░▒▓███▀▒ ▓█   ▓██▒░██▓ ▒██▒░ ████▓▒░▒▒█████▓"
+#define	Titre6 " ░ ▒░▓  ░░ ▒░▒░▒░ ░▒▓▒ ▒ ▒ ▒▓▒░ ░  ░ ░▒   ▒  ▒▒   ▓▒█░░ ▒▓ ░▒▓░░ ▒░▒░▒░ ░▒▓▒ ▒ ▒"
+#define	Titre7 " ░ ░ ▒  ░  ░ ▒ ▒░ ░░▒░ ░ ░ ░▒ ░       ░   ░   ▒   ▒▒ ░  ░▒ ░ ▒░  ░ ▒ ▒░ ░░▒░ ░ ░"
+#define	Titre8 "   ░ ░   ░ ░ ░ ▒   ░░░ ░ ░ ░░       ░ ░   ░   ░   ▒     ░░   ░ ░ ░ ░ ▒   ░░░ ░ ░"
+#define	Titre9 "     ░  ░    ░ ░     ░                    ░       ░  ░   ░         ░ ░     ░    "
+
+#define	jour0 "                                                          "
+#define	jour1 "        ░▒▓█▓▒░ ░▒▓██████▓▒░░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓███████▓▒░   "
+#define	jour2 "        ░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░  "
+#define	jour3 "        ░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░  "
+#define	jour4 "        ░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓███████▓▒░   "
+#define	jour5 " ░▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░  "
+#define	jour6 " ░▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░  "
+#define	jour7 "  ░▒▓██████▓▒░  ░▒▓██████▓▒░  ░▒▓██████▓▒░░ ▒▓█▓▒░░▒▓█▓▒░  "
+
+#define	nuit1 "░▒▓███████▓▒░░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░ ▒▓████████▓▒░ "
+#define	nuit2 "░▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░   ░▒▓█▓▒░     "
+#define	nuit3 "░▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░   ░▒▓█▓▒░     "
+#define	nuit4 "░▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░   ░▒▓█▓▒░     "
+#define	nuit5 "░▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░   ░▒▓█▓▒░     "
+#define	nuit6 "░▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░░▒▓█▓▒░ ▒▓█▓▒░   ░▒▓█▓▒░     "
+#define	nuit7 "░▒▓█▓▒░░▒▓█▓▒░ ░▒▓██████▓▒░░ ▒▓█▓▒░   ░▒▓█▓▒░     "
+
+#define election0 "       _           _   _                    _                          _          "
+#define election1 "      | |         | | (_)                  | |                        (_)         "
+#define election2 "   ___| | ___  ___| |_ _  ___  _ __      __| |_   _    _ __ ___   __ _ _ _ __ ___ "
+#define election3 "  / _ \\ |/ _ \\/ __| __| |/ _ \\| '_  \\   / _` | |  | | | '_ ` _ \\ / _` | | '__/ _ \\"
+#define election4 " |  __/ |  __/ (__| |_| | (_) | | | |  | (_| | |_| |  | | | | | | (_| | | | |  __/"
+#define election5 "  \\___|_|\\___|\\___|\\__|_|\\___/|_|  |_|  \\__,_| \\__,_| |_| |_| |_|\\__,_|_|_|  \\___|"
 
 typedef struct s_limits
 {
@@ -153,7 +198,8 @@ enum	e_LoupGarouPhases
 	Connect,
 	ElectionSpeechs,
 	ElectionVotes,
-	Nuit,
+	Voyante,
+	LoupsGarous,
 	Sorciere,
 	JourSpeech,
 	JourVotes,

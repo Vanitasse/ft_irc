@@ -18,7 +18,7 @@ Bot::Bot()
 	phase = Connect;
 	fmap["!help"] = &Bot::help;
 	fmap["!joke"] = &Bot::joke;
-	fmap["!LG"] = &Bot::LG_register;
+	fmap["!lg"] = &Bot::LG_register;
 }
 
 Bot::~Bot() {}

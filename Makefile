@@ -22,7 +22,7 @@ OBJ		= $(addprefix $(OBJ_DIR), $(FILES:.cpp=.o))
 
 CC		= c++
 
-FLAGS = -Wall -Werror -Wextra -std=c++98
+FLAGS = -Wall -Werror -Wextra -std=c++98 -g3
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp $(INCLUDE)
 	mkdir -p $(OBJ_DIR)

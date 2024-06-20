@@ -30,11 +30,9 @@ void	Client::JOIN(const std::string& channelName)
 	Channel *JOINChannel;
 	std::vector<Channel*>::iterator it;
 
-	for (std::vector<Channel*>::iterator itc = _inChannels.begin(); itc != _inChannels.end(); itc++)
+	for (it = _inChannels.begin(); it != _inChannels.end(); it++)
 		if ((*it)->getName() == channelName)
 			return ;
-	// if (channelName == "#bot")
-	// 	return (_server->_bot.addClient(this));
 	JOINChannel = _server->FindOrCreateChannel(channelName, *this);
 	if (JOINChannel == NULL)
 	{
@@ -51,9 +49,9 @@ void	Client::JOIN(const std::string& channelName)
 		_InvitedAt.erase(it);
 	}
 	JOINChannel->setTopic(JOINChannel->getTopic(), *this);
+	_inChannels.push_back(JOINChannel);
 	FormatIRC::sendJOIN(*this, *JOINChannel);
 	JOINChannel->addClient(this);
-	_inChannels.push_back(JOINChannel);
 }
 
 void	Client::JOIN(const std::string& channelName, const std::string& password)
@@ -61,7 +59,7 @@ void	Client::JOIN(const std::string& channelName, const std::string& password)
 	Channel *JOINChannel;
 	std::vector<Channel*>::iterator it;
 
-	for (std::vector<Channel*>::iterator itc = _inChannels.begin(); itc != _inChannels.end(); itc++)
+	for (it = _inChannels.begin(); it != _inChannels.end(); it++)
 		if ((*it)->getName() == channelName)
 			return ;
 	JOINChannel = _server->FindOrCreateChannel(channelName, *this);
@@ -79,10 +77,10 @@ void	Client::JOIN(const std::string& channelName, const std::string& password)
 			return (FormatIRC::sendCodeMsg(*this, "473", channelName, "Cannot join channel (+i)"));
 		_InvitedAt.erase(it);
 	}
-	JOINChannel->addClient(this);
 	JOINChannel->setTopic(JOINChannel->getTopic(), *this);
 	_inChannels.push_back(JOINChannel);
 	FormatIRC::sendJOIN(*this, *JOINChannel);
+	JOINChannel->addClient(this);
 }
 
 void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
