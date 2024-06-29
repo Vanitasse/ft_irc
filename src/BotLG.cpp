@@ -1,10 +1,13 @@
 #include "../Bot.hpp"
-
+#include <fstream>
+#include <string>
 void	Bot::LG_register(Client *client)
 {
 	t_LoupGarouPlayerID NewPlayerID;
-	std::size_t			nb_players(3);
+	std::size_t			nb_players(5);
 	std::ostringstream	oss;
+	std::ifstream		infile;
+	std::string			line;
 
 	std::srand(time(NULL));
 	NewPlayerID.isDead = false;
@@ -22,18 +25,16 @@ void	Bot::LG_register(Client *client)
 	deathPotion = 1;
 	lastDead = NULL;
 
-	FormatIRC::sendNOTICE(client->getFd(), "#bot", RED Titre1 RESET);
-	FormatIRC::sendNOTICE(client->getFd(), "#bot", RED Titre2 RESET);
-	FormatIRC::sendNOTICE(client->getFd(), "#bot", RED Titre3 RESET);
-	FormatIRC::sendNOTICE(client->getFd(), "#bot", RED Titre4 RESET);
-	FormatIRC::sendNOTICE(client->getFd(), "#bot", RED Titre5 RESET);
-	FormatIRC::sendNOTICE(client->getFd(), "#bot", RED Titre6 RESET);
-	FormatIRC::sendNOTICE(client->getFd(), "#bot", RED Titre7 RESET);
-	FormatIRC::sendNOTICE(client->getFd(), "#bot", RED Titre8 RESET);
-	FormatIRC::sendNOTICE(client->getFd(), "#bot", RED Titre9 RESET);
+	infile.open("logo.txt");
+	if (infile.is_open())
+	{
+		while (std::getline(infile, line))
+			FormatIRC::sendNOTICE(client->getFd(), "#bot", RED + line + RESET);
+		infile.close();
+	}
 	FormatIRC::sendNOTICE(client->getFd(), "#bot", "Registered to Loup-Garou game");
 	FormatIRC::sendNOTICE(client->getFd(), "#bot", "");
-	FormatIRC::sendNOTICE(client->getFd(), "#bot", StoryIntro);
+	FormatIRC::sendNOTICE(client->getFd(), "#bot",  BOLD ITALIC GREEN StoryIntro RESET);
 	if (nb_players - players.size())
 	{
 		oss << nb_players - players.size();
@@ -43,7 +44,7 @@ void	Bot::LG_register(Client *client)
 	{
 		phase = ElectionSpeechs;
 		LG_roles();
-		LG_Story(StoryElection);
+		LG_story();
 	}
 }
 
@@ -68,13 +69,25 @@ void	Bot::LG_roles()
 		{
 			random = rand() % 4;
 			if (random == 0 && sorciere == 1)
+			{
 				(*it)->getLG().role = "Sorciere";
+				sorciere = 0;
+			}
 			else if (random == 1 && chasseur == 1)
+			{
 				(*it)->getLG().role = "Chasseur";
+				chasseur = 0;
+			}
 			else if (random == 2 && cupidon == 1)
+			{
 				(*it)->getLG().role = "Cupidon";
+				cupidon = 0;
+			}
 			else if (random == 3 && voyante == 1)
+			{
 				(*it)->getLG().role = "Voyante";
+				voyante = 0;
+			}
 			else
 				(*it)->getLG().role = "Villageois";
 			villageois++;
@@ -97,7 +110,7 @@ void	Bot::LG_infos(Client *client)
 		case Connect:
 			break;
 		case ElectionSpeechs:
-			format = "Vous avez " GREEN + oss.str() + RESET + " possibilié(s) de parler";
+			format = "Vous avez " GREEN + oss.str() + RESET + " possibilié(s) de parler, tapez " RED "stop" RESET " si vous ne voulez plus parler";
 			break;
 		case ElectionVotes:
 			format = "Vous devez voter pour cette phase en ecrivant le nom d'un joueur";
@@ -188,7 +201,7 @@ bool	Bot::LG_vote(Client *client, const std::string& msg, const std::string& rol
 	return (true);
 }
 
-void	Bot::LG_sendToPlayers(const std::string notice, const std::string role)
+void	Bot::LG_sendToPlayers(const std::string& notice, const std::string& role)
 {
 		for (std::vector<Client*>::iterator it = players.begin(); it != players.end(); it++)
 		{
@@ -197,7 +210,7 @@ void	Bot::LG_sendToPlayers(const std::string notice, const std::string role)
 		}
 }
 
-Client*	Bot::LG_findClientByRole(const std::string role)
+Client*	Bot::LG_findClientByRole(const std::string& role)
 {
 	for (std::vector<Client*>::iterator it = players.begin(); it != players.end(); it++)
 	{
@@ -228,9 +241,12 @@ Client*	Bot::LG_getMoreVoted()
 void	Bot::LG_play(Client *client, const std::string& msg)
 {
 	Client *tmp;
+	std::vector<Client*>::iterator it;
 
 	if (client->getLG().isDead)
 		return (FormatIRC::sendNOTICE(client->getFd(), "#bot", "Vous êtes mort, vous ne pouvez plus interagir avec les autres joueurs"));
+	if (msg == "stop")
+		client->getLG().speech = 1;
 	switch (phase)
 	{
 		case Connect:
@@ -241,7 +257,7 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 			{
 				phase = ElectionVotes;
 				LG_newPhase(0, "all");
-				LG_Story(StoryVoteMaire);
+				LG_story();
 			}
 			break;
 		case ElectionVotes:
@@ -250,26 +266,25 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 				tmp = LG_getMoreVoted();
 				if (tmp == NULL)
 				{
-					LG_sendToPlayers("le vote s'est solde par une egalite, votez de nouveau", "all");
+					LG_sendToPlayers(BG_BRIGHT_RED BOLD "le vote s'est solde par une egalite, votez de nouveau" RESET, "all");
 					LG_newPhase(0, "all");
 				}
 				else
 				{
-					LG_sendToPlayers(GREEN + tmp->getNick() + RESET + " a ete elu maire du village", "all");
+					LG_sendToPlayers(BG_BRIGHT_RED BOLD + tmp->getNick() + RESET + BG_BRIGHT_RED BOLD " a ete elu maire du village" RESET, "all");
 					tmp->getLG().maire = true;
-					LG_Story(StoryNight);
 					tmp = LG_findClientByRole("Voyante");
 					if (tmp && !tmp->getLG().isDead)
 					{
 						phase = Voyante;
 						LG_newPhase(0, "Voyante");
-						LG_Story(StoryVoyante);
+						LG_story();
 					}
 					else
 					{
-						LG_newPhase(0, "Loup-Garou");
 						phase = LoupsGarous;
-						LG_Story(StoryLoupsGarous);
+						LG_newPhase(0, "Loup-Garou");
+						LG_story();
 					}
 				}
 			}
@@ -279,9 +294,9 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 			{
 				phase = LoupsGarous;
 				tmp = LG_getMoreVoted();
-				FormatIRC::sendNOTICE(client->getFd(), "#bot", "le role de ce joueur est " BLUE + tmp->getLG().role + RESET);
+				FormatIRC::sendNOTICE(client->getFd(), "#bot", BG_BRIGHT_RED BOLD "le role de ce joueur est " BLUE + tmp->getLG().role + RESET);
 				LG_newPhase(0, "Loup-Garou");
-				LG_Story(StoryLoupsGarous);
+				LG_story();
 			}
 			break;
 		case LoupsGarous:
@@ -290,31 +305,28 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 				lastDead = LG_getMoreVoted();
 				if (lastDead == NULL)
 				{
-					LG_sendToPlayers("le vote s'est solde par une egalite, votez de nouveau", "Loup-Garou");
+					LG_sendToPlayers(BG_BRIGHT_RED BOLD "le vote s'est solde par une egalite, votez de nouveau" RESET, "Loup-Garou");
 					LG_newPhase(0, "Loup-Garou");
 				}
 				else
 				{
 					lastDead->getLG().isDead = true;
-					tmp = LG_findClientByRole("Voyante");
+					it = std::find(players.begin(), players.end(), lastDead);
+					players.erase(it);
+					tmp = LG_findClientByRole("Sorciere");
 					if (tmp && !tmp->getLG().isDead && (lifePotion || deathPotion))
 					{
 						phase = Sorciere;
-						if (lifePotion && deathPotion)
-							LG_Story(StorySorciere0);
-						else if (lifePotion)
-							LG_Story(StorySorciere1);
-						else if (deathPotion)
-							LG_Story(StorySorciere2);
-						FormatIRC::sendNOTICE(client->getFd(), "#bot", "le joueur " GREEN + lastDead->getNick() + RESET + " est mort cette nuit, que comptes tu faire?");
+						LG_story();
+						FormatIRC::sendNOTICE(tmp->getFd(), "#bot", BG_BRIGHT_RED BOLD "le joueur " GREEN + lastDead->getNick() + RESET + BG_BRIGHT_RED BOLD " est mort cette nuit, que comptes tu faire?" RESET);
 						LG_newPhase(0, "Sorciere");
 					}
 					else
 					{
 						phase = JourSpeech;
-						LG_sendToPlayers("le joueur " GREEN + lastDead->getNick() + RESET + " est mort, son rôle etait " BLUE + lastDead->getLG().role, "all");
+						LG_sendToPlayers(BG_BRIGHT_RED BOLD "le joueur " GREEN + lastDead->getNick() + RESET + BG_BRIGHT_RED BOLD " est mort, son rôle etait " BLUE + lastDead->getLG().role + RESET, "all");
 						LG_newPhase(3, "all");
-						LG_Story(StoryDay);
+						LG_story();
 					}
 				}
 			}
@@ -324,10 +336,26 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 			{
 				tmp = LG_getMoreVoted();
 				if (tmp && (tmp->getNick() == lastDead->getNick()))
+				{
 					lastDead->getLG().isDead = false;
+					lastDead = NULL;
+					tmp = NULL;
+					players.push_back(lastDead);
+				}
 				else if (tmp && (tmp->getNick() != lastDead->getNick()))
+				{
 					tmp->getLG().isDead = true;
+					it = std::find(players.begin(), players.end(), tmp);
+					players.erase(it);
+				}
+				if (lastDead == NULL && tmp == NULL)
+					LG_sendToPlayers(BG_BRIGHT_RED BOLD "Personne n'est mort cette nuit", "all");
+				else if (lastDead)
+					LG_sendToPlayers(BG_BRIGHT_RED BOLD "le joueur " GREEN + lastDead->getNick() + " est mort cette nuit, son rôle etait " BLUE + lastDead->getLG().role + RESET, "all");
+				else if (tmp)
+					LG_sendToPlayers(BG_BRIGHT_RED BOLD "le joueur " GREEN + tmp->getNick() + " est mort cette nuit, son rôle etait " BLUE + tmp->getLG().role + RESET, "all");
 				phase = JourSpeech;
+				LG_story();
 				LG_newPhase(3, "all");
 			}
 			break;
@@ -335,6 +363,7 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 			if (LG_speech(client, msg))
 			{
 				phase = JourVotes;
+				LG_story();
 				LG_newPhase(0, "all");
 			}
 			break;
@@ -344,128 +373,178 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 				lastDead = LG_getMoreVoted();
 				if (lastDead == NULL)
 				{
-					LG_sendToPlayers("le vote s'est solde par une egalite, votez de nouveau", "all");
+					LG_sendToPlayers(BG_BRIGHT_RED BOLD "le vote s'est solde par une egalite, votez de nouveau", "all");
 					LG_newPhase(0, "all");
 				}
 				else
 				{
 					lastDead->getLG().isDead = true;
-					LG_sendToPlayers("le joueur " GREEN + lastDead->getNick() + RESET + " est pendu, son rôle etait " BLUE + lastDead->getLG().role, "all");
+					it = std::find(players.begin(), players.end(), lastDead);
+					players.erase(it);
+					LG_sendToPlayers(BG_BRIGHT_RED BOLD "le joueur " GREEN + lastDead->getNick() + RESET + BG_BRIGHT_RED BOLD " est pendu, son rôle etait " BLUE + lastDead->getLG().role + RESET, "all");
 					if (LG_findClientByRole("Voyante"))
-						{
-							phase = Voyante;
-							LG_newPhase(0, "Voyante");
-							LG_Story(StoryVoyante);
-						}
-						else
-						{
-							phase = LoupsGarous;
-							LG_newPhase(0, "Loup-Garou");
-							LG_Story(StoryLoupsGarous);
-						}
+					{
+						phase = Voyante;
+						LG_newPhase(0, "Voyante");
+						LG_story();
+					}
+					else
+					{
+						phase = LoupsGarous;
+						LG_newPhase(0, "Loup-Garou");
+						LG_story();
+					}
 				}
 			}
 			break;
 	}
 }
 
-void	Bot::LG_Story(const std::string story)
+void	Bot::LG_story()
 {
-
 	for (std::vector<Client*>::iterator it = players.begin(); it != players.end(); it++)
 	{
+		for (int i = 0; i < 8; i++)
+			FormatIRC::sendNOTICE((*it)->getFd(), "#bot", "");
 		switch (phase)
 		{
 			case Connect:
 				break;
 			case ElectionSpeechs:
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour1 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour2 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour3 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour4 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour5 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour6 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN election0 RESET);
 				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN election1 RESET);
 				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN election2 RESET);
 				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN election3 RESET);
 				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN election4 RESET);
 				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN election5 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", ITALIC BOLD GREEN StoryElection RESET);
+				if (!(*it)->getLG().isDead)
+					FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLINK_SLOW BOLD YELLOW "VOTRE TOUR" RESET);
 				break;
 			case ElectionVotes:
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour1 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour2 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour3 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour4 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour5 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour6 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voteMaire0 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voteMaire1 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voteMaire2 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voteMaire3 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voteMaire4 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voteMaire5 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voteMaire6 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voteMaire7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", ITALIC BOLD GREEN StoryVoteMaire RESET);
+				if (!(*it)->getLG().isDead)
+					FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLINK_SLOW BOLD YELLOW "VOTRE TOUR" RESET);
 				break;
 			case Voyante:
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit1 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit2 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit3 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit4 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit5 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit6 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voyante0 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voyante1 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voyante2 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voyante3 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voyante4 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voyante5 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voyante6 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", CYAN voyante7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", ITALIC BOLD GREEN StoryVoyante RESET);
+				if (!(*it)->getLG().isDead && (*it)->getLG().role == "Voyante")
+					FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLINK_SLOW BOLD YELLOW "VOTRE TOUR" RESET);
 				break;
 			case LoupsGarous:
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit1 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit2 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit3 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit4 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit5 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit6 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED loupsGarous0 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED loupsGarous1 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED loupsGarous2 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED loupsGarous3 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED loupsGarous4 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED loupsGarous5 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED loupsGarous6 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED loupsGarous7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", ITALIC BOLD GREEN StoryLoupsGarous RESET);
+				if (!(*it)->getLG().isDead && (*it)->getLG().role == "Loup-Garou")
+					FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLINK_SLOW BOLD YELLOW "VOTRE TOUR" RESET);
 				break;
 			case Sorciere:
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit1 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit2 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit3 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit4 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit5 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit6 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", RED nuit7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", YELLOW sorciere0 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", YELLOW sorciere1 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", YELLOW sorciere2 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", YELLOW sorciere3 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", YELLOW sorciere4 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", YELLOW sorciere5 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", YELLOW sorciere6 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", YELLOW sorciere7 RESET);
+				if (lifePotion && deathPotion)
+					FormatIRC::sendNOTICE((*it)->getFd(), "#bot", ITALIC BOLD GREEN StorySorciere0 RESET);
+				else if (lifePotion)
+					FormatIRC::sendNOTICE((*it)->getFd(), "#bot", ITALIC BOLD GREEN StorySorciere1 RESET);
+				else if (deathPotion)
+					FormatIRC::sendNOTICE((*it)->getFd(), "#bot", ITALIC BOLD GREEN StorySorciere2 RESET);
+				if (!(*it)->getLG().isDead && (*it)->getLG().role == "Sorciere")
+					FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLINK_SLOW BOLD YELLOW "VOTRE TOUR" RESET);
 				break;
 			case JourSpeech:
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour1 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour2 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour3 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour4 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour5 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour6 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN villageois0 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN villageois1 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN villageois2 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN villageois3 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN villageois4 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN villageois5 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN villageois6 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN villageois7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", ITALIC BOLD GREEN StoryDay RESET);
+				if (!(*it)->getLG().isDead)
+					FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLINK_SLOW BOLD YELLOW "VOTRE TOUR" RESET);
 				break;
 			case JourVotes:
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour1 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour2 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour3 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour4 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour5 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour6 RESET);
-				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLUE jour7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN coupable0 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN coupable1 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN coupable2 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN coupable3 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN coupable4 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN coupable5 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN coupable6 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", GREEN coupable7 RESET);
+				FormatIRC::sendNOTICE((*it)->getFd(), "#bot", ITALIC BOLD GREEN StoryDayVote RESET);
+				if (!(*it)->getLG().isDead)
+					FormatIRC::sendNOTICE((*it)->getFd(), "#bot", BLINK_SLOW BOLD YELLOW "VOTRE TOUR" RESET);
+				break;
 		}
-		FormatIRC::sendNOTICE((*it)->getFd(), "#bot", "");
-		FormatIRC::sendNOTICE((*it)->getFd(), "#bot", story);
-		FormatIRC::sendNOTICE((*it)->getFd(), "#bot", "");
 		LG_infos(*it);
+		for (int i = 0; i < 8; i++)
+			FormatIRC::sendNOTICE((*it)->getFd(), "#bot", "");
 	}
 }
 
 void	Bot::LG_newPhase(int speech, const std::string& role_vote)
 {
+	int	goods;
+	int	bads;
+
+	goods = 0;
+	bads = 0;
 	for (std::vector<Client*>::iterator it = players.begin(); it != players.end(); it++)
 	{
-		if ((*it)->getLG().isDead)
-		{
-			(*it)->getLG().voted = true;
-			(*it)->getLG().speech = 0;
-			(*it)->getLG().votes = 0;
-		}
+		if (!(*it)->getLG().isDead && (*it)->getLG().role == "Loup-Garou")
+			bads++;
+		else if (!(*it)->getLG().isDead && (*it)->getLG().role != "Loup-Garou")
+			goods++;
 		if (role_vote == (*it)->getLG().role || role_vote == "all")
 			(*it)->getLG().voted = false;
 		(*it)->getLG().speech = speech;
 		(*it)->getLG().votes = 0;
+	}
+	if (goods == 0)
+	{
+		for (std::vector<Client*>::iterator it = players.begin(); it != players.end();)
+		{
+			FormatIRC::sendNOTICE((*it)->getFd(), "#bot", ITALIC BOLD GREEN "Les loups garous gagnent" RESET);
+			(*it)->getLG().isPlaying = false;
+			players.erase(it);
+		}
+	}
+	else if (bads == 0)
+	{
+		for (std::vector<Client*>::iterator it = players.begin(); it != players.end();)
+		{
+			FormatIRC::sendNOTICE((*it)->getFd(), "#bot", ITALIC BOLD GREEN "Les villageois gagnent" RESET);
+			(*it)->getLG().isPlaying = false;
+			players.erase(it);
+		}
 	}
 }
