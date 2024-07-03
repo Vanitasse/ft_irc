@@ -52,8 +52,6 @@ void	Bot::LG_roles()
 {
 	int			random;
 	std::size_t	sorciere(1);
-	std::size_t	chasseur(1);
-	std::size_t	cupidon(1);
 	std::size_t	voyante(1);
 	std::size_t	loups_garous(0);
 	std::size_t	villageois(0);
@@ -72,16 +70,6 @@ void	Bot::LG_roles()
 			{
 				(*it)->getLG().role = "Sorciere";
 				sorciere = 0;
-			}
-			else if (random == 1 && chasseur == 1)
-			{
-				(*it)->getLG().role = "Chasseur";
-				chasseur = 0;
-			}
-			else if (random == 2 && cupidon == 1)
-			{
-				(*it)->getLG().role = "Cupidon";
-				cupidon = 0;
 			}
 			else if (random == 3 && voyante == 1)
 			{
