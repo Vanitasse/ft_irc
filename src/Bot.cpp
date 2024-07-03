@@ -15,7 +15,6 @@ Bot::Bot()
 	_modes._t = false;
 	_modes._k = false;
 	_modes._l = false;
-	phase = Connect;
 	fmap["!help"] = &Bot::help;
 	fmap["!joke"] = &Bot::joke;
 	fmap["!lg"] = &Bot::LG_register;

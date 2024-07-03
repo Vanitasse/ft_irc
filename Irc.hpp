@@ -237,6 +237,7 @@ enum	e_LoupGarouPhases
 
 typedef struct	s_LoupGarouPlayerID
 {
+	int						ID;
 	std::string				role;
 	int						speech;
 	bool					isPlaying;

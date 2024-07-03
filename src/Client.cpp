@@ -9,7 +9,7 @@ Client::Client() : _server(NULL)
 	_passIsSet = false;
 	_nickIsSet = false;
 	_fd = -1;
-	setLG((t_LoupGarouPlayerID){"none", 0, false, false, false, false,0});
+	setLG((t_LoupGarouPlayerID){0, "none", 0, false, false, false, false,0});
 }
 
 Client::Client(Server& server) : _server(&server)
@@ -18,7 +18,7 @@ Client::Client(Server& server) : _server(&server)
 	_passIsSet = false;
 	_nickIsSet = false;
 	_fd = -1;
-	setLG((t_LoupGarouPlayerID){"none", 0, false, false, false, false,0});
+	setLG((t_LoupGarouPlayerID){0, "none", 0, false, false, false, false,0});
 }
 
 Client::~Client()
