@@ -177,8 +177,6 @@ void	FormatIRC::sendQUIT(const Client& client)
 	// sender(client.getFd(), format);
 }
 
-// >> :max!~mablatie@B2ED245D.B270E442.5F584402.IP QUIT :Quit:: leaving
-
 void	FormatIRC::sendKICK(const Client& client, const std::string& channelName, const std::string& user_kicked, std::vector<Client*> allclients, const std::string& reason)
 {
 	const std::string format(user_id(client.getNick(), client.getUsername()) + " KICK " + channelName + " " + user_kicked + " :" + reason);
