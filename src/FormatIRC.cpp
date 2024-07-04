@@ -152,29 +152,6 @@ void	FormatIRC::sendQUIT(const Client& client)
 	allchan = client.getInChannels();
 	for (std::vector<Channel*>::iterator it = allchan.begin(); it != allchan.end(); it++)
 		sendQuitInfo(client, *it);
-
-
-
-
-
-	// std::vector<Client*> clients = chan.getChanClients();
-	// if (clients.size() == 1)
-	// 	return ;
-	// else
-	// {
-	// 	std::string format = user_id(client.getNick(), client.getUsername()) + " JOIN :" + chan.getName();
-	// 	for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); it++)
-	// 	{
-	// 		if ((*it)->getNick() != client.getNick())
-	// 			sender((*it)->getFd(), format);
-	// 	}
-	// }
-
-
-
-
-	// const std::string format(user_id(client.getNick(), client.getUsername()) + " QUIT :BYE BYE");
-	// sender(client.getFd(), format);
 }
 
 void	FormatIRC::sendKICK(const Client& client, const std::string& channelName, const std::string& user_kicked, std::vector<Client*> allclients, const std::string& reason)
