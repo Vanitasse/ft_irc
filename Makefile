@@ -10,6 +10,7 @@ FILES	=	main.cpp		\
 			Client.cpp		\
 			ClientCmd.cpp	\
 			Bot.cpp			\
+			BotCmd.cpp		\
 			BotLG.cpp		\
 			Server.cpp		\
 			ServerUtils.cpp	\

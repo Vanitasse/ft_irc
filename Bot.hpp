@@ -19,7 +19,7 @@ class	Bot : public Channel
 		void	LG_story(Client* client);
 		bool	LG_speech(Client *client, const std::string& msg);
 		bool	LG_vote(Client *client, const std::string& msg, const std::string& role);
-		void	LG_newPhase(std::vector<Client*>	players, int speech, const std::string& role_vote);
+		bool	LG_newPhase(std::vector<Client*>	players, int speech, const std::string& role_vote);
 		void	LG_infos(Client *client);
 		void	LG_roles(std::vector<Client*> players);
 		void	LG_sendToPlayers(std::vector<Client*> players, const std::string& notice, const std::string& role);

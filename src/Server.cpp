@@ -143,7 +143,7 @@ int	Server::ServerRecv(int fd)
 void	Server::readData(Client* client)
 {
 	if (!ServerRecv(client->getFd()))
-		return (clearClient(client));
+		return (client->QUIT());
 	client->ParseAndRespond(_receivedBuffer);
 }
 

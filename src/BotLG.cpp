@@ -246,7 +246,8 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 			if (LG_speech(client, msg))
 			{
 				games[client->getLG().ID].phase = ElectionVotes;
-				LG_newPhase(games[client->getLG().ID].players, 0, "all");
+				if (!LG_newPhase(games[client->getLG().ID].players, 0, "all"))
+					return ;
 				LG_story(client);
 			}
 			break;
@@ -257,7 +258,8 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 				if (tmp == NULL)
 				{
 					LG_sendToPlayers(games[client->getLG().ID].players, BG_BRIGHT_RED BOLD "le vote s'est solde par une egalite, votez de nouveau" RESET, "all");
-					LG_newPhase(games[client->getLG().ID].players, 0, "all");
+					if (!LG_newPhase(games[client->getLG().ID].players, 0, "all"))
+						return ;
 				}
 				else
 				{
@@ -267,13 +269,15 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 					if (tmp && !tmp->getLG().isDead)
 					{
 						games[client->getLG().ID].phase = Voyante;
-						LG_newPhase(games[client->getLG().ID].players, 0, "Voyante");
+						if (!LG_newPhase(games[client->getLG().ID].players, 0, "Voyante"))
+							return ;
 						LG_story(client);
 					}
 					else
 					{
 						games[client->getLG().ID].phase = LoupsGarous;
-						LG_newPhase(games[client->getLG().ID].players, 0, "Loup-Garou");
+						if (!LG_newPhase(games[client->getLG().ID].players, 0, "Loup-Garou"))
+							return ;
 						LG_story(client);
 					}
 				}
@@ -285,7 +289,8 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 				games[client->getLG().ID].phase = LoupsGarous;
 				tmp = LG_getMoreVoted(games[client->getLG().ID].players);
 				FormatIRC::sendNOTICE(client->getFd(), "#bot", BG_BRIGHT_RED BOLD "le role de ce joueur est " BLUE + tmp->getLG().role + RESET);
-				LG_newPhase(games[client->getLG().ID].players, 0, "Loup-Garou");
+				if (!LG_newPhase(games[client->getLG().ID].players, 0, "Loup-Garou"))
+					return ;
 				LG_story(client);
 			}
 			break;
@@ -296,7 +301,8 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 				if (games[client->getLG().ID].lastDead == NULL)
 				{
 					LG_sendToPlayers(games[client->getLG().ID].players, BG_BRIGHT_RED BOLD "le vote s'est solde par une egalite, votez de nouveau" RESET, "Loup-Garou");
-					LG_newPhase(games[client->getLG().ID].players, 0, "Loup-Garou");
+					if (!LG_newPhase(games[client->getLG().ID].players, 0, "Loup-Garou"))
+						return ;
 				}
 				else
 				{
@@ -307,15 +313,17 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 					if (tmp && !tmp->getLG().isDead && (games[client->getLG().ID].lifePotion || games[client->getLG().ID].deathPotion))
 					{
 						games[client->getLG().ID].phase = Sorciere;
+						if (!LG_newPhase(games[client->getLG().ID].players, 0, "Sorciere"))
+							return ;
 						LG_story(client);
 						FormatIRC::sendNOTICE(tmp->getFd(), "#bot", BG_BRIGHT_RED BOLD "le joueur " GREEN + games[client->getLG().ID].lastDead->getNick() + RESET + BG_BRIGHT_RED BOLD " est mort cette nuit, que comptes tu faire?" RESET);
-						LG_newPhase(games[client->getLG().ID].players, 0, "Sorciere");
 					}
 					else
 					{
 						games[client->getLG().ID].phase = JourSpeech;
 						LG_sendToPlayers(games[client->getLG().ID].players, BG_BRIGHT_RED BOLD "le joueur " GREEN + games[client->getLG().ID].lastDead->getNick() + RESET + BG_BRIGHT_RED BOLD " est mort, son rôle etait " BLUE + games[client->getLG().ID].lastDead->getLG().role + RESET, "all");
-						LG_newPhase(games[client->getLG().ID].players, 3, "all");
+						if (!LG_newPhase(games[client->getLG().ID].players, 3, "all"))
+							return ;
 						LG_story(client);
 					}
 				}
@@ -345,16 +353,18 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 				else if (tmp)
 					LG_sendToPlayers(games[client->getLG().ID].players, BG_BRIGHT_RED BOLD "le joueur " GREEN + tmp->getNick() + " est mort cette nuit, son rôle etait " BLUE + tmp->getLG().role + RESET, "all");
 				games[client->getLG().ID].phase = JourSpeech;
+				if (!LG_newPhase(games[client->getLG().ID].players, 3, "all"))
+					return ;
 				LG_story(client);
-				LG_newPhase(games[client->getLG().ID].players, 3, "all");
 			}
 			break;
 		case JourSpeech:
 			if (LG_speech(client, msg))
 			{
 				games[client->getLG().ID].phase = JourVotes;
+				if (!LG_newPhase(games[client->getLG().ID].players, 0, "all"))
+					return ;
 				LG_story(client);
-				LG_newPhase(games[client->getLG().ID].players, 0, "all");
 			}
 			break;
 		case JourVotes:
@@ -364,7 +374,8 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 				if (games[client->getLG().ID].lastDead == NULL)
 				{
 					LG_sendToPlayers(games[client->getLG().ID].players, BG_BRIGHT_RED BOLD "le vote s'est solde par une egalite, votez de nouveau", "all");
-					LG_newPhase(games[client->getLG().ID].players, 0, "all");
+					if (!LG_newPhase(games[client->getLG().ID].players, 0, "all"))
+						return ;
 				}
 				else
 				{
@@ -375,13 +386,15 @@ void	Bot::LG_play(Client *client, const std::string& msg)
 					if (LG_findClientByRole(games[client->getLG().ID].players, "Voyante"))
 					{
 						games[client->getLG().ID].phase = Voyante;
-						LG_newPhase(games[client->getLG().ID].players, 0, "Voyante");
+						if (!LG_newPhase(games[client->getLG().ID].players, 0, "Voyante"))
+							return ;
 						LG_story(client);
 					}
 					else
 					{
 						games[client->getLG().ID].phase = LoupsGarous;
-						LG_newPhase(games[client->getLG().ID].players, 0, "Loup-Garou");
+						if (!LG_newPhase(games[client->getLG().ID].players, 0, "Loup-Garou"))
+							return ;
 						LG_story(client);
 					}
 				}
@@ -501,7 +514,7 @@ void	Bot::LG_story(Client* client)
 	}
 }
 
-void	Bot::LG_newPhase(std::vector<Client*> players, int speech, const std::string& role_vote)
+bool	Bot::LG_newPhase(std::vector<Client*> players, int speech, const std::string& role_vote)
 {
 	int	goods;
 	int	bads;
@@ -527,6 +540,7 @@ void	Bot::LG_newPhase(std::vector<Client*> players, int speech, const std::strin
 			(*it)->getLG().isPlaying = false;
 			players.erase(it);
 		}
+		return (false);
 	}
 	else if (bads == 0)
 	{
@@ -536,5 +550,7 @@ void	Bot::LG_newPhase(std::vector<Client*> players, int speech, const std::strin
 			(*it)->getLG().isPlaying = false;
 			players.erase(it);
 		}
+		return (false);
 	}
+	return (true);
 }

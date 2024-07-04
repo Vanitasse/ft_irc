@@ -57,9 +57,9 @@ class	Client
 		void							KICK(const std::string & channelName, const std::string& user_kicked, const std::string& reason);
 		void							TOPIC(const std::string& channelName, const std::string& topic);void							TOPIC(const std::string& channelName);
 		void							INVITE(const std::string& nick, const std::string& channelName);
-		void							QUIT();
 		t_LoupGarouPlayerID				_LG_PlayerID;
 	public:
+		void							QUIT();
 					Client();
 					Client(Server& server);
 					Client(const Client& cpy);
