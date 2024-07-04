@@ -45,7 +45,7 @@ Bot&	Bot::operator=(const Bot& rhs)
 	return *this;
 }
 
-void	Bot::addClient(Client *client)
+void	Bot::addClient(Client *client) //override
 {
 	if (this->_userLimit != 0 && _chanClients.size() >= this->_userLimit)
 	{
@@ -124,4 +124,13 @@ void	Bot::parseMsg(Client* client, const std::string& msg)
 			LG_play(client, msg);
 		else
 			FormatIRC::sendNOTICE(client->getFd(), "#bot", "Bot channel: you can't chat in this channel, type !help to use bot");
+}
+
+void	Bot::removeFromGame(Client *client)
+{
+	std::vector<Client*>::iterator	it;
+
+	it = std::find(games[client->getLG().ID].players.begin(), games[client->getLG().ID].players.end(), client);
+	if (it != games[client->getLG().ID].players.end())
+		games[client->getLG().ID].players.erase(it);
 }

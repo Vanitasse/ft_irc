@@ -197,7 +197,7 @@ void	Channel::addOperator(Client *client)
 	std::cout << BG_BLUE << "client " << client->getNick() << " added to channel " << this->_name << " as Operator" << RESET << std::endl;
 }
 
-void	Channel::removeClient(const Client *client)
+void	Channel::removeClient(const Client *client) //bot override it
 {
 	std::vector<Client*>::iterator	it;
 

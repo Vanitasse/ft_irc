@@ -55,5 +55,5 @@ class	Server
 
 		Channel*					FindOrCreateChannel(const std::string& chanName, Client& client);
 		void						sendToBot(Client* client, const std::string& msg);
-
+		void						removeFromGame(Client* client);
 };

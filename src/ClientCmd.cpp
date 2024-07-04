@@ -122,6 +122,8 @@ void	Client::QUIT()
 	FormatIRC::sendQUIT(*this);
 	for (std::vector<Channel*>::iterator it = _inChannels.begin(); it != _inChannels.end(); it++)
 	{
+		if ((*it)->getName() == "#bot")
+			_server->removeFromGame(this);
 		(*it)->removeOP(*this);
 		(*it)->removeClient(this);
 	}

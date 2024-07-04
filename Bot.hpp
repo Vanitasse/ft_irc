@@ -38,4 +38,5 @@ class	Bot : public Channel
 		Bot&	operator=(const Bot& toCpy);
 		void	addClient(Client *client); //override
 		void	parseMsg(Client* client, const std::string& msg);
+		void	removeFromGame(Client* client);
 };

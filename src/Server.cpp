@@ -166,3 +166,8 @@ void Server::serverExec()
 		}
 	}
 }
+
+void	Server::removeFromGame(Client* client)
+{
+	_bot->removeFromGame(client);
+}

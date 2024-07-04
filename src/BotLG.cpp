@@ -5,7 +5,7 @@
 void	Bot::LG_register(Client *client)
 {
 	t_LoupGarouPlayerID NewPlayerID;
-	std::size_t			nb_players(5);
+	std::size_t			nb_players(3);
 	std::ostringstream	oss;
 	std::ifstream		infile;
 	std::string			line;
