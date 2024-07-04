@@ -120,7 +120,7 @@
 
 #define msg_serv(code, nickname) (":42IRCserv " + code + " " + nickname + " :")
 #define msg_serv2(code, nickname) (":42IRCserv " + code + " " + nickname + " ")
-#define msg_serv3(code, nickname, support_info) (":42IRCserv " + code + " " + nickname + " " + support_info + " :are supported by this server\r\n")
+#define msg_serv3(code, nickname, support_info) (":42IRCserv " + code + " " + nickname + " " + supp_info + " :are supported by this server\r\n")
 
 
 #define supp_info "CHANTYPES=# PREFIX=(o)@ MODES=1 CHANNELLEN=20 NICKLEN=20 TOPICLEN=200"

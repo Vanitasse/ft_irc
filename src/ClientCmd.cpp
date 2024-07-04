@@ -50,8 +50,8 @@ void	Client::JOIN(const std::string& channelName)
 	}
 	JOINChannel->setTopic(JOINChannel->getTopic(), *this);
 	_inChannels.push_back(JOINChannel);
-	FormatIRC::sendJOIN(*this, *JOINChannel);
 	JOINChannel->addClient(this);
+	FormatIRC::sendJOIN(*this, *JOINChannel);
 }
 
 void	Client::JOIN(const std::string& channelName, const std::string& password)
@@ -79,8 +79,8 @@ void	Client::JOIN(const std::string& channelName, const std::string& password)
 	}
 	JOINChannel->setTopic(JOINChannel->getTopic(), *this);
 	_inChannels.push_back(JOINChannel);
-	FormatIRC::sendJOIN(*this, *JOINChannel);
 	JOINChannel->addClient(this);
+	FormatIRC::sendJOIN(*this, *JOINChannel);
 }
 
 void	Client::PRIVMSG(const std::string& destination, const std::string& msg)
