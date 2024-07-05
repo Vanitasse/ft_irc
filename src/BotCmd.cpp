@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Bot.Cmd.cpp                                        :+:      :+:    :+:   */
+/*   BotCmd.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bvaujour <bvaujour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vanitas <vanitas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 16:05:32 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/07/04 16:06:42 by bvaujour         ###   ########.fr       */
+/*   Updated: 2024/07/05 14:28:40 by vanitas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	Bot::help(Client* client)
 {
-	std::string format = "---Here is the list of all the available commands---";
+	std::string format = "---Here is the list of all the available bot commands---";
 	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
 	format = "!joke : i will tell you one of my best jokes";
 	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
@@ -22,7 +22,25 @@ void	Bot::help(Client* client)
 	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
 	format = "!help : show this menu";
 	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
-
+	format = "---And here is the list of all general server commands---";
+	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
+	format = "/join <channel> : create or join a channel";
+	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
+	format = "/part [<channels>] [<message>] : leave a channel, with a optional message";
+	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);=
+	format = "/topic [-delete] [<channel>] [<topic>] : show or modify the topic of the current or specified channel";
+	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
+	format = "/invite <nick> [<channel>] : invite a user to join a channel";
+	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
+	format = "---Operators Commands---";
+	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
+	format = "/kick [<channel>] <nicks> [<reason>] : kick user(s) from a channel";
+	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
+	format = "/op <nicks> : give operators privilege to specified nicks";
+	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
+	format = "/mode <your nick>|<channel> [<mode> [<mode parameters>]] : change the channel modes (-i -k -o -l)";
+	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
+	
 }
 
 void	Bot::joke(Client* client)
