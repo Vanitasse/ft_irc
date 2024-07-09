@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BotCmd.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vanitas <vanitas@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mablatie <mablatie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 16:05:32 by bvaujour          #+#    #+#             */
-/*   Updated: 2024/07/05 14:28:40 by vanitas          ###   ########.fr       */
+/*   Updated: 2024/07/09 15:38:07 by mablatie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	Bot::help(Client* client)
 	format = "/join <channel> : create or join a channel";
 	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
 	format = "/part [<channels>] [<message>] : leave a channel, with a optional message";
-	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);=
+	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
 	format = "/topic [-delete] [<channel>] [<topic>] : show or modify the topic of the current or specified channel";
 	FormatIRC::sendNOTICE(client->getFd(), "#bot", format);
 	format = "/invite <nick> [<channel>] : invite a user to join a channel";
